@@ -1,3 +1,5 @@
+package context;
+
 import manager.DaoManager;
 
 import javax.servlet.ServletContextEvent;
@@ -11,21 +13,11 @@ import javax.servlet.http.HttpSessionBindingEvent;
 @WebListener()
 public class ContextListener implements ServletContextListener{
 
-    // Public constructor is required by servlet spec
-    public ContextListener() {
-    }
-
-    // -------------------------------------------------------
-    // ServletContextListener implementation
-    // -------------------------------------------------------
     public void contextInitialized(ServletContextEvent sce) {
       sce.getServletContext().setAttribute("manager", new DaoManager());
     }
 
     public void contextDestroyed(ServletContextEvent sce) {
-      /* This method is invoked when the Servlet Context 
-         (the Web application) is undeployed or 
-         Application Server shuts down.
-      */
+
     }
 }
