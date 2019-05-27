@@ -11,21 +11,16 @@ public class User {
     private String lastName;
     private String password;
     private UserType userType;
-
-    public User(int id, String userName, String password, String firstName, String lastName, UserType userType) {
-        this.id = id;
+    private String mail;
+    public User(String userName, String password, String firstName, String lastName, String mail) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
-        this.userType = userType;
+        this.userType = UserType.User;
+        this.mail = mail;
     }
-    public User(String userName, String password, String firstName, String lastName, UserType userType) {
-        this(0, userName, password, firstName, lastName, userType);
-    }
-    public User(String userName, String password, String firstName, String lastName) {
-        this(0, userName, password, firstName, lastName, UserType.User);
-    }
+
     public int getId() {
         return id;
     }
@@ -54,20 +49,12 @@ public class User {
         this.id = id;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public String getMail() {
+        return mail;
     }
 
     @Override
@@ -79,6 +66,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", password='" + password + '\'' +
                 ", userType=" + userType +
+                ", mail='" + mail + '\'' +
                 '}';
     }
 }
