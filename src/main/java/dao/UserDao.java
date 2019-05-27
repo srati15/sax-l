@@ -33,4 +33,8 @@ public class UserDao implements Dao<User> {
         // TODO: 5/27/19
     }
 
+    public User findByUserName(String userName) {
+        // TODO: 5/27/19
+        return null;
+    }
 }
