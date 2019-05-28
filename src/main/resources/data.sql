@@ -1,3 +1,4 @@
+/* Users table start*/
 create table users
 (
     user_id    int auto_increment,
@@ -13,3 +14,15 @@ create table users
 
 create index user_id_index
     on users (user_id);
+/* Users table end*/
+
+/* Announcements table start*/
+create table announcements
+(
+    id                int auto_increment
+        primary key,
+    announcement_text varchar(255)             not null,
+    hyperlink         varchar(255) default '/' null,
+    active            tinyint(1)   default 1   null
+);
+/* Announcements table start*/

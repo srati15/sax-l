@@ -30,4 +30,22 @@
     <servlet-name>Profile</servlet-name>
     <url-pattern>/profile</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>UserProfile</servlet-name>
+    <jsp-file>/user-profile.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UserProfile</servlet-name>
+    <url-pattern>/user-profile</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>UsersList</servlet-name>
+    <jsp-file>/users-list.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UsersList</servlet-name>
+    <url-pattern>/users-list</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -1,5 +1,7 @@
 <%@ page import="manager.DaoManager" %>
 <%@ page import="dao.QuizDao" %>
+<%@ page import="dao.AnnouncementDao" %>
+<%@ page import="datatypes.Announcement" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,6 +29,7 @@
 <body>
 
 <%DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
+    AnnouncementDao announcementDao = manager.getAnnouncementDao();
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -35,6 +38,18 @@
 
 <!-- ***** Header Area Start ***** -->
 <header class="header_area clearfix">
+    <!-- ***** Announcements start ***** -->
+    <%for (Announcement announcement: announcementDao.findAll()){%>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong><%=announcement.getAnnouncementText()%></strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <%}
+    %>
+    <!-- ***** Announcements end ***** -->
+
     <jsp:include page="header.jsp"/>
 </header>
 <!-- ***** Header Area End ***** -->
