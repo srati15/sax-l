@@ -19,7 +19,6 @@
 
     <!-- Core Stylesheet -->
     <link href="style.css" rel="stylesheet">
-    <link href="css/loginpanel.css" rel="stylesheet">
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
 

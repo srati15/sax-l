@@ -66,41 +66,6 @@ input[type="checkbox"]:checked {
     width: 87px;
     z-index: -1;
 }
-input[type="checkbox"]:checked + .toggle { background-position: 0 -16px }
-.forgot {
-    color: #7f7f7f;
-    display: inline-block;
-    float: right;
-    font: 12px/1 sans-serif;
-    left: -19px;
-    position: relative;
-    text-decoration: none;
-    top: 5px;
-    transition: color .4s;
-}
-.forgot:hover { color: #3b3b3b }
-input[type="submit"] {
-    width:240px;
-    height:35px;
-    display:block;
-    font-family:Arial, "Helvetica", sans-serif;
-    font-size:16px;
-    font-weight:bold;
-    color:#fff;
-    text-decoration:none;
-    text-transform:uppercase;
-    text-align:center;
-    text-shadow:1px 1px 0 #37a69b;
-    padding-top:6px;
-    margin: 29px 0 0 29px;
-    position:relative;
-    cursor:pointer;
-    border: none;
-    background-color: #37a69b;
-    background-image: linear-gradient(top,#3db0a6,#3111);
-    border-radius: 5px;
-    box-shadow: inset 0 1px 0 #2ab7ec, 0 5px 0 0 #497a78, 0 10px 5px #999;
-}
 
 .shadow {
     background: #000;
