@@ -1,7 +1,6 @@
 <%@ page import="manager.DaoManager" %>
 <%@ page import="dao.QuizDao" %>
-<%@ page import="dao.AnnouncementDao" %>
-<%@ page import="datatypes.Announcement" %>
+<%@ page import="datatypes.User" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,7 +28,7 @@
 <body>
 
 <%DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-    AnnouncementDao announcementDao = manager.getAnnouncementDao();
+    User user = (User) request.getSession().getAttribute("user");
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -38,36 +37,29 @@
 
 <!-- ***** Header Area Start ***** -->
 <header class="header_area clearfix">
-    <!-- ***** Announcements start ***** -->
-    <%for (Announcement announcement: announcementDao.findAll()){%>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong><%=announcement.getAnnouncementText()%></strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <%}
-    %>
-    <!-- ***** Announcements end ***** -->
-
     <jsp:include page="header.jsp"/>
 </header>
 <!-- ***** Header Area End ***** -->
 
-<!-- ***** Welcome Area Start ***** -->
-<section class="welcome_area clearfix" id="home" style="background-image: url(img/bg-img/welcome-bg.png)">
-    <div class="hero-slides owl-carousel">
-        <!-- Single Hero Slides -->
-        <div class="single-hero-slide d-flex align-items-end justify-content-center">
-            <div class="hero-slide-content text-center">
-                <h2>Sax-l</h2>
-                <h4>Top Quizzes!</h4>
+<!-- ***** Breadcumb Area Start ***** -->
+<div class="mosh-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12">
+                <div class="bradcumbContent">
+                    <h2><%=user.getUserName()%>'s Profile</h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><%=user.getUserName()%>'s profile</li>
+                        </ol>
+                    </nav>
+                </div>
             </div>
         </div>
-        <!-- Single Hero Slides -->
     </div>
-</section>
-<!-- ***** Welcome Area End ***** -->
+</div>
+<!-- ***** Breadcumb Area End ***** -->
 
 <!-- ***** Footer Area Start ***** -->
 <footer class="footer-area clearfix">

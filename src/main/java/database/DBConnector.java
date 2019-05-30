@@ -28,9 +28,7 @@ public class DBConnector {
             stmt.execute("USE " + dbProperties.getProperty("MYSQL_DATABASE_NAME"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -39,7 +37,6 @@ public class DBConnector {
     public Connection getConnection() {
         try {
             if (connection.isClosed()) createConnection();
-            connection.setAutoCommit(false);
             return connection;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -21,21 +21,18 @@ public class LoginServlet extends HttpServlet {
         User user = userRepository.findByUserName(userName);
         if (user == null) {
             request.setAttribute("error", "Wrong login credentials");
-            System.out.println("Wrong login credentials");
-            //todo register.jsp
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            System.out.println("Wrong username");
+            request.getRequestDispatcher("/register").forward(request, response);
             return;
         }
         if (!user.getPassword().equals(password)) {
             request.setAttribute("error", "Wrong login credentials");
             System.out.println("Wrong login credentials");
-            //todo register.jsp
-            request.getRequestDispatcher("register.jsp").forward(request, response);
+            request.getRequestDispatcher("/register").forward(request, response);
             return;
         }
         request.getSession().setAttribute("user", user);
-        //todo profile.jsp
-        RequestDispatcher dispatcher = request.getRequestDispatcher("profile.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/profile");
         dispatcher.forward(request, response);
     }
 }

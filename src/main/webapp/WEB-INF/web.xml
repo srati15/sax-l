@@ -3,6 +3,8 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
+  <display-name>Archetype Created Web Application</display-name>
+
   <servlet>
     <servlet-name>Login</servlet-name>
     <jsp-file>/login.jsp</jsp-file>
@@ -20,5 +22,30 @@
     <url-pattern>/register</url-pattern>
   </servlet-mapping>
 
-  <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <servlet-name>Profile</servlet-name>
+    <jsp-file>/profile.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Profile</servlet-name>
+    <url-pattern>/profile</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>UserProfile</servlet-name>
+    <jsp-file>/user-profile.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UserProfile</servlet-name>
+    <url-pattern>/user-profile</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>UsersList</servlet-name>
+    <jsp-file>/users-list.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UsersList</servlet-name>
+    <url-pattern>/users-list</url-pattern>
+  </servlet-mapping>
 </web-app>
