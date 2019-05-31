@@ -12,11 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnnouncementDao implements Dao<Announcement> {
-    private final Connection connection;
 
-    public AnnouncementDao(Connection connection) {
-        this.connection = connection;
-    }
     @Override
     public Announcement findById(int id) {
         return null;
@@ -29,20 +25,8 @@ public class AnnouncementDao implements Dao<Announcement> {
 
     @Override
     public List<Announcement> findAll() {
-        List<Announcement> announcements = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM announcements")) {
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                if (rs.getBoolean("active")) {
-                    String announcementText = rs.getString("announcement_text");
-                    String hyperLink = rs.getString("hyperlink");
-                    announcements.add(new Announcement(announcementText, hyperLink));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return announcements;
+        // TODO: 5/31/19
+        return null;
     }
 
     @Override

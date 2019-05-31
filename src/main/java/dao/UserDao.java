@@ -1,5 +1,6 @@
 package dao;
 
+import database.CreateConnection;
 import datatypes.User;
 import enums.UserType;
 
@@ -8,29 +9,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao implements Dao<User> {
-    private Connection connection;
-
-    public UserDao(Connection connection) {
-        this.connection = connection;
-    }
 
     @Override
     public User findById(int id) {
-        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE user_id=?")) {
-            stmt.setInt(1, id);
-            return getUser(stmt);
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        try  {
+            statement = connection.prepareStatement("SELECT * FROM users WHERE user_id=?");
+            statement.setInt(1, id);
+            return getUser(statement);
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            executeFinalBlock(connection, statement);
         }
         return null;
     }
 
     public User findByUserName(String usrName) {
-        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE user_name=?")) {
-            stmt.setString(1, usrName);
-            return getUser(stmt);
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        try   {
+            statement = connection.prepareStatement("SELECT * FROM users WHERE user_name=?");
+            statement.setString(1, usrName);
+            return getUser(statement);
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            executeFinalBlock(connection, statement);
         }
         return null;
     }
@@ -60,30 +66,38 @@ public class UserDao implements Dao<User> {
 
     @Override
     public void insert(User entity) {
-        PreparedStatement stmt;
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
         try {
-            stmt = connection.prepareStatement("INSERT INTO users (user_name, pass, first_name, last_name, user_type, mail) values (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-            stmt.setString(1, entity.getUserName());
-            stmt.setString(2, entity.getPassword());
-            stmt.setString(3, entity.getFirstName());
-            stmt.setString(4, entity.getLastName());
-            stmt.setInt(5, entity.getUserType().getValue());
-            stmt.setString(6, entity.getMail());
-            stmt.executeUpdate();
-            ResultSet rs = stmt.getGeneratedKeys();
+            statement = connection.prepareStatement("INSERT INTO users (user_name, pass, first_name, last_name, user_type, mail) values (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, entity.getUserName());
+            statement.setString(2, entity.getPassword());
+            statement.setString(3, entity.getFirstName());
+            statement.setString(4, entity.getLastName());
+            statement.setInt(5, entity.getUserType().getValue());
+            statement.setString(6, entity.getMail());
+            int result = statement.executeUpdate();
+            if (result == 1) System.out.println("Record inserted sucessfully");
+            else System.out.println("Error inserting record");
+            ResultSet rs = statement.getGeneratedKeys();
             rs.next();
             entity.setId(rs.getInt(1));
             System.out.println(findById(entity.getId()));
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            executeFinalBlock(connection, statement);
         }
     }
 
     @Override
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users")) {
-            ResultSet rs = stmt.executeQuery();
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 int userId = rs.getInt("user_id");
                 String userName = rs.getString("user_name");
@@ -99,21 +113,48 @@ public class UserDao implements Dao<User> {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            executeFinalBlock(connection, statement);
         }
         return users;
     }
 
-    @Override
-    public void deleteById(int id) {
-        try (PreparedStatement stmt = connection.prepareStatement("DELETE FROM users WHERE user_id=" + id)) {
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private void executeFinalBlock(Connection connection, PreparedStatement statement) {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
+    @Override
+    public void deleteById(int id) {
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement("DELETE FROM users WHERE user_id=" + id);
+            int result = statement.executeUpdate();
+            if (result == 1) System.out.println("Record deleted sucessfully");
+            else System.out.println("Error deleting record");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            executeFinalBlock(connection, statement);
+        }
+
+    }
+
     public void updateById(User user) {
-        try (PreparedStatement stmt = connection.prepareStatement("UPDATE users set first_name = ?, last_name = ?, pass = ? WHERE user_id=" + user.getId())) {
+        try (Connection connection = CreateConnection.getConnection(); PreparedStatement stmt = connection.prepareStatement("UPDATE users set first_name = ?, last_name = ?, pass = ? WHERE user_id=" + user.getId())) {
             stmt.setString(1, user.getFirstName());
             stmt.setString(2, user.getLastName());
             stmt.setString(3, user.getPassword());
