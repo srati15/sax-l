@@ -2,6 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="dao.UserDao" %>
 <%@ page import="manager.DaoManager" %>
+<%@ page import="enums.UserType" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,6 +29,7 @@
 <%
     DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
     UserDao userDao = daoManager.getUserDao();
+    User user = (User) request.getSession().getAttribute("user");
     %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -70,6 +72,9 @@
                         <th>Completed Quizes</th>
                         <th>Created Quizes</th>
                         <th>Achievements</th>
+                        <%if (user != null && user.getUserType()==UserType.Admin){%>
+                            <th>Action</th>
+                        <%}%>
                     </tr>
                     </thead>
                     <%
@@ -77,10 +82,40 @@
                         for (int i = 0; i < users.size(); i++) {%>
                     <tr>
                         <td><%=i+1%></td>
-                        <td> <a href="#"><=users.get(i).getUserName()%></a></td>
+                        <td> <a href="#"><%=users.get(i).getUserName()%></a></td>
                         <td>0</td>
                         <td>0</td>
                         <td>0</td>
+                        <%if (user != null && user.getUserType()==UserType.Admin ){%>
+                        <td>
+                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                    data-target="#exampleModalCenter<%=i%>">
+                                Delete User
+                            </button>
+                            <div class="modal fade" id="exampleModalCenter<%=i%>" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Confirm delete</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete user?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                        <form action="DeleteUserServlet" method="post">
+                                            <input type="submit" class="btn btn-primary" value="Yes"/>
+                                            <input type="text" hidden name="deleteUserId" value="<%=users.get(i).getId()%>">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></td>
+                        <%}%>
                     </tr>
                     <%}
                     %>

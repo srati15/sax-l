@@ -1,5 +1,10 @@
+<%@ page import="datatypes.User" %>
+<%@ page import="enums.UserType" %>
 <div class="container-fluid h-100">
     <div class="row h-100">
+        <%
+            User user = (User) request.getSession().getAttribute("user");
+        %>
         <!-- Menu Area Start -->
         <div class="col-12 h-100">
             <div class="menu_area h-100">
@@ -29,21 +34,21 @@
                                     <a class="dropdown-item" href="#">Page</a>
                                 </div>
                             </li>
-                            <%if (request.getSession().getAttribute("user") != null) {%>
+                            <%if (user != null) {%>
                             <li class="nav-item"><a class="nav-link" href="profile">Profile</a></li>
                             <%}%>
                             <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
+                            <%if (user != null && user.getUserType() == UserType.Admin) {%>
+                            <li class="nav-item"><a class="nav-link" href="admin">Administration</a></li>
+                            <%}%>
                         </ul>
                         <!-- Search Form Area Start -->
                         <div class="search-form-area animated">
                             <form action="#" method="post">
-                                <input type="search" name="search" id="search"
-                                       placeholder="Type keywords &amp; hit enter">
-                                <button type="submit" class="d-none"><img src="img/core-img/search-icon.png"
-                                                                          alt="Search"></button>
+                                <input type="search" name="search" id="search" placeholder="Type keywords &amp; hit enter">
+                                <button type="submit" class="d-none"><img src="img/core-img/search-icon.png" alt="Search"></button>
                             </form>
                         </div>
                         <!-- Search btn -->
@@ -51,17 +56,18 @@
                             <a href="#" id="search-btn"><img src="img/core-img/search-icon.png" alt="Search"></a>
                         </div>
                         <!-- Login/Register btn -->
-                        <%if (request.getSession().getAttribute("user") == null) {%>
+                        <%if (user == null) {%>
                         <div class="login-register-btn">
                             <a href="login">Login </a>
                             <a href="register">/ Register</a>
                         </div>
-                        <%}else{%>
+                        <%} else {%>
                         <form action="LogoutServlet" method="post">
                             <button type="submit">Log out</button>
                         </form>
                         <a href="profile"> Profile </a>
-                        <%}
+                        <%
+                            }
 
                         %>
 

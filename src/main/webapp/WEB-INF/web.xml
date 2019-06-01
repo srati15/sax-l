@@ -58,6 +58,7 @@
     <url-pattern>/announcements</url-pattern>
   </servlet-mapping>
 
+
   <servlet>
     <servlet-name>Admin</servlet-name>
     <jsp-file>/admin.jsp</jsp-file>
@@ -66,4 +67,5 @@
     <servlet-name>Admin</servlet-name>
     <url-pattern>/admin</url-pattern>
   </servlet-mapping>
+
 </web-app>

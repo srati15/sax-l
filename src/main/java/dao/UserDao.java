@@ -96,8 +96,8 @@ public class UserDao implements Dao<User> {
         List<User> users = new ArrayList<>();
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
-
         try {
+            statement = connection.prepareStatement("SELECT * FROM users");
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 int userId = rs.getInt("user_id");
