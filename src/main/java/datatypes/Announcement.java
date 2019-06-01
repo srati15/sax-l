@@ -4,33 +4,31 @@ package datatypes;
 public class Announcement {
     private int id;
     private String announcementText;
-    private boolean active = true;
     private String hyperLink;
-
+    private boolean active;
     public Announcement(String announcementText, String hyperLink, Boolean active) {
         this.announcementText = announcementText;
         this.active = active;
         this.hyperLink = hyperLink;
     }
 
-    public void setActive(boolean active) {
+    public Announcement(int id, String announcementText, String hyperLink, boolean active) {
+        this.id = id;
+        this.announcementText = announcementText;
+        this.hyperLink = hyperLink;
         this.active = active;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getAnnouncementText() {
         return announcementText;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
     public String getHyperLink() {
         return hyperLink;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getId() {
@@ -45,5 +43,9 @@ public class Announcement {
                 ", active=" + active +
                 ", hyperLink='" + hyperLink + '\'' +
                 '}';
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

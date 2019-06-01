@@ -28,7 +28,7 @@ public class AnnouncementDao implements Dao<Announcement> {
                 String hyperLink = rs.getString("hyperlink");
                 Boolean isActive = rs.getBoolean("active");
 
-                Announcement announcement = new Announcement(txt,hyperLink, isActive);
+                Announcement announcement = new Announcement(id,txt,hyperLink, isActive);
                 return  announcement;
             }
 
@@ -69,11 +69,11 @@ public class AnnouncementDao implements Dao<Announcement> {
             statement = connection.prepareStatement("SELECT * FROM announcements");
             ResultSet rs = statement.executeQuery();
             while(rs.next()){
+                int id = rs.getInt("id");
                 String txt = rs.getString("announcement_text");
                 String hyperLink = rs.getString("hyperlink");
                 Boolean isActive = rs.getBoolean("active");
-
-                Announcement announcement = new Announcement(txt,hyperLink, isActive);
+                Announcement announcement = new Announcement(id, txt,hyperLink, isActive);
                 if (announcement.isActive()) list.add(announcement);
             }
 
