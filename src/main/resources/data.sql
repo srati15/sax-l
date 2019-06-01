@@ -83,9 +83,9 @@ create table question
         primary key,
     question_text    varchar(200) not null,
     quiz_id          int          not null,
-    question_type_id int          not null,
-    constraint question_questionypes_question_type_id_fk
-        foreign key (question_type_id) references questionTypes (question_type_id)
+    question_type_id int          not null
+ #   constraint question_questionypes_question_type_id_fk
+ #       foreign key (question_type_id) references questionTypes (question_type_id)
 #    constraint question_quiz_quiz_id_fk
 #         foreign key (quiz_id) references quiz (quiz_id)
 );
