@@ -23,7 +23,15 @@
 
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
-
+<%--    <%for (Announcement announcement: announcementDao.findAll()){%>--%>
+<%--    <div class="alert alert-warning alert-dismissible fade show" role="alert">--%>
+<%--        <strong><%=announcement.getAnnouncementText()%></strong>--%>
+<%--        <button type="button" class="close" data-dismiss="alert" aria-label="Close">--%>
+<%--            <span aria-hidden="true">&times;</span>--%>
+<%--        </button>--%>
+<%--    </div>--%>
+<%--    <%}--%>
+<%--    %>--%>
 </head>
 
 <body>
