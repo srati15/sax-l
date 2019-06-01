@@ -26,7 +26,7 @@ public class AnnouncementDao implements Dao<Announcement> {
     @Override
     public List<Announcement> findAll() {
         // TODO: 5/31/19
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

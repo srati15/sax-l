@@ -11,6 +11,7 @@ public class MyDBInfo {
     private String userName;
     private String databaseUrl;
     private String password;
+    private String databaseName;
 
     public MyDBInfo(){
         initProperties();
@@ -22,9 +23,10 @@ public class MyDBInfo {
             dbProperties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
             this.dbServer = dbProperties.getProperty("MYSQL_DATABASE_SERVER");
             this.port = Integer.parseInt(dbProperties.getProperty("DATABASE_PORT"));
+            this.databaseName = dbProperties.getProperty("MYSQL_DATABASE_NAME");
             this.userName = dbProperties.getProperty("MYSQL_USERNAME");
             this.password = dbProperties.getProperty("MYSQL_PASSWORD");
-            this.databaseUrl = "jdbc:mysql://" + dbServer + ":" + port;
+            this.databaseUrl = "jdbc:mysql://" + dbServer + ":" + port+"/"+databaseName;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,5 +42,9 @@ public class MyDBInfo {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
     }
 }

@@ -19,6 +19,7 @@ public class CreateConnection {
         dataSource.setURL(myDBInfo.getDatabaseUrl());
         dataSource.setUser(myDBInfo.getUserName());
         dataSource.setPassword(myDBInfo.getPassword());
+        dataSource.setDatabaseName(myDBInfo.getDatabaseName());
     }
 
     public static Connection getConnection() {
