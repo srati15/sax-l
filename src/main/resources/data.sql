@@ -69,26 +69,15 @@ create table results
 
 /*results table end*/
 
--- creating question table
-create table question
+/*friend requests table start*/
+create table friend_requests
 (
-    question_id      int auto_increment
-        primary key,
-    question_text    varchar(200) not null,
-    quiz_id          int          not null,
-    question_type_id int          not null,
-    constraint question_questionypes_question_type_id_fk
-        foreign key (question_type_id) references questionTypes (question_type_id),
-    constraint question_quiz_quiz_id_fk
-        foreign key (quiz_id) references quiz (quiz_id)
+    id int auto_increment,
+    sender_id int not null,
+    reciever_id int not null,
+    request_status int not null,
+    send_date timestamp default now() not null,
+    constraint friend_requests_pk
+        primary key (id)
 );
-
-
--- creating quiz table
-create table quiz(
-                     quiz_id    int auto_increment primary key,
-                     quiz_name  varchar(100)  not null,
-                     quiz_author varchar(100) not null,
-                     date_created datetime default CURRENT_TIMESTAMP
-
-);
+/*friend requests table end*/
