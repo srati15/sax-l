@@ -28,16 +28,16 @@ create table announcements
 /* Announcements table end*/
 
 /*QuestionTypes table start*/
-create table quetionTypes
+create table questionTypes
 (
     question_type_id int auto_increment primary KEY not NULL ,
     question_type varchar(65) not null
 );
 
-create unique index quetionTypes_question_type_id_uindex
+create unique index questionTypes_question_type_id_uindex
     on quetionTypes (question_type_id);
 
-create unique index quetionTypes_question_type_uindex
+create unique index questionTypes_question_type_uindex
     on quetionTypes (question_type);
 
 /*QuestionTypes table end*/
