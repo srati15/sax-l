@@ -1,4 +1,4 @@
-package servlets;
+package servlets.user;
 
 import dao.UserDao;
 import datatypes.User;
