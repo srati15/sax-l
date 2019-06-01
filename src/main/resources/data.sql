@@ -1,3 +1,11 @@
+DROP TABLE if exists users;
+DROP TABLE if exists announcements;
+DROP TABLE if exists questionTypes;
+DROP TABLE if exists question;
+DROP TABLE if exists answers;
+DROP table if exists quiz;
+drop table if exists results;
+
 /* Users table start*/
 create table users
 (
@@ -35,10 +43,10 @@ create table questionTypes
 );
 
 create unique index questionTypes_question_type_id_uindex
-    on quetionTypes (question_type_id);
+    on questionTypes (question_type_id);
 
 create unique index questionTypes_question_type_uindex
-    on quetionTypes (question_type);
+    on questionTypes (question_type);
 
 /*QuestionTypes table end*/
 
@@ -78,9 +86,9 @@ create table question
     quiz_id          int          not null,
     question_type_id int          not null,
     constraint question_questionypes_question_type_id_fk
-        foreign key (question_type_id) references questionTypes (question_type_id),
-    constraint question_quiz_quiz_id_fk
-        foreign key (quiz_id) references quiz (quiz_id)
+        foreign key (question_type_id) references questionTypes (question_type_id)
+#    constraint question_quiz_quiz_id_fk
+#         foreign key (quiz_id) references quiz (quiz_id)
 );
 
 
