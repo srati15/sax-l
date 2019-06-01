@@ -62,6 +62,7 @@
                         </form>
                         <a href="profile"> Profile </a>
                         <%}
+
                         %>
 
                     </div>
