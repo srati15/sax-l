@@ -48,4 +48,22 @@
     <servlet-name>UsersList</servlet-name>
     <url-pattern>/users-list</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>Announcements</servlet-name>
+    <jsp-file>/announcements.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Announcements</servlet-name>
+    <url-pattern>/announcements</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>Admin</servlet-name>
+    <jsp-file>/admin.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Admin</servlet-name>
+    <url-pattern>/admin</url-pattern>
+  </servlet-mapping>
 </web-app>

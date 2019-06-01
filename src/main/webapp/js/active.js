@@ -167,7 +167,7 @@
     $('.portfolio-menu button.btn').on('click', function () {
         $('.portfolio-menu button.btn').removeClass('active');
         $(this).addClass('active');
-    })
+    });
 
     if ($.fn.scrollUp) {
         $.scrollUp({
