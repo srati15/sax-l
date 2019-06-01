@@ -32,7 +32,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         request.getSession().setAttribute("user", user);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/profile");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("");
         dispatcher.forward(request, response);
     }
 }

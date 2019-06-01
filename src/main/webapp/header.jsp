@@ -1,5 +1,3 @@
-<%@ page import="datatypes.User" %>
-<%@ page import="enums.UserType" %>
 <div class="container-fluid h-100">
     <div class="row h-100">
         <!-- Menu Area Start -->
@@ -8,7 +6,7 @@
                 <nav class="navbar h-100 navbar-expand-lg align-items-center">
                     <!-- Logo -->
                     <a class="navbar-brand" href="/"><img src="img/core-img/logo.png" alt="logo"></a>
-                    <%User user = (User) request.getSession().getAttribute("user");%>
+
                     <!-- Menu Area -->
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mosh-navbar"
                             aria-controls="mosh-navbar" aria-expanded="false" aria-label="Toggle navigation"><span
@@ -31,16 +29,13 @@
                                     <a class="dropdown-item" href="#">Page</a>
                                 </div>
                             </li>
-                            <%if (user != null) {%>
+                            <%if (request.getSession().getAttribute("user") != null) {%>
                             <li class="nav-item"><a class="nav-link" href="profile">Profile</a></li>
                             <%}%>
                             <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
-                            <%if (user != null && user.getUserType() == UserType.Admin) {%>
-                            <li class="nav-item"><a class="nav-link" href="admin">Admin Page</a></li>
-                            <%}%>
                         </ul>
                         <!-- Search Form Area Start -->
                         <div class="search-form-area animated">
@@ -61,10 +56,13 @@
                             <a href="login">Login </a>
                             <a href="register">/ Register</a>
                         </div>
+                        <%}else{%>
+                        <form action="LogoutServlet" method="post">
+                            <button type="submit">Log out</button>
+                        </form>
+                        <a href="profile"> Profile </a>
                         <%}
                         %>
-
-
 
                     </div>
                 </nav>
