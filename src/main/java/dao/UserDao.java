@@ -8,6 +8,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dao.FinalBlockExecutor.executeFinalBlock;
+
 public class UserDao implements Dao<User> {
 
     @Override
@@ -82,7 +84,6 @@ public class UserDao implements Dao<User> {
             ResultSet rs = statement.getGeneratedKeys();
             rs.next();
             entity.setId(rs.getInt(1));
-            System.out.println(findById(entity.getId()));
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -119,23 +120,6 @@ public class UserDao implements Dao<User> {
         return users;
     }
 
-    private void executeFinalBlock(Connection connection, PreparedStatement statement) {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if (statement != null) {
-            try {
-                statement.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public void deleteById(int id) {
         Connection connection = CreateConnection.getConnection();
@@ -154,13 +138,20 @@ public class UserDao implements Dao<User> {
     }
 
     public void updateById(User user) {
-        try (Connection connection = CreateConnection.getConnection(); PreparedStatement stmt = connection.prepareStatement("UPDATE users set first_name = ?, last_name = ?, pass = ? WHERE user_id=" + user.getId())) {
-            stmt.setString(1, user.getFirstName());
-            stmt.setString(2, user.getLastName());
-            stmt.setString(3, user.getPassword());
-            stmt.executeUpdate();
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement("UPDATE users set first_name = ?, last_name = ?, pass = ? WHERE user_id=" + user.getId());
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getPassword());
+            int result = statement.executeUpdate();
+            if (result == 1) System.out.println("Record updated sucessfully");
+            else System.out.println("Error updating record");
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            executeFinalBlock(connection, statement);
         }
     }
 }
