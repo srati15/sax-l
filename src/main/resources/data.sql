@@ -104,7 +104,7 @@ create table friend_requests
 (
     id int auto_increment,
     sender_id int not null,
-    reciever_id int not null,
+    receiver_id int not null,
     request_status int not null,
     send_date timestamp default now() not null,
     constraint friend_requests_pk
