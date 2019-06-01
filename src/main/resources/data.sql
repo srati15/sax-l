@@ -76,7 +76,6 @@ create table results
 );
 
 /*results table end*/
-
 -- creating question table
 create table question
 (
@@ -100,3 +99,15 @@ create table quiz(
                      date_created datetime default CURRENT_TIMESTAMP
 
 );
+/*friend requests table start*/
+create table friend_requests
+(
+    id int auto_increment,
+    sender_id int not null,
+    reciever_id int not null,
+    request_status int not null,
+    send_date timestamp default now() not null,
+    constraint friend_requests_pk
+        primary key (id)
+);
+/*friend requests table end*/

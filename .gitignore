@@ -1,3 +1,4 @@
 .idea/
 target/
 resources/database.properties
+database.properties
