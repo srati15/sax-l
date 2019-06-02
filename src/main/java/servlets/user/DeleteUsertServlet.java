@@ -1,8 +1,8 @@
 package servlets.user;
 
-import dao.AnnouncementDao;
 import dao.UserDao;
 import datatypes.User;
+import enums.DaoType;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -16,7 +16,7 @@ import java.io.IOException;
 public class DeleteUsertServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-        UserDao userDao = manager.getUserDao();
+        UserDao userDao = manager.getDao(DaoType.User);
         User user = (User) request.getSession().getAttribute("user");
         int deleteUserId = Integer.parseInt(request.getParameter("deleteUserId"));
         System.out.println(deleteUserId);

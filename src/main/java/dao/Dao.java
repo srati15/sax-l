@@ -1,17 +1,19 @@
 package dao;
 
-import datatypes.Announcement;
+import enums.DaoType;
 
 import java.util.List;
 
-public interface Dao<D> {
-    D findById(int id);
+public interface Dao<ID, D> {
+    D findById(ID id);
 
     void insert(D entity);
 
     List<D> findAll();
 
-    void deleteById(int id);
+    void deleteById(ID id);
 
     void update(D entity);
+
+    DaoType getDaoType();
 }

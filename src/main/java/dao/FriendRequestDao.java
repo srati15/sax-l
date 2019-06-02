@@ -1,20 +1,20 @@
 package dao;
 
 import database.CreateConnection;
-import datatypes.FriendRequest;
+import datatypes.messages.FriendRequest;
+import enums.DaoType;
 import enums.RequestStatus;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static dao.FinalBlockExecutor.executeFinalBlock;
 
-public class FriendRequestDao implements Dao<FriendRequest> {
+public class FriendRequestDao implements Dao<Integer, FriendRequest> {
 
     @Override
-    public FriendRequest findById(int id) {
+    public FriendRequest findById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -49,7 +49,7 @@ public class FriendRequestDao implements Dao<FriendRequest> {
             statement.setInt(1, entity.getSenderId());
             statement.setInt(2, entity.getReceiverId());
             statement.setInt(3, entity.getStatus().getValue());
-            statement.setTimestamp(4, entity.getSendDate());
+            statement.setTimestamp(4, entity.getTimestamp());
             int result = statement.executeUpdate();
             if(result == 1){
                 ResultSet rs = statement.getGeneratedKeys();
@@ -97,7 +97,7 @@ public class FriendRequestDao implements Dao<FriendRequest> {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -118,6 +118,11 @@ public class FriendRequestDao implements Dao<FriendRequest> {
     @Override
     public void update(FriendRequest entity) {
         // TODO: 6/2/19  
+    }
+
+    @Override
+    public DaoType getDaoType() {
+        return DaoType.FriendRequest;
     }
 
 }

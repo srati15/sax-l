@@ -2,6 +2,7 @@ package servlets.user;
 
 import dao.UserDao;
 import datatypes.User;
+import enums.DaoType;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -15,7 +16,7 @@ import java.io.IOException;
 public class CreateUserServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        UserDao userRepository = ((DaoManager) request.getServletContext().getAttribute("manager")).getUserDao();
+        UserDao userRepository = ((DaoManager) request.getServletContext().getAttribute("manager")).getDao(DaoType.User);
         String userName = request.getParameter("username");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmpassword");

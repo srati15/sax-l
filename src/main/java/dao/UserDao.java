@@ -2,6 +2,7 @@ package dao;
 
 import database.CreateConnection;
 import datatypes.User;
+import enums.DaoType;
 import enums.UserType;
 
 import java.sql.*;
@@ -10,10 +11,10 @@ import java.util.List;
 
 import static dao.FinalBlockExecutor.executeFinalBlock;
 
-public class UserDao implements Dao<User> {
+public class UserDao implements Dao<Integer, User> {
 
     @Override
-    public User findById(int id) {
+    public User findById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try  {
@@ -121,7 +122,7 @@ public class UserDao implements Dao<User> {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -153,5 +154,10 @@ public class UserDao implements Dao<User> {
         }finally {
             executeFinalBlock(connection, statement);
         }
+    }
+
+    @Override
+    public DaoType getDaoType() {
+        return DaoType.User;
     }
 }

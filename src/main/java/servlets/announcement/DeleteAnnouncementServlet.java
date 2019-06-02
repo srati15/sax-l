@@ -1,6 +1,7 @@
 package servlets.announcement;
 
 import dao.AnnouncementDao;
+import enums.DaoType;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -14,7 +15,7 @@ import java.io.IOException;
 public class DeleteAnnouncementServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-        AnnouncementDao announcementDao = manager.getAnnouncementDao();
+        AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
         announcementDao.deleteById(Integer.parseInt(request.getParameter("announcementId")));
         request.getRequestDispatcher("announcements").forward(request, response);
     }

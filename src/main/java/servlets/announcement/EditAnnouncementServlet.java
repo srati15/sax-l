@@ -2,6 +2,7 @@ package servlets.announcement;
 
 import dao.AnnouncementDao;
 import datatypes.Announcement;
+import enums.DaoType;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -15,7 +16,7 @@ import java.io.IOException;
 public class EditAnnouncementServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-        AnnouncementDao announcementDao = manager.getAnnouncementDao();
+        AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
         String announcementText = request.getParameter("announcementText");
         String hyperlink = request.getParameter("hyperlink");
         boolean active = request.getParameter("activeOrNot").equals("active");

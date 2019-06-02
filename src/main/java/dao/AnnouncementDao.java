@@ -2,18 +2,18 @@ package dao;
 
 import database.CreateConnection;
 import datatypes.Announcement;
-import datatypes.User;
-import enums.UserType;
+import enums.DaoType;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 import static dao.FinalBlockExecutor.executeFinalBlock;
 
-public class AnnouncementDao implements Dao<Announcement> {
+public class AnnouncementDao implements Dao<Integer, Announcement> {
 
     @Override
-    public Announcement findById(int id) {
+    public Announcement findById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -90,7 +90,7 @@ public class AnnouncementDao implements Dao<Announcement> {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -124,5 +124,10 @@ public class AnnouncementDao implements Dao<Announcement> {
         }finally {
             executeFinalBlock(connection, statement);
         }
+    }
+
+    @Override
+    public DaoType getDaoType() {
+        return DaoType.Announcement;
     }
 }

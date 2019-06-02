@@ -1,12 +1,13 @@
 package dao;
 
 import datatypes.Quiz;
+import enums.DaoType;
 
 import java.util.List;
 
-public class QuizDao implements Dao<Quiz>{
+public class QuizDao implements Dao<Integer, Quiz>{
     @Override
-    public Quiz findById(int id) {
+    public Quiz findById(Integer id) {
         // TODO: 5/27/19
         return null;
     }
@@ -24,12 +25,17 @@ public class QuizDao implements Dao<Quiz>{
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(Integer id) {
 
     }
 
     @Override
     public void update(Quiz entity) {
         // TODO: 6/2/19  
+    }
+
+    @Override
+    public DaoType getDaoType() {
+        return DaoType.Quiz;
     }
 }
