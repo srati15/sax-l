@@ -27,4 +27,9 @@ public class QuizDao implements Dao<Quiz>{
     public void deleteById(int id) {
 
     }
+
+    @Override
+    public void update(Quiz entity) {
+        // TODO: 6/2/19  
+    }
 }

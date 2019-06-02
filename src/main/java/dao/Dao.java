@@ -1,5 +1,7 @@
 package dao;
 
+import datatypes.Announcement;
+
 import java.util.List;
 
 public interface Dao<D> {
@@ -11,4 +13,5 @@ public interface Dao<D> {
 
     void deleteById(int id);
 
+    void update(D entity);
 }

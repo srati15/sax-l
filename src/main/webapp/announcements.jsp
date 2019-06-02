@@ -1,6 +1,5 @@
 <%@ page import="datatypes.User" %>
 <%@ page import="java.util.List" %>
-<%@ page import="dao.UserDao" %>
 <%@ page import="manager.DaoManager" %>
 <%@ page import="dao.AnnouncementDao" %>
 <%@ page import="enums.UserType" %>
@@ -24,6 +23,9 @@
     <link href="style.css" rel="stylesheet">
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
+
+    <link href="css/datatables.min.css" rel="stylesheet">
+
 
 </head>
 <body>
@@ -67,62 +69,132 @@
 <section class="mosh-aboutUs-area section_padding_100_0">
     <div class="container">
         <h3 class="mb-30">All Announcements</h3>
-        <div class="row col-md-12 col-md-offset-2 user-list-table">
-            <table class="table table-striped user-list-table">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Text</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <%
-                    List<Announcement> announcements = announcementDao.findAll();
-                    for (int i = 0; i < announcements.size(); i++) {%>
-                <tr>
-                    <td><%=i + 1%>
-                    </td>
-                    <td>
-                        <a href="<%=announcements.get(i).getHyperLink()%>"><%=announcements.get(i).getAnnouncementText()%>
-                        </a>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-danger" data-toggle="modal"
-                                data-target="#exampleModalCenter<%=i%>">
-                            Delete Announcement
-                        </button>
+        <!-- ***** create announcement modal ***** -->
+        <jsp:include page="components/create-announcement.jsp"/>
+        <!-- ***** update user modal end***** -->
 
-                        <!-- Delete Modal -->
-                        <div class="modal fade" id="exampleModalCenter<%=i%>" tabindex="-1" role="dialog"
-                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">Confirm delete</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Are you sure you want to delete announcement?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                        <form action="DeleteAnnouncementServlet" method="post">
-                                            <input type="submit" class="btn btn-primary" value="Yes"/>
-                                            <input type="text" hidden name="announcementId" value="<%=announcements.get(i).getId()%>">
-                                        </form>
-                                    </div>
+        <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Text</th>
+                <th>Active</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                List<Announcement> announcements = announcementDao.findAll();
+                for (int i = 0; i < announcements.size(); i++) {%>
+            <tr>
+                <td><%=i + 1%>
+                </td>
+                <td>
+                    <a href="<%=announcements.get(i).getHyperLink()%>"><%=announcements.get(i).getAnnouncementText()%>
+                    </a>
+                </td>
+                <td>
+                    <% if (announcements.get(i).isActive()) {%>
+                    <i class="fa fa-check"> Active</i>
+                    <%} else {%>
+                    <i class="fa fa-close"> Inactive</i>
+                    <%}%>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                            data-target="#deleteAnnouncementModal<%=i%>">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteAnnouncementModal<%=i%>" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Confirm delete</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete announcement?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                    <form action="DeleteAnnouncementServlet" method="post">
+                                        <input type="submit" class="btn btn-primary" value="Yes"/>
+                                        <input type="text" hidden name="announcementId"
+                                               value="<%=announcements.get(i).getId()%>">
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    </td>
-                </tr>
-                <%
-                    }
-                %>
-            </table>
-        </div>
+                    </div>
+                    <!-- Delete Modal -->
+                    <!-- Update  Modal -->
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                            data-target="#editAnnouncementModal<%=i%>">
+                        <i class="fa fa-edit"></i> Edit
+                    </button>
+                    <div class="modal fade" id="editAnnouncementModal<%=i%>" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle2">Edit announcement</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="EditAnnouncementServlet" method="post">
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="AnnouncementText">Announcement Text</label>
+                                            <input type="text" class="form-control" name="announcementText"
+                                                   id="AnnouncementText"
+                                                   value="<%=announcements.get(i).getAnnouncementText()%>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="HyperLink">Hyperlink</label>
+                                            <input type="text" class="form-control" id="HyperLink" name="hyperlink"
+                                                   value="<%=announcements.get(i).getHyperLink()%>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Active</label>
+                                            <select class="form-control" name="activeOrNot">
+                                                <option value="active">Yes</option>
+                                                <option value="inactive">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel
+                                        </button>
+                                        <input type="submit" class="btn btn-primary" value="Update"/>
+                                        <input type="text" hidden name="editAnnouncementId"
+                                               value="<%=announcements.get(i).getId()%>">
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <%
+                }
+            %>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th>#</th>
+                <th>Text</th>
+                <th>Active</th>
+                <th>Action</th>
+            </tr>
+            </tfoot>
+        </table>
     </div>
 </section>
 <!-- ***** Users list Area End ***** -->
@@ -140,5 +212,14 @@
 <script src="js/plugins.js"></script>
 <!-- Active js -->
 <script src="js/active.js"></script>
+
+<!---table scroll -->
+<script type="text/javascript" src="js/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
 </body>
 </html>

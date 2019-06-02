@@ -39,7 +39,7 @@ public class UpdateUsertServlet extends HttpServlet {
             request.setAttribute("error", "Password must be of minimum 4 characters");
             request.getRequestDispatcher("profile").forward(request, response);
         }
-        userDao.updateById(updatedUser);
+        userDao.update(updatedUser);
         request.getRequestDispatcher("users-list").forward(request, response);
 
     }

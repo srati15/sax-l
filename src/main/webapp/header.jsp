@@ -22,8 +22,8 @@
                             <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
                             <%if (user != null) {%>
                             <li class="nav-item"><a class="nav-link" href="profile">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="users-list">Users</a></li>
                             <%}%>
-                            <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
                             <%if (user != null && user.getUserType() == UserType.Admin) {%>

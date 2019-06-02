@@ -62,7 +62,10 @@
         <form action="LoginServlet" method="post">
             <input type="text" placeholder="Username" name="username">
             <input type="password" placeholder="password" name="password">
-            <input type="submit" value="Sign In">
+            <br>
+            <button type="submit" class="btn btn-info btn-sm" style="display: block; margin: 0 auto;">
+                <i class="fa fa-sign-in"></i> Sign in
+            </button>
         </form>
     </div>
     <div class="shadow"></div>

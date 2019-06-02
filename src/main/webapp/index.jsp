@@ -37,7 +37,9 @@
 <!-- ***** Header Area Start ***** -->
 <header class="header_area clearfix">
     <!-- ***** Announcements start ***** -->
-    <%for (Announcement announcement: announcementDao.findAll()){%>
+    <%for (Announcement announcement: announcementDao.findAll()){
+        if (announcement.isActive()) {
+    %>
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <strong><%=announcement.getAnnouncementText()%></strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -45,6 +47,7 @@
         </button>
     </div>
     <%}
+    }
     %>
     <!-- ***** Announcements end ***** -->
 

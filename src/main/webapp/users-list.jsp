@@ -23,6 +23,8 @@
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
 
+    <link href="css/datatables.min.css" rel="stylesheet">
+
 </head>
 <body>
 
@@ -63,9 +65,136 @@
 <section class="mosh-aboutUs-area section_padding_100_0">
     <div class="container">
         <h3 class="mb-30">Users List</h3>
-        <div class="row col-md-12 col-md-offset-2 user-list-table">
-            <table class="table table-striped user-list-table">
-                <thead>
+        <jsp:include page="components/create-user.jsp"/>
+
+        <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Completed Quizes</th>
+                <th>Created Quizes</th>
+                <th>Achievements</th>
+                <%if (user != null && user.getUserType() == UserType.Admin) {%>
+                <th>Action</th>
+                <%}%>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                List<User> users = userDao.findAll();
+                for (int i = 0; i < users.size(); i++) {
+                    User currentUser = users.get(i);
+            %>
+            <tr>
+                <td><%=i + 1%>
+                </td>
+                <td><a href="#"><%=currentUser.getUserName()%>
+                </a></td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <%if (user != null && user.getUserType() == UserType.Admin) {%>
+                <td>
+                    <!-- ***** delete user modal ***** -->
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                            data-target="#exampleModalCenter<%=i%>">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
+                    <div class="modal fade" id="exampleModalCenter<%=i%>" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Confirm delete</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete user?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                    <form action="DeleteUserServlet" method="post">
+                                        <input type="submit" class="btn btn-primary" value="Yes"/>
+                                        <input type="text" hidden name="deleteUserId" value="<%=currentUser.getId()%>">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ***** delete user modal end***** -->
+                    <!-- ***** update user modal ***** -->
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                            data-target="#exampleModalCenter-<%=i%>">
+                        <i class="fa fa-edit"></i> Update
+                    </button>
+                    <div class="modal fade" id="exampleModalCenter-<%=i%>" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle2">Update</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="UpdateUserServlet" method="post">
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="Username">Username</label>
+                                            <input type="text" disabled class="form-control" name="username"
+                                                   id="Username" placeholder="<%=currentUser.getUserName()%>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Password">Password</label>
+                                            <input type="password" class="form-control" name="password" id="Password"
+                                                   placeholder="<%=currentUser.getPassword()%>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="ConfPassword">Confirm Password</label>
+                                            <input type="password" class="form-control" name="confirmpassword"
+                                                   id="ConfPassword" placeholder="<%=currentUser.getPassword()%>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Email">Email address</label>
+                                            <input type="email" disabled class="form-control" id="Email"
+                                                   name="email" placeholder="<%=currentUser.getMail()%>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="FirstName">First Name</label>
+                                            <input type="text" class="form-control" id="FirstName" name="firstname"
+                                                   placeholder="<%=currentUser.getFirstName()%>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="LastName">Last Name</label>
+                                            <input type="text" class="form-control" id="LastName" name="lastname"
+                                                   placeholder="<%=currentUser.getLastName()%>">
+                                        </div>
+                                        <input type="hidden" hidden name="hiddenId" value="<%=currentUser.getId()%>">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel
+                                        </button>
+                                        <input type="submit" class="btn btn-primary" value="Update"/>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ***** update user modal end***** -->
+
+                </td>
+                <%}%>
+            </tr>
+            <%
+                }
+            %>
+            </tbody>
+            <tfoot>
                 <tr>
                     <th>#</th>
                     <th>Username</th>
@@ -76,122 +205,8 @@
                     <th>Action</th>
                     <%}%>
                 </tr>
-                </thead>
-                <%
-                    List<User> users = userDao.findAll();
-                    for (int i = 0; i < users.size(); i++) {
-                        User currentUser = users.get(i);
-                %>
-                <tr>
-                    <td><%=i + 1%>
-                    </td>
-                    <td><a href="#"><%=currentUser.getUserName()%>
-                    </a></td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <%if (user != null && user.getUserType() == UserType.Admin) {%>
-                    <td>
-                        <!-- ***** delete user modal ***** -->
-                        <button type="button" class="btn btn-danger" data-toggle="modal"
-                                data-target="#exampleModalCenter<%=i%>">
-                            Delete
-                        </button>
-                        <div class="modal fade" id="exampleModalCenter<%=i%>" tabindex="-1" role="dialog"
-                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle">Confirm delete</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Are you sure you want to delete user?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                        <form action="DeleteUserServlet" method="post">
-                                            <input type="submit" class="btn btn-primary" value="Yes"/>
-                                            <input type="text" hidden name="deleteUserId"
-                                                   value="<%=currentUser.getId()%>">
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- ***** delete user modal end***** -->
-                        <!-- ***** update user modal ***** -->
-                        <button type="button" class="btn btn-danger" data-toggle="modal"
-                                data-target="#exampleModalCenter-<%=i%>">
-                            Update
-                        </button>
-                        <div class="modal fade" id="exampleModalCenter-<%=i%>" tabindex="-1" role="dialog"
-                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLongTitle2">Update</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form action="UpdateUserServlet" method="post">
-
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <label for="Username">Username</label>
-                                                <input type="text" disabled class="form-control" name="username"
-                                                       id="Username" placeholder="<%=users.get(i).getUserName()%>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="Password">Password</label>
-                                                <input type="password" class="form-control" name="password" id="Password"
-                                                       placeholder="<%=users.get(i).getPassword()%>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="ConfPassword">Confirm Password</label>
-                                                <input type="password" class="form-control" name="confirmpassword"
-                                                       id="ConfPassword" placeholder="<%=users.get(i).getPassword()%>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="Email">Email address</label>
-                                                <input type="email" disabled class="form-control" id="Email"
-                                                       name="email" placeholder="<%=users.get(i).getMail()%>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="FirstName">First Name</label>
-                                                <input type="text" class="form-control" id="FirstName" name="firstname"
-                                                       placeholder="<%=users.get(i).getFirstName()%>">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="LastName">Last Name</label>
-                                                <input type="text" class="form-control" id="LastName" name="lastname"
-                                                       placeholder="<%=users.get(i).getLastName()%>">
-                                            </div>
-                                            <input type="hidden" hidden name="hiddenId" value="<%=currentUser.getId()%>">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No
-                                            </button>
-                                                <input type="submit" class="btn btn-primary" value="Yes"/>
-                                        </div>
-                                    </form>
-
-                                </div>
-                            </div>
-                        </div>
-                        <!-- ***** delete user modal end***** -->
-
-                    </td>
-                    <%}%>
-                </tr>
-                <%
-                    }
-                %>
-            </table>
-        </div>
+            </tfoot>
+        </table>
     </div>
 </section>
 <!-- ***** Users list Area End ***** -->
@@ -209,5 +224,14 @@
 <script src="js/plugins.js"></script>
 <!-- Active js -->
 <script src="js/active.js"></script>
+
+<!---table scroll -->
+<script type="text/javascript" src="js/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
 </body>
 </html>

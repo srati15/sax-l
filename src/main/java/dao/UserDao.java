@@ -137,7 +137,7 @@ public class UserDao implements Dao<User> {
 
     }
 
-    public void updateById(User user) {
+    public void update(User user) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -146,8 +146,8 @@ public class UserDao implements Dao<User> {
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getPassword());
             int result = statement.executeUpdate();
-            if (result == 1) System.out.println("Record updated sucessfully");
-            else System.out.println("Error updating record");
+            if (result == 1) System.out.println("User updated sucessfully");
+            else System.out.println("Error updating user");
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {

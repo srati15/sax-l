@@ -115,4 +115,9 @@ public class FriendRequestDao implements Dao<FriendRequest> {
         }
     }
 
+    @Override
+    public void update(FriendRequest entity) {
+        // TODO: 6/2/19  
+    }
+
 }
