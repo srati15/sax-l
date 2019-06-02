@@ -1,6 +1,5 @@
-<%@ page import="manager.DaoManager" %>
-<%@ page import="dao.QuizDao" %>
 <%@ page import="datatypes.User" %>
+<%@ page import="manager.DaoManager" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,7 +36,7 @@
 
 <!-- ***** Header Area Start ***** -->
 <header class="header_area clearfix">
-    <jsp:include page="header.jsp"/>
+    <jsp:include page="components/header.jsp"/>
 </header>
 <!-- ***** Header Area End ***** -->
 
@@ -63,7 +62,7 @@
 
 <!-- ***** Footer Area Start ***** -->
 <footer class="footer-area clearfix">
-    <jsp:include page="footer.jsp"/>
+    <jsp:include page="components/footer.jsp"/>
 </footer>
 <!-- ***** Footer Area End ***** -->
 

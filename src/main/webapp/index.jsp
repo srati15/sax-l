@@ -51,7 +51,7 @@
     %>
     <!-- ***** Announcements end ***** -->
 
-    <jsp:include page="header.jsp"/>
+    <jsp:include page="components/header.jsp"/>
 </header>
 <!-- ***** Header Area End ***** -->
 
@@ -72,7 +72,7 @@
 
 <!-- ***** Footer Area Start ***** -->
 <footer class="footer-area clearfix">
-    <jsp:include page="footer.jsp"/>
+    <jsp:include page="components/footer.jsp"/>
 </footer>
 <!-- ***** Footer Area End ***** -->
 

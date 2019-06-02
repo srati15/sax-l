@@ -10,7 +10,7 @@
             <div class="menu_area h-100">
                 <nav class="navbar h-100 navbar-expand-lg align-items-center">
                     <!-- Logo -->
-                    <a class="navbar-brand" href="/"><img src="img/core-img/logo.png" alt="logo"></a>
+                    <a class="navbar-brand" href="/"><img src="../img/core-img/logo.png" alt="logo"></a>
 
                     <!-- Menu Area -->
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mosh-navbar"
@@ -34,12 +34,12 @@
                         <div class="search-form-area animated">
                             <form action="#" method="post">
                                 <input type="search" name="search" id="search" placeholder="Type keywords &amp; hit enter">
-                                <button type="submit" class="d-none"><img src="img/core-img/search-icon.png" alt="Search"></button>
+                                <button type="submit" class="d-none"><img src="../img/core-img/search-icon.png" alt="Search"></button>
                             </form>
                         </div>
                         <!-- Search btn -->
                         <div class="search-button">
-                            <a href="#" id="search-btn"><img src="img/core-img/search-icon.png" alt="Search"></a>
+                            <a href="#" id="search-btn"><img src="../img/core-img/search-icon.png" alt="Search"></a>
                         </div>
                         <!-- Login/Register btn -->
                         <%if (user == null) {%>
