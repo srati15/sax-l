@@ -57,13 +57,13 @@
 </div>
 <!-- ***** Breadcumb Area End ***** -->
 <!-- ***** Login Area Start ***** -->
-<section class="mosh-aboutUs-area section_padding_100_0">
+<section class="mosh-aboutUs-area">
     <div class="login">
-        <form action="RegisterServlet" method="post">
-            <input type="text" placeholder="Username" name="username">
-            <input type="password" placeholder="Password" name="password">
-            <input type="password" placeholder="Confirm password" name="confirmpassword">
-            <input type="text" placeholder="E-mail" name="mail">
+        <form action="RegisterServlet" method="post" id="signUpForm">
+            <input type="text" placeholder="Username" name="username" required minlength="4">
+            <input type="password" placeholder="Password" name="password" required minlength="4" >
+            <input type="password" placeholder="Confirm password" name="confirmpassword" required minlength="4">
+            <input type="email" placeholder="E-mail" name="mail" required >
             <input type="text" placeholder="First Name" name="firstname">
             <input type="text" placeholder="Last Name" name="lastname">
             <br>
@@ -71,6 +71,9 @@
                 <i class="fa fa-sign-in"></i> Register
             </button>
         </form>
+        <script>
+            ${"#signUpForm"}.validate();
+        </script>
     </div>
 </section>
 <!-- ***** Login Area End ***** -->
@@ -88,5 +91,8 @@
 <script src="js/plugins.js"></script>
 <!-- Active js -->
 <script src="js/active.js"></script>
+
+<!-- Sign up validation -->
+<script src="js/jquery.validate.js"></script>
 </body>
 </html>

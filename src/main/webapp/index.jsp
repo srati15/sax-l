@@ -1,7 +1,7 @@
-<%@ page import="manager.DaoManager" %>
-<%@ page import="dao.QuizDao" %>
 <%@ page import="dao.AnnouncementDao" %>
 <%@ page import="datatypes.Announcement" %>
+<%@ page import="enums.DaoType" %>
+<%@ page import="manager.DaoManager" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,7 +27,7 @@
 <body>
 
 <%DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-    AnnouncementDao announcementDao = manager.getAnnouncementDao();
+    AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">

@@ -1,9 +1,10 @@
-<%@ page import="datatypes.User" %>
-<%@ page import="java.util.List" %>
-<%@ page import="manager.DaoManager" %>
 <%@ page import="dao.AnnouncementDao" %>
-<%@ page import="enums.UserType" %>
 <%@ page import="datatypes.Announcement" %>
+<%@ page import="datatypes.User" %>
+<%@ page import="enums.DaoType" %>
+<%@ page import="enums.UserType" %>
+<%@ page import="manager.DaoManager" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +36,7 @@
     User user = (User) request.getSession().getAttribute("user");
     if (user == null) response.sendError(404);
     if (user.getUserType() != UserType.Admin) response.sendError(404);
-    AnnouncementDao announcementDao = daoManager.getAnnouncementDao();
+    AnnouncementDao announcementDao = daoManager.getDao(DaoType.Announcement);
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -56,7 +57,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                            <li class="breadcrumb-item active" aria-current="page">Announcements</li>
                         </ol>
                     </nav>
                 </div>
@@ -66,7 +67,7 @@
 </div>
 <!-- ***** Breadcumb Area End ***** -->
 <!-- ***** Users list Area Start ***** -->
-<section class="mosh-aboutUs-area section_padding_100_0">
+<section class="mosh-aboutUs-area">
     <div class="container">
         <h3 class="mb-30">All Announcements</h3>
         <!-- ***** create announcement modal ***** -->

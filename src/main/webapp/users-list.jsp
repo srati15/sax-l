@@ -1,8 +1,9 @@
-<%@ page import="datatypes.User" %>
-<%@ page import="java.util.List" %>
 <%@ page import="dao.UserDao" %>
-<%@ page import="manager.DaoManager" %>
+<%@ page import="datatypes.User" %>
+<%@ page import="enums.DaoType" %>
 <%@ page import="enums.UserType" %>
+<%@ page import="manager.DaoManager" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +31,7 @@
 
 <%
     DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
-    UserDao userDao = daoManager.getUserDao();
+    UserDao userDao = daoManager.getDao(DaoType.User);
     User user = (User) request.getSession().getAttribute("user");
 %>
 <!-- ***** Preloader Start ***** -->

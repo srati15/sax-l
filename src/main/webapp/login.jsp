@@ -57,18 +57,21 @@
 </div>
 <!-- ***** Breadcumb Area End ***** -->
 <!-- ***** Login Area Start ***** -->
-<section class="mosh-aboutUs-area section_padding_100_0">
+
+<section class="mosh-aboutUs-area">
     <div class="login">
-        <form action="LoginServlet" method="post">
-            <input type="text" placeholder="Username" name="username">
-            <input type="password" placeholder="password" name="password">
+        <form action="LoginServlet" method="post" id="loginSection">
+            <input type="text" placeholder="Username" minlength="4" required name="username">
+            <input type="password" placeholder="password" minlength="4" required name="password">
             <br>
             <button type="submit" class="btn btn-info btn-sm" style="display: block; margin: 0 auto;">
                 <i class="fa fa-sign-in"></i> Sign in
             </button>
         </form>
     </div>
-    <div class="shadow"></div>
+    <script>
+        ${"#loginSection"}.validate();
+    </script>
 </section>
 <!-- ***** Login Area End ***** -->
 <footer class="footer-area clearfix">
@@ -85,5 +88,8 @@
 <script src="js/plugins.js"></script>
 <!-- Active js -->
 <script src="js/active.js"></script>
+
+<!---Validate js -->
+<script src="js/jquery.validate.js"></script>
 </body>
 </html>
