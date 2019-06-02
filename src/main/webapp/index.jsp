@@ -20,7 +20,6 @@
 
     <!-- Core Stylesheet -->
     <link href="style.css" rel="stylesheet">
-
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
 </head>

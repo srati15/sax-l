@@ -58,6 +58,7 @@
 <!-- ***** Breadcumb Area End ***** -->
 <!-- ***** Login Area Start ***** -->
 <section class="mosh-aboutUs-area section_padding_100_0">
+
     <div class="login">
         <form action="RegisterServlet" method="post">
             <input type="text" placeholder="Username" name="username">
@@ -66,10 +67,9 @@
             <input type="text" placeholder="E-mail" name="mail">
             <input type="text" placeholder="First Name" name="firstname">
             <input type="text" placeholder="Last Name" name="lastname">
-            <input type="submit" value="Sign Up">
+            <input type="submit" class="btn btn-primary"  value="Sign up"/>
         </form>
     </div>
-    <div class="shadow"></div>
 </section>
 <!-- ***** Login Area End ***** -->
 <footer class="footer-area clearfix">

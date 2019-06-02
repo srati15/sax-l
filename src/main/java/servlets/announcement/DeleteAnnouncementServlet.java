@@ -3,7 +3,6 @@ package servlets.announcement;
 import dao.AnnouncementDao;
 import manager.DaoManager;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

@@ -147,12 +147,12 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="Password">Password</label>
-                                                <input type="text" class="form-control" name="password" id="Password"
+                                                <input type="password" class="form-control" name="password" id="Password"
                                                        placeholder="<%=users.get(i).getPassword()%>">
                                             </div>
                                             <div class="form-group">
                                                 <label for="ConfPassword">Confirm Password</label>
-                                                <input type="text" class="form-control" name="confirmpassword"
+                                                <input type="password" class="form-control" name="confirmpassword"
                                                        id="ConfPassword" placeholder="<%=users.get(i).getPassword()%>">
                                             </div>
                                             <div class="form-group">

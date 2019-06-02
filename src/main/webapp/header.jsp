@@ -20,20 +20,6 @@
                     <div class="collapse navbar-collapse justify-content-end" id="mosh-navbar">
                         <ul class="navbar-nav animated" id="nav">
                             <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="moshDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>
-                                <div class="dropdown-menu" aria-labelledby="moshDropdown">
-                                    <a class="dropdown-item" href="#">Page</a>
-                                    <a class="dropdown-item" href="#">Page</a>
-                                    <a class="dropdown-item" href="#">Page</a>
-                                    <a class="dropdown-item" href="#">Page</a>
-                                    <a class="dropdown-item" href="#">Page</a>
-                                    <a class="dropdown-item" href="#">Page</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Page</a>
-                                </div>
-                            </li>
                             <%if (user != null) {%>
                             <li class="nav-item"><a class="nav-link" href="profile">Profile</a></li>
                             <%}%>
@@ -58,14 +44,28 @@
                         <!-- Login/Register btn -->
                         <%if (user == null) {%>
                         <div class="login-register-btn">
-                            <a href="login">Login </a>
-                            <a href="register">/ Register</a>
+                            <a href="login">
+                                <button type="submit" class="btn btn-info btn-sm">
+                                    <i class="fa fa-sign-in"></i> Login
+                                </button>
+                            </a>
+                            <a href="register">
+                                <button type="submit" class="btn btn-info btn-sm">
+                                    <i class="fa fa-user-circle-o"></i> Register
+                                </button>
+                            </a>
                         </div>
                         <%} else {%>
                         <form action="LogoutServlet" method="post">
-                            <button type="submit">Log out</button>
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa fa-sign-out"></i> Sign out
+                            </button>
                         </form>
-                        <a href="profile"> Profile </a>
+                        <a href="profile">
+                            <button type="submit" class="btn btn-info btn-sm">
+                                <i class="fa fa-user"></i> Profile
+                            </button>
+                        </a>
                         <%
                             }
 
