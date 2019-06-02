@@ -31,19 +31,19 @@ public class RegisterServlet extends HttpServlet {
         if (userRepository.findByUserName(userName) != null) {
             request.setAttribute("error", "Username is already taken");
             System.out.println("Username is already taken");
-            request.getRequestDispatcher("/register").forward(request, response);
+            request.getRequestDispatcher("register").forward(request, response);
             return;
         }
 
         if (password.length() < 4) {
             System.out.println("Password must be of minimum 6 character");
             request.setAttribute("error", "Password must be of minimum 6 character");
-            request.getRequestDispatcher("/register").forward(request, response);
+            request.getRequestDispatcher("register").forward(request, response);
             return;
         }
         User user = new User(userName, password, firstName, lastName, mail);
         userRepository.insert(user);
         request.getSession().setAttribute("user", userRepository.findByUserName(userName));
-        request.getRequestDispatcher("/profile").forward(request, response);
+        request.getRequestDispatcher("/").forward(request, response);
     }
 }
