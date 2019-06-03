@@ -12,38 +12,45 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="CreateUserServlet" method="post">
+            <form action="CreateUserServlet" method="post" id="signUpForm">
 
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="Username">Username</label>
                         <input type="text" class="form-control" name="username"
-                               id="Username" placeholder="Username">
+                               id="Username" placeholder="Username" required minlength="4">
                     </div>
                     <div class="form-group">
                         <label for="Password">Password</label>
                         <input type="password" class="form-control" name="password" id="Password"
-                               placeholder="Password">
+                               placeholder="Password" required minlength="4">
                     </div>
                     <div class="form-group">
                         <label for="ConfPassword">Confirm Password</label>
                         <input type="password" class="form-control" name="confirmpassword"
-                               id="ConfPassword" placeholder="Confirm Password">
+                               id="ConfPassword" placeholder="Confirm Password" required minlength="4">
                     </div>
                     <div class="form-group">
                         <label for="Email">Email address</label>
                         <input type="email" class="form-control" id="Email"
-                               name="mail" placeholder="E-mail">
+                               name="mail" placeholder="E-mail" required>
                     </div>
                     <div class="form-group">
                         <label for="FirstName">First Name</label>
                         <input type="text" class="form-control" id="FirstName" name="firstname"
-                               placeholder="First Name">
+                               placeholder="First Name" required>
                     </div>
                     <div class="form-group">
                         <label for="LastName">Last Name</label>
                         <input type="text" class="form-control" id="LastName" name="lastname"
-                               placeholder="Last Name">
+                               placeholder="Last Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>User Type</label>
+                        <select class="form-control" name="usertype" required>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -52,7 +59,9 @@
                     <input type="submit" class="btn btn-primary" value="Create"/>
                 </div>
             </form>
-
+            <script>
+                ${"#signUpForm"}.validate();
+            </script>
         </div>
     </div>
 </div>

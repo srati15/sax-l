@@ -142,10 +142,11 @@ public class UserDao implements Dao<Integer, User> {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
-            statement = connection.prepareStatement("UPDATE users set first_name = ?, last_name = ?, pass = ? WHERE user_id=" + user.getId());
+            statement = connection.prepareStatement("UPDATE users set first_name = ?, last_name = ?, pass = ?, user_type = ? WHERE user_id=" + user.getId());
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getPassword());
+            statement.setInt(4, user.getUserType().getValue());
             int result = statement.executeUpdate();
             if (result == 1) System.out.println("User updated sucessfully");
             else System.out.println("Error updating user");

@@ -25,6 +25,13 @@
                         <input type="text" class="form-control" id="HyperLink" name="hyperlink"
                                placeholder="Hyperlink here">
                     </div>
+                    <div class="form-group">
+                        <label>Active</label>
+                        <select class="form-control" name="activeOrNot">
+                            <option value="active">Yes</option>
+                            <option value="inactive">No</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel

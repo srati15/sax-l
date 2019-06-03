@@ -3,6 +3,7 @@ package servlets.user;
 import dao.UserDao;
 import datatypes.User;
 import enums.DaoType;
+import enums.UserType;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -23,6 +24,7 @@ public class CreateUserServlet extends HttpServlet {
         String firstName = request.getParameter("firstname");
         String lastName = request.getParameter("lastname");
         String mail = request.getParameter("mail");
+        UserType userType = request.getParameter("usertype").equals("admin")? UserType.Admin:UserType.User;
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Passwords don't match");
             System.out.println("Passwords don't match");
@@ -36,13 +38,8 @@ public class CreateUserServlet extends HttpServlet {
             return;
         }
 
-        if (password.length() < 4) {
-            System.out.println("Password must be of minimum 6 character");
-            request.setAttribute("error", "Password must be of minimum 6 character");
-            request.getRequestDispatcher("users-list").forward(request, response);
-            return;
-        }
         User user = new User(userName, password, firstName, lastName, mail);
+        user.setUserType(userType);
         userRepository.insert(user);
         request.getRequestDispatcher("users-list").forward(request, response);
     }

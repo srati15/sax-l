@@ -141,23 +141,23 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form action="UpdateUserServlet" method="post">
+                                <form action="UpdateUserServlet" method="post" id="editForm">
 
                                     <div class="modal-body">
                                         <div class="form-group">
                                             <label for="Username">Username</label>
                                             <input type="text" disabled class="form-control" name="username"
-                                                   id="Username" placeholder="<%=currentUser.getUserName()%>">
+                                                   id="Username" placeholder="<%=currentUser.getUserName()%>" >
                                         </div>
                                         <div class="form-group">
                                             <label for="Password">Password</label>
                                             <input type="password" class="form-control" name="password" id="Password"
-                                                   placeholder="<%=currentUser.getPassword()%>">
+                                                   required minlength="4" >
                                         </div>
                                         <div class="form-group">
                                             <label for="ConfPassword">Confirm Password</label>
                                             <input type="password" class="form-control" name="confirmpassword"
-                                                   id="ConfPassword" placeholder="<%=currentUser.getPassword()%>">
+                                                   id="ConfPassword" required minlength="4">
                                         </div>
                                         <div class="form-group">
                                             <label for="Email">Email address</label>
@@ -167,12 +167,19 @@
                                         <div class="form-group">
                                             <label for="FirstName">First Name</label>
                                             <input type="text" class="form-control" id="FirstName" name="firstname"
-                                                   placeholder="<%=currentUser.getFirstName()%>">
+                                                   placeholder="<%=currentUser.getFirstName()%>" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="LastName">Last Name</label>
                                             <input type="text" class="form-control" id="LastName" name="lastname"
-                                                   placeholder="<%=currentUser.getLastName()%>">
+                                                   placeholder="<%=currentUser.getLastName()%>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>User Type</label>
+                                            <select class="form-control" name="usertype" required>
+                                                <option value="admin">Admin</option>
+                                                <option value="user">User</option>
+                                            </select>
                                         </div>
                                         <input type="hidden" hidden name="hiddenId" value="<%=currentUser.getId()%>">
                                     </div>
@@ -182,7 +189,9 @@
                                         <input type="submit" class="btn btn-primary" value="Update"/>
                                     </div>
                                 </form>
-
+                                <script>
+                                    ${"#editForm"}.validate();
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -234,5 +243,8 @@
         $('.dataTables_length').addClass('bs-select');
     });
 </script>
+
+<!-- Sign up validation -->
+<script src="js/jquery.validate.js"></script>
 </body>
 </html>
