@@ -26,7 +26,7 @@ public class RegisterServlet extends HttpServlet {
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Passwords don't match");
             System.out.println("Passwords don't match");
-            response.sendRedirect("/register");
+            request.getRequestDispatcher("register").forward(request, response);
             return;
         }
         if (userRepository.findByUserName(userName) != null) {
@@ -36,12 +36,6 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        if (password.length() < 4) {
-            System.out.println("Password must be of minimum 6 character");
-            request.setAttribute("error", "Password must be of minimum 6 character");
-            request.getRequestDispatcher("register").forward(request, response);
-            return;
-        }
         User user = new User(userName, password, firstName, lastName, mail);
         userRepository.insert(user);
         request.getSession().setAttribute("user", userRepository.findByUserName(userName));

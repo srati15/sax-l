@@ -2,6 +2,7 @@
 <%@ page import="datatypes.Announcement" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,11 +23,14 @@
     <link href="style.css" rel="stylesheet">
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
+    <link href="css/toastr.css" rel="stylesheet">
+
 </head>
 
 <body>
 
-<%DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
+<%
+    DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
 %>
 <!-- ***** Preloader Start ***** -->
@@ -36,22 +40,11 @@
 
 <!-- ***** Header Area Start ***** -->
 <header class="header_area clearfix">
-    <!-- ***** Announcements start ***** -->
-    <%for (Announcement announcement: announcementDao.findAll()){
-        if (announcement.isActive()) {
-    %>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong><%=announcement.getAnnouncementText()%></strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <%}
-    }
-    %>
-    <!-- ***** Announcements end ***** -->
+
 
     <jsp:include page="components/header.jsp"/>
+
+
 </header>
 <!-- ***** Header Area End ***** -->
 
@@ -70,6 +63,7 @@
 </section>
 <!-- ***** Welcome Area End ***** -->
 
+
 <!-- ***** Footer Area Start ***** -->
 <footer class="footer-area clearfix">
     <jsp:include page="components/footer.jsp"/>
@@ -86,6 +80,23 @@
 <script src="js/plugins.js"></script>
 <!-- Active js -->
 <script src="js/active.js"></script>
+
+<script src="js/toastr.js"></script>
+
+<script>
+    $(document).ready(function () {
+        toastr.options.closeButton = true;
+        toastr.options.timeOut = 0;
+        toastr.options.extendedTimeOut = 0;
+        toastr.options.positionClass ="toast-bottom-right";
+        <%
+        List<Announcement> announcements = announcementDao.findAll();
+        for (Announcement announcement: announcements){
+        %>
+        toastr.info('<%=announcement.getAnnouncementText()%>');
+        <%}%>
+    });
+</script>
 </body>
 
 </html>

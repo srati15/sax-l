@@ -19,7 +19,11 @@ public class DeleteUsertServlet extends HttpServlet {
         UserDao userDao = manager.getDao(DaoType.User);
         User user = (User) request.getSession().getAttribute("user");
         int deleteUserId = Integer.parseInt(request.getParameter("deleteUserId"));
-        System.out.println(deleteUserId);
+        if (user.getId() == deleteUserId) {
+            request.setAttribute("error", "You can't delete yourself");
+            request.getRequestDispatcher("users-list").forward(request, response);
+            return;
+        }
         if (user.getId() != deleteUserId)  userDao.deleteById(deleteUserId);
         request.getRequestDispatcher("users-list").forward(request, response);
     }

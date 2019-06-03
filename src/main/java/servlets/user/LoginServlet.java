@@ -23,13 +23,13 @@ public class LoginServlet extends HttpServlet {
         if (user == null) {
             request.setAttribute("error", "Wrong login credentials");
             System.out.println("Wrong username");
-            request.getRequestDispatcher("/register").forward(request, response);
+            request.getRequestDispatcher("login").forward(request, response);
             return;
         }
         if (!user.getPassword().equals(password)) {
             request.setAttribute("error", "Wrong login credentials");
             System.out.println("Wrong login credentials");
-            request.getRequestDispatcher("/register").forward(request, response);
+            request.getRequestDispatcher("login").forward(request, response);
             return;
         }
         request.getSession().setAttribute("user", user);

@@ -25,6 +25,8 @@
     <link href="css/loginpanel.css" rel="stylesheet">
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
+    <link href="css/toastr.css" rel="stylesheet">
+
 
 </head>
 <body>
@@ -94,5 +96,18 @@
 
 <!-- Sign up validation -->
 <script src="js/jquery.validate.js"></script>
+
+<script src="js/toastr.js"></script>
+<%
+    String error = (String) request.getAttribute("error");
+    if (error != null) {%>
+<script>
+    toastr.options.closeButton = true;
+    toastr.options.timeOut = 0;
+    toastr.options.extendedTimeOut = 0;
+    toastr.error("<%=error%>");
+</script>
+<%request.removeAttribute("error");
+}%>
 </body>
 </html>
