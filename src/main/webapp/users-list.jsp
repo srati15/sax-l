@@ -4,6 +4,16 @@
 <%@ page import="enums.UserType" %>
 <%@ page import="manager.DaoManager" %>
 <%@ page import="java.util.List" %>
+<%@ page import="jdk.nashorn.internal.ir.debug.JSONWriter" %>
+<%@ page import="com.mysql.cj.xdevapi.JsonString" %>
+<%@ page import="com.mysql.cj.xdevapi.JsonArray" %>
+<%@ page import="org.json.JSONObject" %>
+<%@ page import="datatypes.FormField" %>
+<%@ page import="enums.InputType" %>
+<%@ page import="org.json.JSONArray" %>
+<%@ page import="datatypes.SelectField" %>
+<%@ page import="java.util.Arrays" %>
+<%@ page import="enums.FormFields" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,10 +75,27 @@
 </div>
 <!-- ***** Breadcumb Area End ***** -->
 <!-- ***** Users list Area Start ***** -->
+<%
+    JSONArray array = new JSONArray();
+    array.put(new JSONObject(new FormField(FormFields.username.getValue(),  InputType.text, true, 4)));
+    array.put(new JSONObject(new FormField(FormFields.password.getValue(),  InputType.password, true, 4)));
+    array.put( new JSONObject(new FormField(FormFields.confirmpassword.getValue(),  InputType.password, true, 4)));
+    array.put(new JSONObject(new FormField(FormFields.mail.getValue(),  InputType.email, true, 4)));
+    array.put( new JSONObject(new FormField(FormFields.firstname.getValue(), InputType.text, true, 0)));
+    array.put(new JSONObject(new FormField(FormFields.lastname.getValue(), InputType.text, true, 0)));
+    JSONObject select = new JSONObject(new SelectField("usertype", Arrays.asList("admin", "user")));
+%>
 <section class="mosh-aboutUs-area section_padding_100_0">
     <div class="container">
         <h3 class="mb-30">Users List</h3>
-        <jsp:include page="components/create-user.jsp"/>
+        <jsp:include page="components/create-modal.jsp">
+            <jsp:param name="entityName" value="user"/>
+            <jsp:param name="actionServlet" value="CreateUserServlet"/>
+            <jsp:param name="formId" value="createUserForm"/>
+            <jsp:param name="fieldFormJson" value="<%=array.toString()%>"/>
+            <jsp:param name="selects" value="<%=select.toString()%>"/>
+            <jsp:param name="selectDisplayName" value="User Type"/>
+        </jsp:include>
 
         <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
             <thead>
@@ -99,35 +126,12 @@
                 <td>0</td>
                 <%if (user != null && user.getUserType() == UserType.Admin) {%>
                 <td>
-                    <!-- ***** delete user modal ***** -->
-                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                            data-target="#exampleModalCenter<%=i%>">
-                        <i class="fa fa-trash"></i> Delete
-                    </button>
-                    <div class="modal fade" id="exampleModalCenter<%=i%>" tabindex="-1" role="dialog"
-                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Confirm delete</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Are you sure you want to delete user?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                    <form action="DeleteUserServlet" method="post">
-                                        <input type="submit" class="btn btn-primary" value="Yes"/>
-                                        <input type="text" hidden name="deleteUserId" value="<%=currentUser.getId()%>">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ***** delete user modal end***** -->
+                    <jsp:include page="components/delete-modal.jsp">
+                        <jsp:param name="entityName" value="user"/>
+                        <jsp:param name="deleteParameterName" value="deleteUserId"/>
+                        <jsp:param name="deleteParameterId" value="<%=currentUser.getId()%>"/>
+                        <jsp:param name="actionServlet" value="DeleteUserServlet"/>
+                    </jsp:include>
                     <!-- ***** update user modal ***** -->
                     <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
                             data-target="#exampleModalCenter-<%=i%>">

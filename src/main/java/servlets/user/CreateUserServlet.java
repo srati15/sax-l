@@ -1,8 +1,10 @@
 package servlets.user;
 
 import dao.UserDao;
+import datatypes.FormField;
 import datatypes.User;
 import enums.DaoType;
+import enums.FormFields;
 import enums.UserType;
 import manager.DaoManager;
 
@@ -18,12 +20,12 @@ public class CreateUserServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         UserDao userRepository = ((DaoManager) request.getServletContext().getAttribute("manager")).getDao(DaoType.User);
-        String userName = request.getParameter("username");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirmpassword");
-        String firstName = request.getParameter("firstname");
-        String lastName = request.getParameter("lastname");
-        String mail = request.getParameter("mail");
+        String userName = request.getParameter(FormFields.username.getValue());
+        String password = request.getParameter(FormFields.password.getValue());
+        String confirmPassword = request.getParameter(FormFields.confirmpassword.getValue());
+        String firstName = request.getParameter(FormFields.firstname.getValue());
+        String lastName = request.getParameter(FormFields.lastname.getValue());
+        String mail = request.getParameter(FormFields.mail.getValue());
         UserType userType = request.getParameter("usertype").equals("admin")? UserType.Admin:UserType.User;
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Passwords don't match");

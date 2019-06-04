@@ -5,6 +5,13 @@
 <%@ page import="enums.UserType" %>
 <%@ page import="manager.DaoManager" %>
 <%@ page import="java.util.List" %>
+<%@ page import="org.json.JSONArray" %>
+<%@ page import="org.json.JSONObject" %>
+<%@ page import="datatypes.FormField" %>
+<%@ page import="enums.FormFields" %>
+<%@ page import="enums.InputType" %>
+<%@ page import="datatypes.SelectField" %>
+<%@ page import="java.util.Arrays" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,12 +74,24 @@
 </div>
 <!-- ***** Breadcumb Area End ***** -->
 <!-- ***** Users list Area Start ***** -->
+<%
+    JSONArray array = new JSONArray();
+    array.put(new JSONObject(new FormField(FormFields.announcementText.getValue(),  InputType.text, true, 4)));
+    array.put(new JSONObject(new FormField(FormFields.hyperlink.getValue(),  InputType.text, true, 0)));
+    JSONObject select = new JSONObject(new SelectField(FormFields.activeOrNot.getValue(), Arrays.asList("Active", "Inactive")));
+%>
 <section class="mosh-aboutUs-area">
     <div class="container">
         <h3 class="mb-30">All Announcements</h3>
         <!-- ***** create announcement modal ***** -->
-        <jsp:include page="components/create-announcement.jsp"/>
-        <!-- ***** update user modal end***** -->
+        <jsp:include page="components/create-modal.jsp">
+            <jsp:param name="entityName" value="announcement"/>
+            <jsp:param name="actionServlet" value="CreateAnnouncementServlet"/>
+            <jsp:param name="formId" value="createAnnouncementForm"/>
+            <jsp:param name="fieldFormJson" value="<%=array.toString()%>"/>
+            <jsp:param name="selects" value="<%=select.toString()%>"/>
+            <jsp:param name="selectDisplayName" value="Active"/>
+        </jsp:include>        <!-- ***** update user modal end***** -->
 
         <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
             <thead>
@@ -102,36 +121,12 @@
                     <%}%>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                            data-target="#deleteAnnouncementModal<%=i%>">
-                        <i class="fa fa-trash"></i> Delete
-                    </button>
-                    <!-- Delete Modal -->
-                    <div class="modal fade" id="deleteAnnouncementModal<%=i%>" tabindex="-1" role="dialog"
-                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Confirm delete</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Are you sure you want to delete announcement?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                    <form action="DeleteAnnouncementServlet" method="post">
-                                        <input type="submit" class="btn btn-primary" value="Yes"/>
-                                        <input type="text" hidden name="announcementId"
-                                               value="<%=announcements.get(i).getId()%>">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Delete Modal -->
+                    <jsp:include page="components/delete-modal.jsp">
+                       <jsp:param name="entityName" value="announcement"/>
+                       <jsp:param name="deleteParameterName" value="announcementId"/>
+                       <jsp:param name="deleteParameterId" value="<%=announcements.get(i).getId()%>"/>
+                       <jsp:param name="actionServlet" value="DeleteAnnouncementServlet"/>
+                   </jsp:include>
                     <!-- Update  Modal -->
                     <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
                             data-target="#editAnnouncementModal<%=i%>">
@@ -222,5 +217,18 @@
         $('.dataTables_length').addClass('bs-select');
     });
 </script>
+<script src="js/toastr.js"></script>
+
+<%
+    String error = (String) request.getAttribute("error");
+    if (error != null) {%>
+<script>
+    toastr.options.closeButton = true;
+    toastr.options.timeOut = 0;
+    toastr.options.extendedTimeOut = 0;
+    toastr.error("<%=error%>");
+</script>
+<%request.removeAttribute("error");
+}%>
 </body>
 </html>

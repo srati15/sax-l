@@ -19,8 +19,7 @@ public class CreateAnnouncementServlet extends HttpServlet {
         AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
         String announcementText = request.getParameter("announcementText");
         String hyperlink = request.getParameter("hyperlink");
-        if (hyperlink == null) hyperlink="/";
-        boolean active = request.getParameter("activeOrNot").equals("active");
+        boolean active = request.getParameter("activeOrNot").equals("Active");
         Announcement announcement = new Announcement(announcementText, hyperlink, active);
         announcementDao.insert(announcement);
         request.getRequestDispatcher("announcements").forward(request, response);
