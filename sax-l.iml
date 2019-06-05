@@ -28,5 +28,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: mysql:mysql-connector-java:8.0.15" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.protobuf:protobuf-java:3.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20180813" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>
