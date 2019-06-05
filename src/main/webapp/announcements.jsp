@@ -1,17 +1,16 @@
 <%@ page import="dao.AnnouncementDao" %>
 <%@ page import="datatypes.Announcement" %>
+<%@ page import="datatypes.FormField" %>
+<%@ page import="datatypes.SelectField" %>
 <%@ page import="datatypes.User" %>
 <%@ page import="enums.DaoType" %>
-<%@ page import="enums.UserType" %>
-<%@ page import="manager.DaoManager" %>
-<%@ page import="java.util.List" %>
-<%@ page import="org.json.JSONArray" %>
-<%@ page import="org.json.JSONObject" %>
-<%@ page import="datatypes.FormField" %>
 <%@ page import="enums.FormFields" %>
 <%@ page import="enums.InputType" %>
-<%@ page import="datatypes.SelectField" %>
+<%@ page import="enums.UserType" %>
+<%@ page import="manager.DaoManager" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Arrays" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,23 +74,16 @@
 <!-- ***** Breadcumb Area End ***** -->
 <!-- ***** Users list Area Start ***** -->
 <%
-    JSONArray array = new JSONArray();
-    array.put(new JSONObject(new FormField(FormFields.announcementText.getValue(),  InputType.text, true, 4)));
-    array.put(new JSONObject(new FormField(FormFields.hyperlink.getValue(),  InputType.text, true, 0)));
-    JSONObject select = new JSONObject(new SelectField(FormFields.activeOrNot.getValue(), Arrays.asList("Active", "Inactive")));
+    SelectField field = new SelectField("Status",FormFields.activeOrNot.getValue(), Arrays.asList("Active", "Inactive"));
+    List<FormField> formFields = new ArrayList<>();
+    formFields.add(new FormField("AnnouncementText", FormFields.announcementText.getValue(),  InputType.text, true, 4));
+    formFields.add(new FormField("Password", FormFields.password.getValue(),  InputType.password, true, 4));
 %>
 <section class="mosh-aboutUs-area">
     <div class="container">
         <h3 class="mb-30">All Announcements</h3>
         <!-- ***** create announcement modal ***** -->
-        <jsp:include page="components/create-modal.jsp">
-            <jsp:param name="entityName" value="announcement"/>
-            <jsp:param name="actionServlet" value="CreateAnnouncementServlet"/>
-            <jsp:param name="formId" value="createAnnouncementForm"/>
-            <jsp:param name="fieldFormJson" value="<%=array.toString()%>"/>
-            <jsp:param name="selects" value="<%=select.toString()%>"/>
-            <jsp:param name="selectDisplayName" value="Active"/>
-        </jsp:include>        <!-- ***** update user modal end***** -->
+        <h:create entityName="Announcement" selectFields="<%=field%>" actionServlet="CreateAnnouncementServlet" formFields="<%=formFields%>" formId="createAnnouncementForm"/>
 
         <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
             <thead>

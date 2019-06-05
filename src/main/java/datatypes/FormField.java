@@ -8,7 +8,9 @@ public class FormField {
     private InputType inputType;
     private boolean required;
     private Integer minLength;
-    public FormField(String name, InputType inputType, boolean required, Integer minLength) {
+    private String displayName;
+    public FormField(String displayName, String name, InputType inputType, boolean required, Integer minLength) {
+        this.displayName = displayName;
         this.name = name;
         this.inputType = inputType;
         this.required = required;
@@ -23,12 +25,16 @@ public class FormField {
         return inputType;
     }
 
-    public boolean isRequired() {
-        return required;
+    public String getRequired() {
+        return required? "required" : "";
     }
 
     public Integer getMinLength() {
         return minLength;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     @Override
@@ -38,7 +44,9 @@ public class FormField {
                 ", inputType=" + inputType +
                 ", required=" + required +
                 ", minLength=" + minLength +
+                ", displayName='" + displayName + '\'' +
                 '}';
     }
+
 
 }

@@ -1,15 +1,20 @@
 package datatypes;
 
 import java.util.List;
-import java.util.Map;
 
 public class SelectField {
+    private String displayName;
     private String name;
     private List<String> selectStrings;
 
-    public SelectField(String name, List<String> selectStrings) {
+    public SelectField(String displayName, String name, List<String> selectStrings) {
+        this.displayName = displayName;
         this.name = name;
         this.selectStrings = selectStrings;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public List<String> getSelectStrings() {
@@ -23,8 +28,10 @@ public class SelectField {
     @Override
     public String toString() {
         return "SelectField{" +
-                "name='" + name + '\'' +
+                "displayName='" + displayName + '\'' +
+                ", name='" + name + '\'' +
                 ", selectStrings=" + selectStrings +
                 '}';
     }
+
 }

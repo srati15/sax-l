@@ -5,7 +5,6 @@ import database.mapper.DBRowMapper;
 import database.mapper.UserMapper;
 import datatypes.User;
 import enums.DaoType;
-import enums.UserType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -27,8 +26,9 @@ public class UserDao implements Dao<Integer, User> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
-            resultSet.next();
-            return mapper.mapRow(resultSet);
+            if (resultSet.next()) {
+                return mapper.mapRow(resultSet);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -45,9 +45,11 @@ public class UserDao implements Dao<Integer, User> {
             String query = getSelectQuery(TABLE_NAME, USER_NAME);
             statement = connection.prepareStatement(query);
             statement.setString(1, usrName);
+            System.out.println(statement);
             resultSet = statement.executeQuery();
-            resultSet.next();
-            return mapper.mapRow(resultSet);
+            if (resultSet.next()){
+                return mapper.mapRow(resultSet);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -58,6 +60,7 @@ public class UserDao implements Dao<Integer, User> {
 
     @Override
     public void insert(User entity) {
+        System.out.println(entity);
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -70,6 +73,7 @@ public class UserDao implements Dao<Integer, User> {
             statement.setString(4, entity.getLastName());
             statement.setInt(5, entity.getUserType().getValue());
             statement.setString(6, entity.getMail());
+            System.out.println(statement);
             int result = statement.executeUpdate();
             if (result == 1) System.out.println("Record inserted sucessfully");
             else System.out.println("Error inserting record");

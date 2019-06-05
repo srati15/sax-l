@@ -3,6 +3,7 @@ package servlets.announcement;
 import dao.AnnouncementDao;
 import datatypes.Announcement;
 import enums.DaoType;
+import enums.FormFields;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -19,7 +20,7 @@ public class CreateAnnouncementServlet extends HttpServlet {
         AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
         String announcementText = request.getParameter("announcementText");
         String hyperlink = request.getParameter("hyperlink");
-        boolean active = request.getParameter("activeOrNot").equals("Active");
+        boolean active = request.getParameter(FormFields.activeOrNot.getValue()).equals("Active");
         Announcement announcement = new Announcement(announcementText, hyperlink, active);
         announcementDao.insert(announcement);
         request.getRequestDispatcher("announcements").forward(request, response);

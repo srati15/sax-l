@@ -25,8 +25,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             rs = statement.executeQuery();
-            rs.next();
-            return mapper.mapRow(rs);
+            if (rs.next()) return mapper.mapRow(rs);
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {

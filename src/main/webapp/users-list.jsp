@@ -1,19 +1,20 @@
 <%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.FormField" %>
+<%@ page import="datatypes.SelectField" %>
 <%@ page import="datatypes.User" %>
 <%@ page import="enums.DaoType" %>
+<%@ page import="enums.FormFields" %>
+<%@ page import="enums.InputType" %>
 <%@ page import="enums.UserType" %>
 <%@ page import="manager.DaoManager" %>
-<%@ page import="java.util.List" %>
-<%@ page import="jdk.nashorn.internal.ir.debug.JSONWriter" %>
-<%@ page import="com.mysql.cj.xdevapi.JsonString" %>
-<%@ page import="com.mysql.cj.xdevapi.JsonArray" %>
-<%@ page import="org.json.JSONObject" %>
-<%@ page import="datatypes.FormField" %>
-<%@ page import="enums.InputType" %>
-<%@ page import="org.json.JSONArray" %>
-<%@ page import="datatypes.SelectField" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Arrays" %>
-<%@ page import="enums.FormFields" %>
+<%@ page import="java.util.List" %>
+
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,26 +77,20 @@
 <!-- ***** Breadcumb Area End ***** -->
 <!-- ***** Users list Area Start ***** -->
 <%
-    JSONArray array = new JSONArray();
-    array.put(new JSONObject(new FormField(FormFields.username.getValue(),  InputType.text, true, 4)));
-    array.put(new JSONObject(new FormField(FormFields.password.getValue(),  InputType.password, true, 4)));
-    array.put( new JSONObject(new FormField(FormFields.confirmpassword.getValue(),  InputType.password, true, 4)));
-    array.put(new JSONObject(new FormField(FormFields.mail.getValue(),  InputType.email, true, 4)));
-    array.put( new JSONObject(new FormField(FormFields.firstname.getValue(), InputType.text, true, 0)));
-    array.put(new JSONObject(new FormField(FormFields.lastname.getValue(), InputType.text, true, 0)));
-    JSONObject select = new JSONObject(new SelectField("usertype", Arrays.asList("admin", "user")));
+    List<FormField> formFields = new ArrayList<>();
+    formFields.add(new FormField("Username", FormFields.username.getValue(),  InputType.text, true, 4));
+    formFields.add(new FormField("Password", FormFields.password.getValue(),  InputType.password, true, 4));
+    formFields.add(new FormField("Confirm Password", FormFields.confirmpassword.getValue(),  InputType.password, true, 4));
+    formFields.add(new FormField("Mail",FormFields.mail.getValue(),  InputType.email, true, 4));
+    formFields.add(new FormField("First Name", FormFields.firstname.getValue(), InputType.text, true, 0));
+    formFields.add(new FormField("Last Name", FormFields.lastname.getValue(), InputType.text, true, 0));
+    SelectField field = new SelectField("User Type","usertype", Arrays.asList("admin", "user"));
 %>
-<section class="mosh-aboutUs-area section_padding_100_0">
+
+<section class="mosh-aboutUs-area">
     <div class="container">
         <h3 class="mb-30">Users List</h3>
-        <jsp:include page="components/create-modal.jsp">
-            <jsp:param name="entityName" value="user"/>
-            <jsp:param name="actionServlet" value="CreateUserServlet"/>
-            <jsp:param name="formId" value="createUserForm"/>
-            <jsp:param name="fieldFormJson" value="<%=array.toString()%>"/>
-            <jsp:param name="selects" value="<%=select.toString()%>"/>
-            <jsp:param name="selectDisplayName" value="User Type"/>
-        </jsp:include>
+        <h:create entityName="User" selectFields="<%=field%>" actionServlet="CreateUserServlet" formFields="<%=formFields%>" formId="createUserForm"/>
 
         <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
             <thead>
