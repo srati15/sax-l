@@ -45,7 +45,6 @@ public class UserDao implements Dao<Integer, User> {
             String query = getSelectQuery(TABLE_NAME, USER_NAME);
             statement = connection.prepareStatement(query);
             statement.setString(1, usrName);
-            System.out.println(statement);
             resultSet = statement.executeQuery();
             if (resultSet.next()){
                 return mapper.mapRow(resultSet);
@@ -60,7 +59,6 @@ public class UserDao implements Dao<Integer, User> {
 
     @Override
     public void insert(User entity) {
-        System.out.println(entity);
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -73,7 +71,6 @@ public class UserDao implements Dao<Integer, User> {
             statement.setString(4, entity.getLastName());
             statement.setInt(5, entity.getUserType().getValue());
             statement.setString(6, entity.getMail());
-            System.out.println(statement);
             int result = statement.executeUpdate();
             if (result == 1) System.out.println("Record inserted sucessfully");
             else System.out.println("Error inserting record");
