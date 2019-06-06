@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="dao.AnnouncementDao" %>
 <%@ page import="datatypes.Announcement" %>
 <%@ page import="enums.DaoType" %>
@@ -89,12 +90,9 @@
         toastr.options.timeOut = 0;
         toastr.options.extendedTimeOut = 0;
         toastr.options.positionClass ="toast-bottom-right";
-        <%
-        List<Announcement> announcements = announcementDao.findAll();
-        for (Announcement announcement: announcements){
-        %>
-        toastr.info('<%=announcement.getAnnouncementText()%>');
-        <%}%>
+        <c:forEach items="<%=announcementDao.findAll()%>" var="announcement">
+            toastr.info('${announcement.announcementText}');
+        </c:forEach>
     });
 </script>
 </body>

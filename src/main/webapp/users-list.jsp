@@ -10,6 +10,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.List" %>
+<%@ page import="datatypes.EditFormField" %>
 
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
@@ -46,6 +47,7 @@
     DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
     UserDao userDao = daoManager.getDao(DaoType.User);
     User user = (User) request.getSession().getAttribute("user");
+    pageContext.setAttribute("pageUser", user);
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -78,19 +80,19 @@
 <!-- ***** Users list Area Start ***** -->
 <%
     List<FormField> formFields = new ArrayList<>();
-    formFields.add(new FormField("Username", FormFields.username.getValue(),  InputType.text, true, 4));
-    formFields.add(new FormField("Password", FormFields.password.getValue(),  InputType.password, true, 4));
-    formFields.add(new FormField("Confirm Password", FormFields.confirmpassword.getValue(),  InputType.password, true, 4));
-    formFields.add(new FormField("Mail",FormFields.mail.getValue(),  InputType.email, true, 4));
+    formFields.add(new FormField("Username", FormFields.username.getValue(), InputType.text, true, 4));
+    formFields.add(new FormField("Password", FormFields.password.getValue(), InputType.password, true, 4));
+    formFields.add(new FormField("Confirm Password", FormFields.confirmpassword.getValue(), InputType.password, true, 4));
+    formFields.add(new FormField("Mail", FormFields.mail.getValue(), InputType.email, true, 4));
     formFields.add(new FormField("First Name", FormFields.firstname.getValue(), InputType.text, true, 0));
     formFields.add(new FormField("Last Name", FormFields.lastname.getValue(), InputType.text, true, 0));
-    SelectField field = new SelectField("User Type","usertype", Arrays.asList("admin", "user"));
+    SelectField createSelectField = new SelectField("User Type", "usertype", Arrays.asList("admin", "user"));
 %>
 
 <section class="mosh-aboutUs-area">
     <div class="container">
         <h3 class="mb-30">Users List</h3>
-        <h:create entityName="User" selectFields="<%=field%>" actionServlet="CreateUserServlet" formFields="<%=formFields%>" formId="createUserForm"/>
+        <h:create entityName="User" selectFields="<%=createSelectField%>" actionServlet="CreateUserServlet" formFields="<%=formFields%>" formId="createUserForm"/>
 
         <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
             <thead>
@@ -100,122 +102,72 @@
                 <th>Completed Quizes</th>
                 <th>Created Quizes</th>
                 <th>Achievements</th>
-                <%if (user != null && user.getUserType() == UserType.Admin) {%>
-                <th>Action</th>
-                <%}%>
+            <c:choose>
+                <c:when test="${pageUser!=null && pageUser.userType==UserType.Admin}">
+                    <th>Action</th>
+                </c:when>
+            </c:choose>
             </tr>
             </thead>
             <tbody>
-            <%
-                List<User> users = userDao.findAll();
-                for (int i = 0; i < users.size(); i++) {
-                    User currentUser = users.get(i);
-            %>
-            <tr>
-                <td><%=i + 1%>
-                </td>
-                <td><a href="#"><%=currentUser.getUserName()%>
-                </a></td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <%if (user != null && user.getUserType() == UserType.Admin) {%>
-                <td>
-                    <jsp:include page="components/delete-modal.jsp">
-                        <jsp:param name="entityName" value="user"/>
-                        <jsp:param name="deleteParameterName" value="deleteUserId"/>
-                        <jsp:param name="deleteParameterId" value="<%=currentUser.getId()%>"/>
-                        <jsp:param name="actionServlet" value="DeleteUserServlet"/>
-                    </jsp:include>
-                    <!-- ***** update user modal ***** -->
-                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                            data-target="#exampleModalCenter-<%=i%>">
-                        <i class="fa fa-edit"></i> Update
-                    </button>
-                    <div class="modal fade" id="exampleModalCenter-<%=i%>" tabindex="-1" role="dialog"
-                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle2">Update</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form action="UpdateUserServlet" method="post" id="editForm">
+            <c:set var="i" value="0" scope="page"/>
+            <c:forEach items="<%=userDao.findAll()%>" var="currentUser">
+                <tr>
+                    <td>${i+1}
+                    </td>
+                    <td><a href="#">${currentUser.userName}</a></td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <c:choose>
+                        <c:when test="${pageUser!=null && pageUser.userType==UserType.Admin}">
+                            <td>
+                                <%
+                                    User user1 =  (User)pageContext.getAttribute("currentUser");
+                                    List<EditFormField> editFormFields = new ArrayList<>();
+                                    editFormFields.add(new EditFormField("Username", FormFields.username.getValue(), InputType.text, true, 4, user1.getUserName(), true));
+                                    editFormFields.add(new EditFormField("Password", FormFields.password.getValue(), InputType.password, true, 4, "", false));
+                                    editFormFields.add(new EditFormField("Confirm Password", FormFields.confirmpassword.getValue(), InputType.password, true, 4, "", false));
+                                    editFormFields.add(new EditFormField("Mail", FormFields.mail.getValue(), InputType.email, true, 4, user1.getMail(), true));
+                                    editFormFields.add(new EditFormField("First Name", FormFields.firstname.getValue(), InputType.text, true, 0, user1.getFirstName(), false));
+                                    editFormFields.add(new EditFormField("Last Name", FormFields.lastname.getValue(), InputType.text, true, 0, user1.getLastName(), false));
+                                    SelectField editSelectField = new SelectField("User Type", "usertype", Arrays.asList("admin", "user"));
+                                %>
+                                <!-- ***** delete user modal ***** -->
+                                <h:delete entityName="User"
+                                          actionServlet="DeleteUserServlet"
+                                          hiddenParameterName="deleteUserId"
+                                          hiddenParameterValue="${currentUser.id}">
+                                </h:delete>
+                                <!-- ***** update user modal ***** -->
+                                <h:edit entityName="User"
+                                        actionServlet="CreateUserServlet"
+                                        hiddenParameterName="hiddenId"
+                                        hiddenParameterValue="${currentUser.id}"
+                                        formFields="<%=editFormFields%>"
+                                        selectFields="<%=editSelectField%>">
+                                </h:edit>
+                            </td>
+                        </c:when>
+                    </c:choose>
 
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label for="Username">Username</label>
-                                            <input type="text" disabled class="form-control" name="username"
-                                                   id="Username" placeholder="<%=currentUser.getUserName()%>" >
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Password">Password</label>
-                                            <input type="password" class="form-control" name="password" id="Password"
-                                                   required minlength="4" >
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="ConfPassword">Confirm Password</label>
-                                            <input type="password" class="form-control" name="confirmpassword"
-                                                   id="ConfPassword" required minlength="4">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Email">Email address</label>
-                                            <input type="email" disabled class="form-control" id="Email"
-                                                   name="email" placeholder="<%=currentUser.getMail()%>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="FirstName">First Name</label>
-                                            <input type="text" class="form-control" id="FirstName" name="firstname"
-                                                   placeholder="<%=currentUser.getFirstName()%>" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="LastName">Last Name</label>
-                                            <input type="text" class="form-control" id="LastName" name="lastname"
-                                                   placeholder="<%=currentUser.getLastName()%>" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>User Type</label>
-                                            <select class="form-control" name="usertype" required>
-                                                <option value="admin">Admin</option>
-                                                <option value="user">User</option>
-                                            </select>
-                                        </div>
-                                        <input type="hidden" hidden name="hiddenId" value="<%=currentUser.getId()%>">
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel
-                                        </button>
-                                        <input type="submit" class="btn btn-primary" value="Update"/>
-                                    </div>
-                                </form>
-                                <script>
-                                    ${"#editForm"}.validate();
-                                </script>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ***** update user modal end***** -->
-
-                </td>
-                <%}%>
-            </tr>
-            <%
-                }
-            %>
+                </tr>
+                <c:set var="i" value="${i + 1}" scope="page"/>
+            </c:forEach>
             </tbody>
             <tfoot>
-                <tr>
-                    <th>#</th>
-                    <th>Username</th>
-                    <th>Completed Quizes</th>
-                    <th>Created Quizes</th>
-                    <th>Achievements</th>
-                    <%if (user != null && user.getUserType() == UserType.Admin) {%>
-                    <th>Action</th>
-                    <%}%>
-                </tr>
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Completed Quizes</th>
+                <th>Created Quizes</th>
+                <th>Achievements</th>
+                <c:choose>
+                    <c:when test="${pageUser!=null && pageUser.userType==UserType.Admin}">
+                        <th>Action</th>
+                    </c:when>
+                </c:choose>
+            </tr>
             </tfoot>
         </table>
     </div>
@@ -259,7 +211,9 @@
     toastr.options.extendedTimeOut = 0;
     toastr.error("<%=error%>");
 </script>
-<%request.removeAttribute("error");
-}%>
+<%
+        request.removeAttribute("error");
+    }
+%>
 </body>
 </html>

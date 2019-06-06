@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/DeleteUserServlet")
-public class DeleteUsertServlet extends HttpServlet {
+public class DeleteUserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
         UserDao userDao = manager.getDao(DaoType.User);

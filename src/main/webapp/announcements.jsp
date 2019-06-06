@@ -1,8 +1,4 @@
 <%@ page import="dao.AnnouncementDao" %>
-<%@ page import="datatypes.Announcement" %>
-<%@ page import="datatypes.FormField" %>
-<%@ page import="datatypes.SelectField" %>
-<%@ page import="datatypes.User" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="enums.FormFields" %>
 <%@ page import="enums.InputType" %>
@@ -11,6 +7,11 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.List" %>
+<%@ page import="datatypes.*" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,8 +77,8 @@
 <%
     SelectField field = new SelectField("Status",FormFields.activeOrNot.getValue(), Arrays.asList("Active", "Inactive"));
     List<FormField> formFields = new ArrayList<>();
-    formFields.add(new FormField("AnnouncementText", FormFields.announcementText.getValue(),  InputType.text, true, 4));
-    formFields.add(new FormField("Password", FormFields.password.getValue(),  InputType.password, true, 4));
+    formFields.add(new FormField("Announcement Text", FormFields.announcementText.getValue(),  InputType.text, true, 1));
+    formFields.add(new FormField("Hyperlink", FormFields.hyperlink.getValue(),  InputType.text, true, 1));
 %>
 <section class="mosh-aboutUs-area">
     <div class="container">
@@ -95,84 +96,39 @@
             </tr>
             </thead>
             <tbody>
-            <%
-                List<Announcement> announcements = announcementDao.findAll();
-                for (int i = 0; i < announcements.size(); i++) {%>
-            <tr>
-                <td><%=i + 1%>
-                </td>
-                <td>
-                    <a href="<%=announcements.get(i).getHyperLink()%>"><%=announcements.get(i).getAnnouncementText()%>
-                    </a>
-                </td>
-                <td>
-                    <% if (announcements.get(i).isActive()) {%>
-                    <i class="fa fa-check"> Active</i>
-                    <%} else {%>
-                    <i class="fa fa-close"> Inactive</i>
-                    <%}%>
-                </td>
-                <td>
-                    <jsp:include page="components/delete-modal.jsp">
-                       <jsp:param name="entityName" value="announcement"/>
-                       <jsp:param name="deleteParameterName" value="announcementId"/>
-                       <jsp:param name="deleteParameterId" value="<%=announcements.get(i).getId()%>"/>
-                       <jsp:param name="actionServlet" value="DeleteAnnouncementServlet"/>
-                   </jsp:include>
-                    <!-- Update  Modal -->
-                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                            data-target="#editAnnouncementModal<%=i%>">
-                        <i class="fa fa-edit"></i> Edit
-                    </button>
-                    <div class="modal fade" id="editAnnouncementModal<%=i%>" tabindex="-1" role="dialog"
-                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle2">Edit announcement</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <form action="EditAnnouncementServlet" method="post">
-
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label for="AnnouncementText">Announcement Text</label>
-                                            <input type="text" class="form-control" name="announcementText"
-                                                   id="AnnouncementText"
-                                                   value="<%=announcements.get(i).getAnnouncementText()%>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="HyperLink">Hyperlink</label>
-                                            <input type="text" class="form-control" id="HyperLink" name="hyperlink"
-                                                   value="<%=announcements.get(i).getHyperLink()%>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Active</label>
-                                            <select class="form-control" name="activeOrNot">
-                                                <option value="active">Yes</option>
-                                                <option value="inactive">No</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel
-                                        </button>
-                                        <input type="submit" class="btn btn-primary" value="Update"/>
-                                        <input type="text" hidden name="editAnnouncementId"
-                                               value="<%=announcements.get(i).getId()%>">
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <%
-                }
-            %>
+            <c:set var="i" value="0" scope="page"/>
+            <c:forEach items="<%=announcementDao.findAll()%>" var="announcement">
+                <tr>
+                    <td>${i+1}
+                    </td>
+                    <td>
+                        <a href="${announcement.hyperLink}">${announcement.announcementText}
+                        </a>
+                    </td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${announcement.active}">
+                                <i class="fa fa-check"> Active</i>
+                            </c:when>
+                            <c:when test="${!announcement.active}">
+                                <i class="fa fa-close"> Inactive</i>
+                            </c:when>
+                        </c:choose>
+                    </td>
+                    <td>
+                        <h:delete entityName="Announcement" actionServlet="DeleteAnnouncementServlet" hiddenParameterName="announcementId" hiddenParameterValue="${announcement.id}"/>
+                        <%
+                            SelectField editSelectField = new SelectField("Status",FormFields.activeOrNot.getValue(), Arrays.asList("Active", "Inactive"));
+                            List<EditFormField> editFormFields = new ArrayList<>();
+                            editFormFields.add(new EditFormField("AnnouncementText", FormFields.announcementText.getValue(),  InputType.text, true, 0, ((Announcement) pageContext.getAttribute("announcement")).getAnnouncementText(), false));
+                            editFormFields.add(new EditFormField("Hyperlink", FormFields.hyperlink.getValue(),  InputType.text, true, 0, ((Announcement) pageContext.getAttribute("announcement")).getHyperLink(), false));
+                        %>
+                        <!-- Update  Modal -->
+                        <h:edit entityName="Announcement" actionServlet="EditAnnouncementServlet" hiddenParameterName="editAnnouncementId" hiddenParameterValue="${announcement.id}" formFields="<%=editFormFields%>" selectFields="<%=editSelectField%>"/>
+                    </td>
+                </tr>
+                <c:set var="i" value="${i + 1}" scope="page"/>
+            </c:forEach>
             </tbody>
             <tfoot>
             <tr>

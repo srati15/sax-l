@@ -1,17 +1,18 @@
+<%@ attribute name="entityName" required="true" %>
+<%@ attribute name="actionServlet" required="true" %>
+<%@ attribute name="hiddenParameterName" required="true" %>
+<%@ attribute name="hiddenParameterValue" required="true" type="java.lang.Integer" %>
 
-<%
-    String entity = request.getParameter("entityName");
-    String parameterId = request.getParameter("deleteParameterId");
-    String servlet = request.getParameter("actionServlet");
-    String parameterName = request.getParameter("deleteParameterName");
-    String target = entity+"Modal"+parameterId;
-%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<c:set var="target" value="delete${entityName}Modal${hiddenParameterValue}"/>
+
 <!-- Delete Modal -->
 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-        data-target="#<%=target%>">
+        data-target="#${target}">
     <i class="fa fa-trash"></i> Delete
 </button>
-<div class="modal fade" id="<%=target%>" tabindex="-1" role="dialog"
+<div class="modal fade" id="${target}" tabindex="-1" role="dialog"
      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -22,14 +23,14 @@
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete <%=entity%>?
+                Are you sure you want to delete ${entityName}?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <form action="<%=servlet%>" method="post">
+                <form action="${actionServlet}" method="post">
                     <input type="submit" class="btn btn-primary" value="Yes"/>
-                    <input type="text" hidden name="<%=parameterName%>"
-                           value="<%=parameterId%>">
+                    <input type="text" hidden name="${hiddenParameterName}"
+                           value="${hiddenParameterValue}">
                 </form>
             </div>
         </div>
