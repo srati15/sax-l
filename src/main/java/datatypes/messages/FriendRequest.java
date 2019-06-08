@@ -6,7 +6,7 @@ import enums.RequestStatus;
 import java.sql.Timestamp;
 
 public class FriendRequest extends Message{
-    private final RequestStatus status;
+    private RequestStatus status;
     private final MessageType messageType = MessageType.FriendRequest;
     private int id;
     public FriendRequest(int senderId, int recieverId, RequestStatus status, Timestamp sendDate) {
@@ -24,6 +24,10 @@ public class FriendRequest extends Message{
 
     public RequestStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(RequestStatus status) {
+        this.status = status;
     }
 
     public void setId(int id) {

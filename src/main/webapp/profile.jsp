@@ -1,5 +1,11 @@
 <%@ page import="datatypes.User" %>
 <%@ page import="manager.DaoManager" %>
+<%@ page import="datatypes.messages.FriendRequest" %>
+<%@ page import="dao.FriendRequestDao" %>
+<%@ page import="enums.DaoType" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="dao.UserDao" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,8 +32,13 @@
 
 <body>
 
-<%DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
+<%
+    DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     User user = (User) request.getSession().getAttribute("user");
+    UserDao userDao = manager.getDao(DaoType.User);
+    FriendRequestDao requestDao = manager.getDao(DaoType.FriendRequest);
+    List<FriendRequest> list = requestDao.getPendingRequestsFor(user.getId());
+
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -50,7 +61,8 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><%=user.getUserName()%>'s profile</li>
+                            <li class="breadcrumb-item active" aria-current="page"><%=user.getUserName()%>'s profile
+                            </li>
                         </ol>
                     </nav>
                 </div>
@@ -59,6 +71,56 @@
     </div>
 </div>
 <!-- ***** Breadcumb Area End ***** -->
+<section class="mosh-aboutUs-area">
+    <div class="container">
+
+        <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>Friend Request</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                for (FriendRequest friendRequest : list) {
+            %>
+            <tr>
+                <td><a href="user-profile?userid=<%=friendRequest.getSenderId()%>">
+                    <%=userDao.findById(friendRequest.getSenderId()).getUserName()%> sent you a friend request
+                </a></td>
+                <td>
+                    <form action="FriendRequestAcceptServlet" method="post" style="float:left">
+                        <button type="submit" class="btn btn-success btn-sm">
+                            Accept
+                        </button>
+                        <input type="text" hidden name="receiverId" value="<%=friendRequest.getSenderId()%>"/>
+                    </form>
+                    <form action="FriendRequestDeleteServlet" method="post" style="float:left">
+                        <button type="submit" class="btn btn-warning btn-sm">
+                            Reject
+                        </button>
+                        <input type="text" hidden name="receiverId" value="<%=friendRequest.getSenderId()%>"/>
+                        <input type="text" hidden name="callingPage" value="profile">
+                    </form>
+                    <br>
+                </td>
+            </tr>
+            <%
+                }
+            %>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th>Friend Request</th>
+                <th>Action</th>
+            </tr>
+            </tfoot>
+        </table>
+
+
+    </div>
+</section>
 
 <!-- ***** Footer Area Start ***** -->
 <footer class="footer-area clearfix">
@@ -76,6 +138,14 @@
 <script src="js/plugins.js"></script>
 <!-- Active js -->
 <script src="js/active.js"></script>
+
+<script type="text/javascript" src="js/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
 </body>
 
 </html>

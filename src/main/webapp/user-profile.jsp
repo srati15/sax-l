@@ -1,9 +1,11 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="datatypes.User" %>
 <%@ page import="manager.DaoManager" %>
 <%@ page import="dao.FriendRequestDao" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="datatypes.messages.FriendRequest" %>
 <%@ page import="enums.RequestStatus" %>
+<%@ page import="dao.UserDao" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,9 +35,15 @@
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     FriendRequestDao friendRequestDao = manager.getDao(DaoType.FriendRequest);
+    UserDao userDao = manager.getDao(DaoType.User);
     User user = (User) request.getSession().getAttribute("user");
     int id = Integer.parseInt(request.getParameter("userid"));
+    User profileUser = userDao.findById(id);
     FriendRequest request1 = friendRequestDao.findBySenderReceiverId(user.getId(), id);
+    FriendRequest request2 = friendRequestDao.findBySenderReceiverId(id, user.getId());
+    pageContext.setAttribute("request1", request1);
+    pageContext.setAttribute("request2", request2);
+    pageContext.setAttribute("pending", RequestStatus.Pending);
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -54,28 +62,44 @@
         <div class="row h-100 align-items-center">
             <div class="col-12">
                 <div class="bradcumbContent">
-                    <h2><%=user.getUserName()%>'s Profile</h2>
+                    <h2><%=profileUser.getUserName()%>'s Profile</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><%=user.getUserName()%>'s profile
+                            <li class="breadcrumb-item active" aria-current="page"><%=profileUser.getUserName()%>'s
+                                profile
                             </li>
-                            <%
-                                if (request1 == null) {
-                            %>
-                            <form action="FriendRequestSenderServlet" method="post">
-                                <input type="submit" class="btn btn-primary" value="Send Friend Request"/>
-                                <input type="text" hidden name="receiverId" value="<%=id%>"/>
-                            </form>
-                            <%
-                            } else if (request1.getStatus() == RequestStatus.Pending) { %>
-                            <form action="FriendRequestDeleteServlet" method="post">
-                                <input type="submit" class="btn btn-info" value="Cancel Friend Request"/>
-                                <input type="text" hidden name="receiverId" value="<%=id%>"/>
-                            </form>
-                            <%
-                                }
-                            %>
+                            <c:choose>
+                                <c:when test="${request1 == null && request2 == null}">
+                                    <form action="FriendRequestSenderServlet" method="post">
+                                        <input type="submit" class="btn btn-success btn-sm"
+                                               value="Send Friend Request"/>
+                                        <input type="text" hidden name="receiverId" value="<%=id%>"/>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:choose>
+                                        <c:when test="${request1!=null && request1.status == RequestStatus.Pending}">
+                                            <form action="FriendRequestDeleteServlet" method="post">
+                                                <input type="submit" class="btn btn-warning btn-sm"
+                                                       value="Cancel Friend Request"/>
+                                                <input type="text" hidden name="receiverId" value="<%=id%>"/>
+                                            </form>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:choose>
+                                                <c:when test="${(request1!=null && request1.status == RequestStatus.Accepted) || (request2 !=null && request2.status==RequestStatus.Accepted)}">
+                                                    <form action="FriendRequestDeleteServlet" method="post">
+                                                        <input type="submit" class="btn btn-warning btn-sm"
+                                                               value="Remove Friend"/>
+                                                        <input type="text" hidden name="receiverId" value="<%=id%>"/>
+                                                    </form>
+                                                </c:when>
+                                            </c:choose>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:otherwise>
+                            </c:choose>
                         </ol>
                     </nav>
                 </div>

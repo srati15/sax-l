@@ -16,25 +16,17 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@WebServlet("/FriendRequestDeleteServlet")
-public class FriendRequestDeleteServlet extends HttpServlet {
+@WebServlet("/FriendRequestReceiverServlet")
+public class FriendRequestReceiverServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
         FriendRequestDao friendRequestDao = manager.getDao(DaoType.FriendRequest);
         User user = (User) request.getSession().getAttribute("user");
         int receiverId = Integer.parseInt(request.getParameter("receiverId"));
-        FriendRequest request1 = friendRequestDao.findBySenderReceiverId(user.getId(), receiverId);
-        FriendRequest request2 = friendRequestDao.findBySenderReceiverId(receiverId, user.getId());
-        if(request1 != null)
-            friendRequestDao.deleteById(request1.getId());
-        else if(request2 != null)
-                friendRequestDao.deleteById(request2.getId());
-        String callingPage = request.getParameter("callingPage");
-
-        if (callingPage!=null && callingPage.equals("profile")){
-            request.getRequestDispatcher("profile").forward(request, response);
-        }else
-            request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
+        Timestamp dateSent = Timestamp.valueOf(LocalDateTime.now());
+        FriendRequest friendRequest = new FriendRequest(user.getId(), receiverId, RequestStatus.Pending, dateSent );
+        friendRequestDao.insert(friendRequest);
+        request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
     }
 }

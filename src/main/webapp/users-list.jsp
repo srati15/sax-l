@@ -115,7 +115,14 @@
                 <tr>
                     <td>${i+1}
                     </td>
-                    <td><a href="user-profile?userid=${currentUser.id}">${currentUser.userName}</a></td>
+                    <c:choose>
+                        <c:when test="${currentUser.id == pageUser.id}">
+                            <td><a href="profile">${currentUser.userName}</a></td>
+                        </c:when>
+                        <c:when test="${currentUser.id != pageUser.id}">
+                            <td><a href="user-profile?userid=${currentUser.id}">${currentUser.userName}</a></td>
+                        </c:when>
+                    </c:choose>
                     <td>0</td>
                     <td>0</td>
                     <td>0</td>

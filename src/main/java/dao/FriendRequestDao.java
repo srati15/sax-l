@@ -108,7 +108,24 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
 
     @Override
     public void update(FriendRequest entity) {
-        // TODO: 6/2/19  
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        try {
+            String query = getUpdateQuery(TABLE_NAME, REQUEST_ID, REQUEST_STATUS);
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, entity.getStatus().getValue());
+            statement.setInt(2, entity.getId());
+            int result = statement.executeUpdate();
+            if(result == 1)
+                System.out.println("Request accepted Successfully");
+            else
+                System.out.println("Error accepting Request");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            executeFinalBlock(connection, statement);
+        }
+
     }
 
     @Override
@@ -125,7 +142,6 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, senderId);
             statement.setInt(2, receiverId);
-            System.out.println(statement);
             rs = statement.executeQuery();
             if(rs.next()){
                 return (mapper.mapRow(rs));
@@ -136,5 +152,28 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             executeFinalBlock(connection, statement);
         }
         return null;
+    }
+
+    public List<FriendRequest> getPendingRequestsFor(int receiverId) {
+        List<FriendRequest> list = new ArrayList<>();
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            String query = getSelectQuery(TABLE_NAME, RECEIVER_ID, REQUEST_STATUS);
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, receiverId);
+            statement.setInt(2, RequestStatus.Pending.getValue());
+            rs = statement.executeQuery();
+            while(rs.next()){
+                list.add(mapper.mapRow(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            executeFinalBlock(connection, statement);
+        }
+
+        return list;
     }
 }
