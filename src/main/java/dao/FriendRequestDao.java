@@ -10,8 +10,9 @@ import enums.RequestStatus;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import static dao.QueryGenerator.*;
+
 import static dao.FinalBlockExecutor.executeFinalBlock;
+import static dao.QueryGenerator.*;
 import static database.mapper.FriendRequestMapper.*;
 public class FriendRequestDao implements Dao<Integer, FriendRequest> {
     private DBRowMapper<FriendRequest> mapper = new FriendRequestMapper();
@@ -174,6 +175,36 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             executeFinalBlock(connection, statement);
         }
 
+        return list;
+    }
+
+    public List<Integer> getFriendsIdsFor(int id) {
+        List<Integer> list = new ArrayList<>();
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            String query = getSelectQuery(TABLE_NAME, RECEIVER_ID, REQUEST_STATUS);
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            statement.setInt(2, RequestStatus.Accepted.getValue());
+            rs = statement.executeQuery();
+            while(rs.next()){
+                list.add(mapper.mapRow(rs).getSenderId());
+            }
+            query = getSelectQuery(TABLE_NAME, SENDER_ID, REQUEST_STATUS);
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            statement.setInt(2, RequestStatus.Accepted.getValue());
+            rs = statement.executeQuery();
+            while(rs.next()){
+                list.add(mapper.mapRow(rs).getReceiverId());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            executeFinalBlock(connection, statement);
+        }
         return list;
     }
 }

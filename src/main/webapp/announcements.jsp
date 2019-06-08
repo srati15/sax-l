@@ -1,13 +1,12 @@
 <%@ page import="dao.AnnouncementDao" %>
+<%@ page import="datatypes.*" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="enums.FormFields" %>
 <%@ page import="enums.InputType" %>
-<%@ page import="enums.UserType" %>
 <%@ page import="manager.DaoManager" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.List" %>
-<%@ page import="datatypes.*" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -41,8 +40,6 @@
 <%
     DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
     User user = (User) request.getSession().getAttribute("user");
-    if (user == null) response.sendError(404);
-    if (user.getUserType() != UserType.Admin) response.sendError(404);
     AnnouncementDao announcementDao = daoManager.getDao(DaoType.Announcement);
 %>
 <!-- ***** Preloader Start ***** -->

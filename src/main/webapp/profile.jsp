@@ -1,11 +1,9 @@
-<%@ page import="datatypes.User" %>
-<%@ page import="manager.DaoManager" %>
-<%@ page import="datatypes.messages.FriendRequest" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="dao.FriendRequestDao" %>
-<%@ page import="enums.DaoType" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.User" %>
+<%@ page import="enums.DaoType" %>
+<%@ page import="manager.DaoManager" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,8 +35,9 @@
     User user = (User) request.getSession().getAttribute("user");
     UserDao userDao = manager.getDao(DaoType.User);
     FriendRequestDao requestDao = manager.getDao(DaoType.FriendRequest);
-    List<FriendRequest> list = requestDao.getPendingRequestsFor(user.getId());
-
+    pageContext.setAttribute("friendsIds", requestDao.getFriendsIdsFor(user.getId()));
+    pageContext.setAttribute("requestList", requestDao.getPendingRequestsFor(user.getId()));
+    pageContext.setAttribute("userDao", userDao);
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -73,52 +72,123 @@
 <!-- ***** Breadcumb Area End ***** -->
 <section class="mosh-aboutUs-area">
     <div class="container">
+        <ul class="nav nav-tabs nav-fill">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#requests">Friend Requests<span
+                        class="badge badge-info">${requestList.size()}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#friends">Friends<span
+                        class="badge badge-info">${friendsIds.size()}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#messages">Messages</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
 
-        <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
-            <thead>
-            <tr>
-                <th>Friend Request</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <%
-                for (FriendRequest friendRequest : list) {
-            %>
-            <tr>
-                <td><a href="user-profile?userid=<%=friendRequest.getSenderId()%>">
-                    <%=userDao.findById(friendRequest.getSenderId()).getUserName()%> sent you a friend request
-                </a></td>
-                <td>
-                    <form action="FriendRequestAcceptServlet" method="post" style="float:left">
-                        <button type="submit" class="btn btn-success btn-sm">
-                            Accept
-                        </button>
-                        <input type="text" hidden name="receiverId" value="<%=friendRequest.getSenderId()%>"/>
-                    </form>
-                    <form action="FriendRequestDeleteServlet" method="post" style="float:left">
-                        <button type="submit" class="btn btn-warning btn-sm">
-                            Reject
-                        </button>
-                        <input type="text" hidden name="receiverId" value="<%=friendRequest.getSenderId()%>"/>
-                        <input type="text" hidden name="callingPage" value="profile">
-                    </form>
-                    <br>
-                </td>
-            </tr>
-            <%
-                }
-            %>
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>Friend Request</th>
-                <th>Action</th>
-            </tr>
-            </tfoot>
-        </table>
+            <div class="tab-pane fade active show" id="requests">
+                <table id="friendRequestTable" class="table table-striped table-bordered table-sm" cellspacing="0"
+                       width="100%">
+                    <thead>
+                    <tr>
+                        <th>Friend Request</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${requestList}" var="friendRequest">
+                        <tr>
+                            <td>
+                                <a href="user-profile?userid=${friendRequest.senderId}">
+                                        ${userDao.findById(friendRequest.senderId).userName} sent you a friend request
+                                </a>
+                            </td>
+                            <td>
+                                <form action="FriendRequestAcceptServlet" method="post" style="float:left">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        Accept
+                                    </button>
+                                    <input type="text" hidden name="receiverId" value="${friendRequest.senderId}"/>
+                                </form>
+                                <form action="FriendRequestDeleteServlet" method="post" style="float:left">
+                                    <button type="submit" class="btn btn-warning btn-sm">
+                                        Reject
+                                    </button>
+                                    <input type="text" hidden name="receiverId" value="${friendRequest.senderId}"/>
+                                    <input type="text" hidden name="callingPage" value="profile">
+                                </form>
+                                <br>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Friend Request</th>
+                        <th>Action</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="friends">
+                <table id="friendsTable" class="table table-striped table-bordered table-sm" cellspacing="0"
+                       width="100%">
+                    <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Achievements</th>
+                        <th>Completed Quizzes</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${friendsIds}" var="friendId">
+                        <% User currentFriend = userDao.findById((Integer) pageContext.getAttribute("friendId"));%>
+                        <tr>
+                            <td>
+                                <a href="user-profile?userid=${friendId}"><%=currentFriend.getUserName()%>
+                                </a>
+                            </td>
+                            <td>
+                                <%=currentFriend.getFirstName()%>
+                            </td>
+                            <td>
+                                <%=currentFriend.getLastName()%>
+                            </td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>
+                                <form action="FriendRequestDeleteServlet" method="post">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-trash"></i> Unfriend
+                                    </button>
+                                    <input type="text" hidden name="receiverId" value="<%=currentFriend.getId()%>"/>
+                                    <input type="text" hidden name="callingPage" value="profile">
+                                </form>
+                            </td>
 
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Achievements</th>
+                        <th>Completed Quizzes</th>
+                        <th>Action</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="messages">
 
+            </div>
+        </div>
     </div>
 </section>
 
@@ -142,8 +212,17 @@
 <script type="text/javascript" src="js/datatables.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#myTable').DataTable();
+        $('#friendRequestTable').DataTable();
         $('.dataTables_length').addClass('bs-select');
+    });
+    $(document).ready(function () {
+        $('#friendsTable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+    $('#friendsTable tr').click(function () {
+        $(this).remove();
+
+        return false;
     });
 </script>
 </body>

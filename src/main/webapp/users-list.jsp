@@ -1,4 +1,5 @@
 <%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.EditFormField" %>
 <%@ page import="datatypes.FormField" %>
 <%@ page import="datatypes.SelectField" %>
 <%@ page import="datatypes.User" %>
@@ -10,7 +11,6 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.List" %>
-<%@ page import="datatypes.EditFormField" %>
 
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
@@ -157,10 +157,10 @@
                             </td>
                         </c:when>
                     </c:choose>
-
                 </tr>
                 <c:set var="i" value="${i + 1}" scope="page"/>
             </c:forEach>
+
             </tbody>
             <tfoot>
             <tr>
