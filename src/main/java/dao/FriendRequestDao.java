@@ -116,4 +116,25 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
         return DaoType.FriendRequest;
     }
 
+    public FriendRequest findBySenderReceiverId(int senderId, int receiverId) {
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            String query = getSelectQuery(TABLE_NAME, SENDER_ID, RECEIVER_ID);
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, senderId);
+            statement.setInt(2, receiverId);
+            System.out.println(statement);
+            rs = statement.executeQuery();
+            if(rs.next()){
+                return (mapper.mapRow(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            executeFinalBlock(connection, statement);
+        }
+        return null;
+    }
 }

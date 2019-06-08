@@ -20,7 +20,7 @@ public class EditAnnouncementServlet extends HttpServlet {
         String announcementText = request.getParameter("announcementText");
         String hyperlink = request.getParameter("hyperlink");
         if (hyperlink == null) hyperlink="/";
-        boolean active = request.getParameter("activeOrNot").equals("active");
+        boolean active = request.getParameter("activeOrNot").equals("Active");
         int id = Integer.parseInt(request.getParameter("editAnnouncementId"));
         Announcement announcement = new Announcement(id, announcementText, hyperlink, active);
         announcementDao.update(announcement);

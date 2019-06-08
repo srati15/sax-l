@@ -18,6 +18,10 @@ public class FriendRequest extends Message{
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public RequestStatus getStatus() {
         return status;
     }

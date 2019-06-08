@@ -7,13 +7,6 @@ import java.sql.SQLException;
 
 public class FinalBlockExecutor {
     public static void executeFinalBlock(Connection connection, PreparedStatement statement, ResultSet resultSet) {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
         if (statement != null) {
             try {
                 statement.close();
@@ -24,6 +17,13 @@ public class FinalBlockExecutor {
         if (resultSet != null) {
             try {
                 resultSet.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (connection != null) {
+            try {
+                connection.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

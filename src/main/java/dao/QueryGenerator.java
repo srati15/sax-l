@@ -10,7 +10,7 @@ public class QueryGenerator {
         builder.append(whereColumnNames.length>0?" WHERE ":"");
         for (int i = 0; i < whereColumnNames.length ; i++) {
             if (i+1 == whereColumnNames.length) builder.append(whereColumnNames[i]+"=?");
-            else builder.append(whereColumnNames[i]+"=? AND");
+            else builder.append(whereColumnNames[i]+"=? AND ");
         }
         return builder.toString();
     }

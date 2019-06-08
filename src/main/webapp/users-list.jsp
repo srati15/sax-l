@@ -115,7 +115,7 @@
                 <tr>
                     <td>${i+1}
                     </td>
-                    <td><a href="#">${currentUser.userName}</a></td>
+                    <td><a href="user-profile?userid=${currentUser.id}">${currentUser.userName}</a></td>
                     <td>0</td>
                     <td>0</td>
                     <td>0</td>
