@@ -8,9 +8,11 @@ import java.sql.SQLException;
 public class CreateConnection {
     private static MysqlDataSource dataSource;
     private static MyDBInfo myDBInfo = new MyDBInfo();
-    public static void setTestMyDBInfo(MyDBInfo myDBInfo1){
-        myDBInfo= myDBInfo1;
+
+    public static void setTestMyDBInfo(MyDBInfo myDBInfo1) {
+        myDBInfo = myDBInfo1;
     }
+
     private static void initDataSource() {
         dataSource = new MysqlDataSource();
         dataSource.setURL(myDBInfo.getDatabaseUrl());

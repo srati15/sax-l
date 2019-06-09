@@ -23,6 +23,8 @@
     <!-- Core Stylesheet -->
     <link href="style.css" rel="stylesheet">
 
+    <link href="css/loginpanel.css" rel="stylesheet">
+
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
 
@@ -83,6 +85,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#messages">Messages</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#edit">Edit Profile</a>
             </li>
         </ul>
         <div id="myTabContent" class="tab-content">
@@ -188,6 +193,52 @@
             <div class="tab-pane fade" id="messages">
 
             </div>
+            <div class="tab-pane fade" id="edit">
+                <form action="UpdateUserServlet" method="post" id="editForm">
+                    <center>
+                        <label>
+                            <input type="text" disabled value="<%=user.getUserName()%>" name="username" required
+                                   minlength="4">
+                        </label>
+                        <br>
+                        <label>
+                            <input type="password" placeholder="Password" name="password" required minlength="4">
+                        </label>
+                        <br>
+                        <label>
+                            <input type="password" placeholder="Confirm password" name="confirmpassword" required
+                                   minlength="4">
+                        </label>
+                        <br>
+
+                        <label>
+                            <input type="email" disabled placeholder="E-mail" name="mail" required>
+                        </label>
+                        <br>
+
+                        <label>
+                            <input type="text" value="<%=user.getFirstName()%>" name="firstname">
+                        </label>
+                        <br>
+
+                        <label>
+                            <input type="text" value="<%=user.getLastName()%>" name="lastname">
+                        </label>
+                        <br>
+                        <button type="submit" class="btn btn-outline-info btn-sm" style="display: block; margin: 0 auto;">
+                            <i class="fa fa-sign-in"></i> Update
+                        </button>
+                        <br>
+
+                        <input type="text" hidden name="hiddenId" value="<%=user.getId()%>">
+                        <input type="text" hidden name="calledFrom" value="profile">
+                    </center>
+                </form>
+                <script>
+                    ${"#editForm"}.validate();
+                </script>
+            </div>
+
         </div>
     </div>
 </section>

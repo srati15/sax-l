@@ -64,14 +64,22 @@
 
 <section class="mosh-aboutUs-area">
     <div class="login">
+
         <form action="LoginServlet" method="post" id="loginSection">
             <input type="text" placeholder="Username" minlength="4" required name="username">
             <input type="password" placeholder="password" minlength="4" required name="password">
             <br>
-            <button type="submit" class="btn btn-info btn-sm" style="display: block; margin: 0 auto;">
-                <i class="fa fa-sign-in"></i> Sign in
-            </button>
+            <div style="margin-top: 20px; display: flex; align-items: center; justify-content: center;">
+                <a href="forgot" class="btn btn-outline-danger btn-sm" >
+                    <i class="fa fa-key"></i> Forgot?
+                </a>
+                <button type="submit" class="btn btn-outline-info btn-sm" style="margin-left: 10px" >
+                    <i class="fa fa-sign-in"></i> Sign in
+                </button>
+            </div>
+
         </form>
+
     </div>
     <script>
         ${"#loginSection"}.validate();
@@ -105,6 +113,12 @@
         toastr.error("${requestScope.error}");
     </script>
     ${requestScope.remove("error")}
+</c:if>
+<c:if test="${requestScope.info !=null}">
+    <script>
+        toastr.success("${requestScope.info}");
+    </script>
+    ${requestScope.remove("info")}
 </c:if>
 </body>
 </html>

@@ -2,8 +2,6 @@ package datatypes;
 
 import enums.UserType;
 
-import java.util.Objects;
-
 public class User {
     private int id;
     private String userName;
@@ -19,6 +17,11 @@ public class User {
         this.password = password;
         this.userType = UserType.User;
         this.mail = mail;
+    }
+
+    public User(int id, String userName, String password, String firstName, String lastName, String mail) {
+        this(userName, password, firstName, lastName, mail);
+        this.id = id;
     }
 
     public int getId() {

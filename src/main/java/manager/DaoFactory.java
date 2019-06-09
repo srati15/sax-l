@@ -17,6 +17,6 @@ class DaoFactory {
     }
     static <E extends Dao> E dispatch(DaoType daoType) {
         if (map.containsKey(daoType)) return (E) map.get(daoType);
-        return null;
+        throw new IllegalArgumentException("Dao not found for "+daoType.name());
     }
 }

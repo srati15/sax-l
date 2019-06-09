@@ -1,11 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: lasha
-  Date: 5/27/19
-  Time: 8:16 PM
-  To change this template use File | Settings | File Templates.
---%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +19,7 @@
     <link href="css/loginpanel.css" rel="stylesheet">
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
+
     <link href="css/toastr.css" rel="stylesheet">
 
 
@@ -46,11 +40,11 @@
         <div class="row h-100 align-items-center">
             <div class="col-12">
                 <div class="bradcumbContent">
-                    <h2>Register Page</h2>
+                    <h2>Password Recovery</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Registration Form</li>
+                            <li class="breadcrumb-item active" aria-current="page">Password Recovery</li>
                         </ol>
                     </nav>
                 </div>
@@ -60,36 +54,20 @@
 </div>
 <!-- ***** Breadcumb Area End ***** -->
 <!-- ***** Login Area Start ***** -->
+
 <section class="mosh-aboutUs-area">
     <div class="login">
-        <form action="RegisterServlet" method="post" id="signUpForm">
-            <label>
-                <input type="text" placeholder="Username" name="username" required minlength="4">
-            </label>
-            <label>
-                <input type="password" placeholder="Password" name="password" required minlength="4" >
-            </label>
-            <label>
-                <input type="password" placeholder="Confirm password" name="confirmpassword" required minlength="4">
-            </label>
-            <label>
-                <input type="email" placeholder="E-mail" name="mail" required >
-            </label>
-            <label>
-                <input type="text" placeholder="First Name" name="firstname">
-            </label>
-            <label>
-                <input type="text" placeholder="Last Name" name="lastname">
-            </label>
+        <form action="ForgotPasswordServlet" method="post" id="loginSection">
+            <input type="text" placeholder="Username" minlength="4" required name="username">
             <br>
-            <button type="submit" class="btn btn-info btn-sm" style="display: block; margin: 0 auto;">
-                <i class="fa fa-sign-in"></i> Register
+            <button type="submit" class="btn btn-outline-info btn-sm" style="display: block; margin: 0 auto;">
+                <i class="fa fa-key"></i> Recover
             </button>
         </form>
-        <script>
-            ${"#signUpForm"}.validate();
-        </script>
     </div>
+    <script>
+        ${"#loginSection"}.validate();
+    </script>
 </section>
 <!-- ***** Login Area End ***** -->
 <footer class="footer-area clearfix">
@@ -107,7 +85,7 @@
 <!-- Active js -->
 <script src="js/active.js"></script>
 
-<!-- Sign up validation -->
+<!---Validate js -->
 <script src="js/jquery.validate.js"></script>
 
 <script src="js/toastr.js"></script>

@@ -26,26 +26,32 @@ public class UpdateUserServlet extends HttpServlet {
         String lastName = request.getParameter("lastname");
         String mail = request.getParameter("email");
         int id = Integer.parseInt(request.getParameter("hiddenId"));
-        UserType userType = request.getParameter("usertype").equals("admin")? UserType.Admin:UserType.User;
-        if (user.getId() == id && userType == UserType.User) {
+        UserType userType = UserType.User;
+        if (request.getParameter("usertype") != null && request.getParameter("usertype").equals("admin") ) userType = UserType.Admin;
+        if (user.getId() == id && userType == UserType.User && user.getUserType() == UserType.Admin) {
             request.setAttribute("error", "You can't downgrade yourself to user");
             request.getRequestDispatcher("users-list").forward(request, response);
             return;
         }
-        if (password == null || confirmPassword == null ) request.getRequestDispatcher("users-list").forward(request, response);
-        User updatedUser = new User(userName, password, firstName, lastName, mail);
-        updatedUser.setId(id);
-        updatedUser.setUserType(userType);
-        if (!password.equals(confirmPassword)) {
-            request.setAttribute("error", "Passwords don't match");
-            System.out.println("Passwords don't match");
-            request.getRequestDispatcher("users-list").forward(request, response);
+        if ((password == null || confirmPassword == null )) {
+            if (user.getUserType()== UserType.Admin) request.getRequestDispatcher("users-list").forward(request, response);
+            else request.getRequestDispatcher("profile").forward(request, response);
             return;
         }
 
+        if (!password.equals(confirmPassword)) {
+            request.setAttribute("error", "Passwords don't match");
+            System.out.println("Passwords don't match");
+            if (user.getUserType()== UserType.Admin) request.getRequestDispatcher("users-list").forward(request, response);
+            else request.getRequestDispatcher("profile").forward(request, response);
+            return;
+        }
+        User updatedUser = new User(userName, password, firstName, lastName, mail);
+        updatedUser.setId(id);
+        updatedUser.setUserType(userType);
         userDao.update(updatedUser);
-        request.getRequestDispatcher("users-list").forward(request, response);
-
+        if (user.getUserType()== UserType.Admin) request.getRequestDispatcher("users-list").forward(request, response);
+        else request.getRequestDispatcher("profile").forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

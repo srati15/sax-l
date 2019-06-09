@@ -4,7 +4,8 @@ public enum DaoType {
     User(1),
     Quiz(2),
     FriendRequest(3),
-    Announcement(4);
+    Announcement(4),
+    TextMessage(5);
     private int value;
     DaoType(int value) {
         this.value = value;
