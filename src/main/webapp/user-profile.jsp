@@ -1,11 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="datatypes.User" %>
-<%@ page import="manager.DaoManager" %>
 <%@ page import="dao.FriendRequestDao" %>
-<%@ page import="enums.DaoType" %>
-<%@ page import="datatypes.messages.FriendRequest" %>
-<%@ page import="enums.RequestStatus" %>
 <%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.User" %>
+<%@ page import="enums.DaoType" %>
+<%@ page import="enums.RequestStatus" %>
+<%@ page import="manager.DaoManager" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,11 +38,8 @@
     User user = (User) request.getSession().getAttribute("user");
     int id = Integer.parseInt(request.getParameter("userid"));
     User profileUser = userDao.findById(id);
-    FriendRequest request1 = friendRequestDao.findBySenderReceiverId(user.getId(), id);
-    FriendRequest request2 = friendRequestDao.findBySenderReceiverId(id, user.getId());
-    pageContext.setAttribute("request1", request1);
-    pageContext.setAttribute("request2", request2);
-    pageContext.setAttribute("pending", RequestStatus.Pending);
+    pageContext.setAttribute("request1",friendRequestDao.findBySenderReceiverId(user.getId(), id));
+    pageContext.setAttribute("request2",friendRequestDao.findBySenderReceiverId(id, user.getId()));
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">

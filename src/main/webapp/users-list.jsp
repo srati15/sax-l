@@ -11,6 +11,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.List" %>
+<%@ page import="static com.sun.org.apache.xalan.internal.xsltc.compiler.sym.error" %>
 
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
@@ -208,19 +209,14 @@
 <script src="js/jquery.validate.js"></script>
 
 <script src="js/toastr.js"></script>
-
-<%
-    String error = (String) request.getAttribute("error");
-    if (error != null) {%>
-<script>
-    toastr.options.closeButton = true;
-    toastr.options.timeOut = 0;
-    toastr.options.extendedTimeOut = 0;
-    toastr.error("<%=error%>");
-</script>
-<%
-        request.removeAttribute("error");
-    }
-%>
+<c:if test="${requestScope.error !=null}">
+    <script>
+        toastr.options.closeButton = true;
+        toastr.options.timeOut = 0;
+        toastr.options.extendedTimeOut = 0;
+        toastr.error("${requestScope.error}");
+    </script>
+    ${requestScope.remove("error")}
+</c:if>
 </body>
 </html>

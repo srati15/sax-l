@@ -1,9 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="dao.AnnouncementDao" %>
-<%@ page import="datatypes.Announcement" %>
 <%@ page import="enums.DaoType" %>
-<%@ page import="manager.DaoManager" %>
-<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,11 +25,9 @@
 </head>
 
 <body>
+<c:set var="manager" scope="page" value="${applicationScope.manager}"/>
+<c:set var="announcementDao" scope="page" value="${manager.getDao(DaoType.Announcement)}"/>
 
-<%
-    DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-    AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
-%>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
     <div class="mosh-preloader"></div>
@@ -90,7 +84,7 @@
         toastr.options.timeOut = 0;
         toastr.options.extendedTimeOut = 0;
         toastr.options.positionClass ="toast-bottom-right";
-        <c:forEach items="<%=announcementDao.findAll()%>" var="announcement">
+        <c:forEach items="${announcementDao.findAll()}" var="announcement">
             toastr.info('${announcement.announcementText}');
         </c:forEach>
     });

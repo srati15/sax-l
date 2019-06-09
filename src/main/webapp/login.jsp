@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: lasha
@@ -96,16 +97,14 @@
 <script src="js/jquery.validate.js"></script>
 
 <script src="js/toastr.js"></script>
-<%
-    String error = (String) request.getAttribute("error");
-    if (error != null) {%>
-        <script>
-            toastr.options.closeButton = true;
-            toastr.options.timeOut = 0;
-            toastr.options.extendedTimeOut = 0;
-            toastr.error("<%=error%>");
-        </script>
-    <%request.removeAttribute("error");
-    }%>
+<c:if test="${requestScope.error !=null}">
+    <script>
+        toastr.options.closeButton = true;
+        toastr.options.timeOut = 0;
+        toastr.options.extendedTimeOut = 0;
+        toastr.error("${requestScope.error}");
+    </script>
+    ${requestScope.remove("error")}
+</c:if>
 </body>
 </html>

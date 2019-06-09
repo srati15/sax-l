@@ -11,8 +11,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dao.FinalBlockExecutor.executeFinalBlock;
-import static dao.QueryGenerator.*;
+import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
+import static dao.helpers.QueryGenerator.*;
 import static database.mapper.FriendRequestMapper.*;
 public class FriendRequestDao implements Dao<Integer, FriendRequest> {
     private DBRowMapper<FriendRequest> mapper = new FriendRequestMapper();
