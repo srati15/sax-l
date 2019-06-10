@@ -111,3 +111,16 @@ create table friend_requests
         primary key (id)
 );
 /*friend requests table end*/
+
+/*text message table start*/
+create table text_message
+(
+    text_message_id int auto_increment,
+    sender_id int not null,
+    receiver_id int not null,
+    date_sent datetime default current_timestamp,
+    message_sent text not null,
+    constraint text_message_pk
+        primary key (text_message_id)
+);
+/*text message table end*/
