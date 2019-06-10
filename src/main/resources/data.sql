@@ -119,7 +119,7 @@ create table text_message
     sender_id int not null,
     receiver_id int not null,
     date_sent datetime default current_timestamp,
-    message_sent text not null,
+    message_sent varchar(1000) not null,
     constraint text_message_pk
         primary key (text_message_id)
 );
