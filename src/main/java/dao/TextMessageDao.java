@@ -124,7 +124,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             query = query + " ORDER BY " + DATE_SENT + " ASC";
             statement = connection.prepareStatement(query);
             statement.setInt(1, senderId);
-            statement.setInt(1, receiverId);
+            statement.setInt(2, receiverId);
             rs = statement.executeQuery();
             while(rs.next()){
                 list.add(mapper.mapRow(rs));
