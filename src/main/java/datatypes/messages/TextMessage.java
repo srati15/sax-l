@@ -22,6 +22,11 @@ public class TextMessage extends Message {
         this.id = id;
     }
 
+    public  int getId() {return  id;}
+
+    public String getTextMessage(){return textMesage;}
+
+
     @Override
     public MessageType getMessageType() {
         return messageType;
