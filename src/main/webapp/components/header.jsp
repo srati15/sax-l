@@ -23,8 +23,8 @@
                             <%if (user != null) {%>
                             <li class="nav-item"><a class="nav-link" href="profile">Profile</a></li>
                             <li class="nav-item"><a class="nav-link" href="users-list">Users</a></li>
+                            <li class="nav-item"><a class="nav-link" href="quiz">Quizzes</a></li>
                             <%}%>
-                            <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
                             <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
                             <%if (user != null && user.getUserType() == UserType.Admin) {%>
                             <li class="nav-item"><a class="nav-link" href="admin">Administration</a></li>
@@ -33,8 +33,10 @@
                         <!-- Search Form Area Start -->
                         <div class="search-form-area animated">
                             <form action="#" method="post">
-                                <input type="search" name="search" id="search" placeholder="Type keywords &amp; hit enter">
-                                <button type="submit" class="d-none"><img src="../img/core-img/search-icon.png" alt="Search"></button>
+                                <input type="search" name="search" id="search"
+                                       placeholder="Type keywords &amp; hit enter">
+                                <button type="submit" class="d-none"><img src="../img/core-img/search-icon.png"
+                                                                          alt="Search"></button>
                             </form>
                         </div>
                         <!-- Search btn -->
@@ -77,3 +79,4 @@
         </div>
     </div>
 </div>
+

@@ -10,4 +10,9 @@ public class QuestionResponse extends Question {
     QuestionType getQuestionType() {
         return QuestionType.QuestionResponse;
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

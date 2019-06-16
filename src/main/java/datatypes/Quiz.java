@@ -29,6 +29,17 @@ public class Quiz {
         this.allowedPracticemode = allowedPracticemode;
     }
 
+    public Quiz(int authorId, Map<Question, Answer> questionAnswerMap, int timesDone, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode) {
+        this.authorId = authorId;
+        this.questionAnswerMap = questionAnswerMap;
+        this.timesDone = timesDone;
+        this.dateCreated = dateCreated;
+        this.randomized = randomized;
+        this.onePage = onePage;
+        this.allowedImmediateCorrection = allowedImmediateCorrection;
+        this.allowedPracticemode = allowedPracticemode;
+    }
+
     public boolean isRandomized() {
         return randomized;
     }

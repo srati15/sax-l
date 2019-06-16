@@ -34,4 +34,11 @@ public abstract class Question {
     public int getAuthorId() {
         return authorId;
     }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "question='" + question + '\'' +
+                '}';
+    }
 }

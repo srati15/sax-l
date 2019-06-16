@@ -14,4 +14,11 @@ public abstract class Answer {
     }
 
     abstract QuestionType getAnswerType();
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "answer='" + answer + '\'' +
+                '}';
+    }
 }
