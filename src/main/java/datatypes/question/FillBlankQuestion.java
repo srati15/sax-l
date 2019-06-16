@@ -3,11 +3,16 @@ package datatypes.question;
 import enums.QuestionType;
 
 public class FillBlankQuestion extends Question {
-    public FillBlankQuestion(String question){
-        super(question);
+    public FillBlankQuestion(int questionId, int quizId, String question) {
+        super(questionId, quizId, question);
     }
+
+    public FillBlankQuestion(String question, int quizId) {
+        super(question, quizId);
+    }
+
     @Override
-    QuestionType getQuestionType() {
+    public QuestionType getQuestionType() {
         return QuestionType.FillInTheBlank;
     }
 }

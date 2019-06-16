@@ -1,15 +1,11 @@
 package datatypes;
 
-import datatypes.answer.Answer;
-import datatypes.question.Question;
-
 import java.sql.Timestamp;
-import java.util.Map;
 
 public class Quiz {
     private int id;
+    private String quizName;
     private int authorId;
-    private Map<Question, Answer> questionAnswerMap;
     private int timesDone;
     private Timestamp dateCreated;
     private boolean randomized;
@@ -17,10 +13,18 @@ public class Quiz {
     private boolean allowedImmediateCorrection;
     private boolean allowedPracticemode;
 
-    public Quiz(int id, int authorId, Map<Question, Answer> questionAnswerMap, int timesDone, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public String getQuizName() {
+        return quizName;
+    }
+
+    public Quiz(int id, String quizName, int authorId, int timesDone, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode) {
+        this.id = id;
+        this.quizName = quizName;
         this.authorId = authorId;
-        this.questionAnswerMap = questionAnswerMap;
         this.timesDone = timesDone;
         this.dateCreated = dateCreated;
         this.randomized = randomized;
@@ -29,10 +33,9 @@ public class Quiz {
         this.allowedPracticemode = allowedPracticemode;
     }
 
-    public Quiz(int authorId, Map<Question, Answer> questionAnswerMap, int timesDone, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode) {
+    public Quiz(String quizName, int authorId, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode) {
+        this.quizName = quizName;
         this.authorId = authorId;
-        this.questionAnswerMap = questionAnswerMap;
-        this.timesDone = timesDone;
         this.dateCreated = dateCreated;
         this.randomized = randomized;
         this.onePage = onePage;
@@ -68,11 +71,22 @@ public class Quiz {
         return authorId;
     }
 
-    public Map<Question, Answer> getQuestionAnswerMap() {
-        return questionAnswerMap;
-    }
-
     public int getTimesDone() {
         return timesDone;
+    }
+
+    @Override
+    public String toString() {
+        return "Quiz{" +
+                "id=" + id +
+                ", quizName='" + quizName + '\'' +
+                ", authorId=" + authorId +
+                ", timesDone=" + timesDone +
+                ", dateCreated=" + dateCreated +
+                ", randomized=" + randomized +
+                ", onePage=" + onePage +
+                ", allowedImmediateCorrection=" + allowedImmediateCorrection +
+                ", allowedPracticemode=" + allowedPracticemode +
+                '}';
     }
 }

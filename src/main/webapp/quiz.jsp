@@ -62,56 +62,137 @@
 <!-- ***** Welcome Area Start ***** -->
 
 <section class="mosh-aboutUs-area">
-    <div class="container" id="createContainer">
+    <div class="container" id="createContainer" style="display: inline-block;">
         <h2 id="questionNum">Question N1</h2>
-        <p>
-            <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#questionResponse"
-                    aria-expanded="false" aria-controls="collapseExample">
-                Question-Response
-            </button>
-            <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#pictureResponse"
-                    aria-expanded="false" aria-controls="collapseExample">
-                Picture-Response
-            </button>
-        </p>
-        <div class="collapse" id="questionResponse">
-            <div class="card card-body">
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="simpleQuestionText">Question</label>
-                    <div class="col-md-4">
-                        <textarea class="form-control" id="simpleQuestionText" name="questionText"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="simpleAnswerText">Answer</label>
-                    <div class="col-md-4">
-                        <textarea class="form-control" id="simpleAnswerText" name="answerText"></textarea>
-                    </div>
-                </div>
+        <div class="progress" id="progressBar">
+            <div class="progress-bar progress-bar-striped" id="progressLabel" role="progressbar" aria-valuenow="0"
+                 aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                0%
             </div>
-            <button type="button" class="btn btn-info" id="simpleQuestionSubmit">Submit</button>
+        </div>
+        <div style="float: left; width: 80%">
+            <p>
+                <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#questionResponse"
+                        aria-expanded="false" aria-controls="collapseExample">
+                    Question-Response
+                </button>
+                <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#pictureResponse"
+                        aria-expanded="false" aria-controls="collapseExample">
+                    Picture-Response
+                </button>
+            </p>
+            <div class="collapse" id="questionResponse">
+                <div class="card card-body">
 
-        </div>
-        <div class="collapse" id="pictureResponse">
-            <div class="card card-body">
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="pictureQuestionText">Picture</label>
-                    <div class="col-md-4">
-                        <textarea class="form-control" id="pictureQuestionText" name="questionText"></textarea>
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="simpleQuestionText">Question</label>
+                        <div class="col-md-8">
+                            <input id="simpleQuestionText" name="simpleQuestionText" type="text" placeholder=""
+                                   class="form-control input-md" required>
+
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="pictureAnswerText">Answer</label>
-                    <div class="col-md-4">
-                        <textarea class="form-control" id="pictureAnswerText" name="answerText"></textarea>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="simpleAnswerText">Answer</label>
+                        <div class="col-md-8">
+                            <input id="simpleAnswerText" name="simpleAnswerText" type="text" placeholder=""
+                                   class="form-control input-md" required>
+                        </div>
                     </div>
+                    <button type="button" class="btn btn-info" id="simpleQuestionSubmit">Submit</button>
+
                 </div>
             </div>
-            <button type="button" class="btn btn-info" id="pictureSubmit">Submit</button>
+            <div class="collapse" id="pictureResponse">
+                <div class="card card-body">
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="pictureQuestionText">Image source</label>
+                        <div class="col-md-8">
+                            <input id="pictureQuestionText" name="pictureQuestionText" type="text" placeholder=""
+                                   class="form-control input-md" required>
+
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="pictureAnswerText">Answer</label>
+                        <div class="col-md-8">
+                            <input id="pictureAnswerText" name="pictureAnswerText" type="text" placeholder=""
+                                   class="form-control input-md" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-info" id="pictureSubmit">Submit</button>
+            </div>
         </div>
-        <form action = "QuizCreationServlet" method="post" id="submitQuizForm">
-            <button type="submit" class="btn btn-success" id="finishCreationButton" style="display: none">Finish</button>
-        </form>
+        <div style="float: end">
+            <form action="QuizCreationServlet" method="post" id="submitQuizForm">
+                <fieldset>
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label for="quizname">Quiz Name</label>
+                        <div>
+                            <input id="quizname" name="quizname" type="text" placeholder=""
+                                   class="form-control input-md"
+                                   required="">
+                        </div>
+                    </div>
+
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <label for="correction">Allow immediate correction</label>
+                        <div>
+                            <select id="correction" name="correction" class="form-control">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <label for="singlepage">Show all question on single page</label>
+                        <div>
+                            <select id="singlepage" name="singlepage" class="form-control">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <label for="practice">Allow practice mode</label>
+                        <div>
+                            <select id="practice" name="practice" class="form-control">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Select Basic -->
+                    <div class="form-group">
+                        <label for="randomized">Randomize questions</label>
+                        <div>
+                            <select id="randomized" name="randomized" class="form-control">
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <button type="submit" class="btn btn-success" id="finishCreationButton" style="display: none">Finish
+                </button>
+            </form>
+        </div>
     </div>
 </section>
 <!-- ***** Welcome Area End ***** -->
@@ -153,10 +234,9 @@
             });
         });
     });
+
     $(document).ready(function () {
         var questionsList = [];
-        var finishButton = '<button type="button" class="btn btn-success" id="finishCreationButton">Finish</button>';
-
         $("#simpleQuestionSubmit").click(function () {
             var question = $('#simpleQuestionText').val();
             var answer = $('#simpleAnswerText').val();
@@ -165,15 +245,7 @@
             pictQuest['question'] = question;
             pictQuest['answer'] = answer;
             questionsList.push(pictQuest);
-            if (questionsList.length == 10) {
-                $("#finishCreationButton").css("display", "flex");
-                var input = $("<input>").attr("type", "hidden").attr("name", "questions").val(JSON.stringify(questionsList));
-                $('#submitQuizForm').append(input);
-            }else if (questionsList.length >10) {
-                $('[name=questions]').val(JSON.stringify(questionsList));
-            }
-            $('#questionNum').text("Question N" + (questionsList.length + 1));
-            console.log(questionsList)
+            checker(questionsList);
         });
 
 
@@ -185,16 +257,25 @@
             pictQuest['question'] = question;
             pictQuest['answer'] = answer;
             questionsList.push(pictQuest);
-            if (questionsList.length == 10) {
+            checker();
+        });
+
+        function checker() {
+            if (questionsList.length <= 10) {
+                $("#progressLabel").attr("aria-valuenow", questionsList.length * 10)
+                    .css("width", questionsList.length * 10 + "%")
+                    .text(questionsList.length * 10 + "%");
+            }
+            if (questionsList.length === 10) {
                 $("#finishCreationButton").css("display", "flex");
                 var input = $("<input>").attr("type", "hidden").attr("name", "questions").val(JSON.stringify(questionsList));
                 $('#submitQuizForm').append(input);
-            }else if (questionsList.length >10) {
+            } else if (questionsList.length > 10) {
                 $('[name=questions]').val(JSON.stringify(questionsList));
             }
             $('#questionNum').text("Question N" + (questionsList.length + 1));
             console.log(questionsList)
-        });
+        }
     });
 </script>
 

@@ -3,11 +3,16 @@ package datatypes.question;
 import enums.QuestionType;
 
 public class MultipleChoiceQuestion extends Question {
-    public MultipleChoiceQuestion(String question) {
-        super(question);
+    public MultipleChoiceQuestion(int questionId, int quizId, String question) {
+        super(questionId, quizId, question);
     }
+
+    public MultipleChoiceQuestion(String questionText, int quizId) {
+        super(questionText, quizId);
+    }
+
     @Override
-    QuestionType getQuestionType() {
+    public QuestionType getQuestionType() {
         return QuestionType.QuestionResponse;
     }
 }

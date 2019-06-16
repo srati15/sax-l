@@ -12,8 +12,8 @@ public enum QuestionType {
         this.value = value;
     }
 
-    public static UserType getById(int value) {
-        for (UserType type: UserType.values()) {
+    public static QuestionType getById(int value) {
+        for (QuestionType type: QuestionType.values()) {
             if (type.getValue() == value) return type;
         }
         return null;
