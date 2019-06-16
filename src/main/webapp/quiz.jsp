@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="dao.AnnouncementDao" %>
+<%@ page import="dao.QuizDao" %>
+<%@ page import="dao.UserDao" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
 <!DOCTYPE html>
@@ -31,7 +33,11 @@
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
+    UserDao userDao = manager.getDao(DaoType.User);
+    QuizDao quizDao = manager.getDao(DaoType.Quiz);
+    pageContext.setAttribute("userDao", userDao);
 %>
+
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
     <div class="mosh-preloader"></div>
@@ -63,6 +69,47 @@
 
 <section class="mosh-aboutUs-area">
     <div class="container" id="createContainer" style="display: inline-block;">
+        <!----quizzes table --->
+        <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Quiz Name</th>
+                <th>Author</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:set var="i" value="0" scope="page"/>
+            <c:forEach items="<%=quizDao.findAll()%>" var="quiz">
+                <tr>
+                    <td>${i+1}
+                    </td>
+                    <td>${quiz.quizName}
+                    </td>
+                    <td>
+                        ${userDao.findById(quiz.authorId)}
+                    </td>
+                    <td>
+                        <a href="#" >Start</a>
+                    </td>
+                </tr>
+                <c:set var="i" value="${i + 1}" scope="page"/>
+            </c:forEach>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th>#</th>
+                <th>Quiz Name</th>
+                <th>Author</th>
+                <th>Action</th>
+            </tr>
+            </tfoot>
+        </table>
+
+        <!------quizzes table-->
+
+
         <h2 id="questionNum">Question N1</h2>
         <div class="progress" id="progressBar">
             <div class="progress-bar progress-bar-striped" id="progressLabel" role="progressbar" aria-valuenow="0"
@@ -70,7 +117,7 @@
                 0%
             </div>
         </div>
-        <div style="float: left; width: 80%">
+        <div style="float: left; width: 70%">
             <p>
                 <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#questionResponse"
                         aria-expanded="false" aria-controls="collapseExample">
@@ -79,6 +126,14 @@
                 <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#pictureResponse"
                         aria-expanded="false" aria-controls="collapseExample">
                     Picture-Response
+                </button>
+                <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#fillBlank"
+                        aria-expanded="false" aria-controls="collapseExample">
+                    Fill in the blank
+                </button>
+                <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#multipleChoice"
+                        aria-expanded="false" aria-controls="collapseExample">
+                    Multiple choice
                 </button>
             </p>
             <div class="collapse" id="questionResponse">
@@ -129,6 +184,63 @@
                 </div>
                 <button type="button" class="btn btn-info" id="pictureSubmit">Submit</button>
             </div>
+            <div class="collapse" id="fillBlank">
+                <div class="card card-body">
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="pictureQuestionText">Question</label>
+                        <div class="col-md-8">
+                            <input id="fillBlankText" name="fillBlankText" type="text" placeholder=""
+                                   class="form-control input-md" required>
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="pictureAnswerText">Answer</label>
+                        <div class="col-md-8">
+                            <input id="fillBlankAnswer" name="fillBlankAnswer" type="text" placeholder=""
+                                   class="form-control input-md" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-info" id="fillBlankSubmit">Submit</button>
+            </div>
+            <div class="collapse" id="multipleChoice">
+                <div class="card card-body">
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="multipleChoiceText">Question</label>
+                        <div class="col-md-8">
+                            <input id="multipleChoiceText" name="multipleChoiceText" type="text" placeholder=""
+                                   class="form-control input-md" required>
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="multipleCorrectAnswer">Correct Answer</label>
+                        <div class="col-md-8">
+                            <input id="multipleCorrectAnswer" name="multipleCorrectAnswer" type="text" placeholder=""
+                                   class="form-control input-md" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="multipleWrongAnswer1">Wrong Answers</label>
+                        <div class="col-md-8">
+                            <input id="multipleWrongAnswer1" name="multipleWrongAnswer1" type="text" placeholder=""
+                                   class="form-control input-md" required>
+                            <input id="multipleWrongAnswer2" name="multipleWrongAnswer2" type="text" placeholder=""
+                                   class="form-control input-md" required>
+                            <input id="multipleWrongAnswer3" name="multipleWrongAnswer3" type="text" placeholder=""
+                                   class="form-control input-md" required>
+                        </div>
+                    </div>
+
+                </div>
+                <button type="button" class="btn btn-info" id="multipleChoiceSubmit">Submit</button>
+            </div>
+
         </div>
         <div style="float: end">
             <form action="QuizCreationServlet" method="post" id="submitQuizForm">
@@ -257,6 +369,29 @@
             pictQuest['question'] = question;
             pictQuest['answer'] = answer;
             questionsList.push(pictQuest);
+            checker();
+        });
+        $("#fillBlankSubmit").click(function () {
+            var question = $('#fillBlankText').val();
+            var answer = $('#fillBlankAnswer').val();
+            var quest = {};
+            quest['type'] = 'fillBlank';
+            quest['question'] = question;
+            quest['answer'] = answer;
+            questionsList.push(quest);
+            checker();
+        });
+        $("#multipleChoiceSubmit").click(function () {
+            var question = $('#multipleChoiceText').val();
+            var answer = $('#multipleCorrectAnswer').val()+","+
+                $('#multipleWrongAnswer1').val()+","+
+                $('#multipleWrongAnswer2').val()+","+
+                $('#multipleWrongAnswer3').val();
+            var quest = {};
+            quest['type'] = 'multipleChoice';
+            quest['question'] = question;
+            quest['answer'] = answer;
+            questionsList.push(quest);
             checker();
         });
 

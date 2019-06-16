@@ -12,7 +12,7 @@ public class QuestionAnswerJsonDispatcher {
             question = new QuestionResponse(questionText, quizId);
         }else if (type.equals("pictureResponse")){
             question = new PictureResponseQuestion(questionText, quizId);
-        }else if (type.equals("fillInTheBlanks")) {
+        }else if (type.equals("fillBlank")) {
             question = new FillBlankQuestion(questionText, quizId);
         }else if (type.equals("multipleChoice")){
             question = new MultipleChoiceQuestion(questionText, quizId);

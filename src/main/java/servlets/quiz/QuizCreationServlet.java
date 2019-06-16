@@ -43,9 +43,13 @@ public class QuizCreationServlet extends HttpServlet {
         for (int i = 0; i < questionsArray.length(); i++) {
             JSONObject questionJson = questionsArray.getJSONObject(i);
             Question question = QuestionAnswerJsonDispatcher.dispatchQuestion(questionJson, quiz.getId());
-            quizDao.getQuestionDao().insert(question);
-            quizDao.getAnswerDao().insert(new Answer(questionJson.getString("answer"), question.getQuestionId(), true));
+            questionAnswerMap.put(question, new Answer(questionJson.getString("answer"), 0));
         }
+        quizDao.getQuestionDao().insertAll(questionAnswerMap.keySet());
+        for (Question question: questionAnswerMap.keySet()) {
+            questionAnswerMap.get(question).setQuestionId(question.getQuestionId());
+        }
+        quizDao.getAnswerDao().insertAll(questionAnswerMap.values());
         request.getRequestDispatcher("quiz").forward(request, response);
     }
 
