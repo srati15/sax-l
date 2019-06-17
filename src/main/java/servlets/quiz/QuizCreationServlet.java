@@ -47,7 +47,7 @@ public class QuizCreationServlet extends HttpServlet {
         }
         quizDao.getQuestionDao().insertAll(questionAnswerMap.keySet());
         for (Question question: questionAnswerMap.keySet()) {
-            questionAnswerMap.get(question).setQuestionId(question.getQuestionId());
+            questionAnswerMap.get(question).setQuestionId(question.getId());
         }
         quizDao.getAnswerDao().insertAll(questionAnswerMap.values());
         request.getRequestDispatcher("quiz").forward(request, response);

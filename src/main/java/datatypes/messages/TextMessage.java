@@ -6,7 +6,6 @@ import java.sql.Timestamp;
 
 public class TextMessage extends Message {
     private final String textMesage;
-    private int id;
     private final MessageType messageType = MessageType.TextMessage;
     public TextMessage(int senderId, int receiverId, Timestamp timestamp, String textMessage) {
         super(senderId, receiverId, timestamp);
@@ -22,10 +21,7 @@ public class TextMessage extends Message {
         this.id = id;
     }
 
-    public  int getId() {return  id;}
-
     public String getTextMessage(){return textMesage;}
-
 
     @Override
     public MessageType getMessageType() {

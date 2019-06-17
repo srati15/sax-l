@@ -14,6 +14,8 @@ class DaoFactory {
         map.put(DaoType.Quiz, new QuizDao(new QuestionDao(), new AnswerDao()));
         map.put(DaoType.Announcement, new AnnouncementDao());
         map.put(DaoType.FriendRequest, new FriendRequestDao());
+
+        map.values().stream().forEach(s->s.cache());
     }
     static <E extends Dao> E dispatch(DaoType daoType) {
         if (map.containsKey(daoType)) return (E) map.get(daoType);

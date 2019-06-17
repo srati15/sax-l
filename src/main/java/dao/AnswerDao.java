@@ -6,16 +6,15 @@ import enums.DaoType;
 
 import java.sql.*;
 import java.util.Collection;
-import java.util.List;
 
 import static dao.helpers.QueryGenerator.getInsertQuery;
 import static database.mapper.AnswerMapper.*;
 
 public class AnswerDao implements Dao<Integer, Answer> {
+    private Cao<Integer, Answer> cao = new Cao<>();
     @Override
-    public Answer findById(Integer integer) {
-        // TODO: 6/16/19
-        return null;
+    public Answer findById(Integer id) {
+        return cao.findById(id);
     }
 
     @Override
@@ -24,9 +23,9 @@ public class AnswerDao implements Dao<Integer, Answer> {
     }
 
     @Override
-    public List<Answer> findAll() {
+    public Collection<Answer> findAll() {
         // TODO: 6/16/19
-        return null;
+        return cao.findAll();
     }
 
     @Override
@@ -46,6 +45,11 @@ public class AnswerDao implements Dao<Integer, Answer> {
         return DaoType.Answer;
     }
 
+    @Override
+    public void cache() {
+
+    }
+
     public void insertAll(Collection<Answer> values) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
@@ -61,9 +65,13 @@ public class AnswerDao implements Dao<Integer, Answer> {
             statement.executeBatch();
             rs = statement.getGeneratedKeys();
             for (Answer answer : values) {
-                rs.next();
-                System.out.println(rs.getInt(1));
-                answer.setQuestionId(rs.getInt(1));
+                if (rs.next()){
+                    System.out.println(rs.getInt(1));
+                    answer.setId(rs.getInt(1));
+                    cao.add(answer);
+                }else {
+                    System.out.println("error in some insertions");
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

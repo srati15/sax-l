@@ -7,7 +7,7 @@ import datatypes.Quiz;
 import enums.DaoType;
 
 import java.sql.*;
-import java.util.List;
+import java.util.Collection;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.QueryGenerator.getInsertQuery;
@@ -19,7 +19,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
     private final QuestionDao questionDao;
     private final AnswerDao answerDao;
     private DBRowMapper<Quiz> mapper = new QuizMapper();
-
+    private Cao<Integer, Quiz> cao = new Cao<>();
     public QuizDao(QuestionDao questionDao, AnswerDao answerDao) {
         this.questionDao = questionDao;
         this.answerDao = answerDao;
@@ -35,23 +35,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
 
     @Override
     public Quiz findById(Integer id) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            String query = getSelectQuery(TABLE_NAME, QUIZ_ID);
-            statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return mapper.mapRow(resultSet);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            executeFinalBlock(connection, statement, rs);
-        }
-        return null;
+        return cao.findById(id);
     }
 
     @Override
@@ -75,8 +59,10 @@ public class QuizDao implements Dao<Integer, Quiz>{
             if (result == 1) {
                 System.out.println("Record inserted sucessfully");
                 rs = statement.getGeneratedKeys();
-                rs.next();
-                entity.setId(rs.getInt(1));
+                if (rs.next()){
+                    entity.setId(rs.getInt(1));
+                    cao.add(entity);
+                }
             }
             else System.out.println("Error inserting record");
         } catch (SQLException e) {
@@ -87,15 +73,13 @@ public class QuizDao implements Dao<Integer, Quiz>{
     }
 
     @Override
-    public List<Quiz> findAll() {
-        // TODO: 5/27/19
-
-        return null;
+    public Collection<Quiz> findAll() {
+        return cao.findAll();
     }
 
     @Override
     public void deleteById(Integer id) {
-
+        // TODO: 6/17/19
     }
 
     @Override
@@ -107,6 +91,24 @@ public class QuizDao implements Dao<Integer, Quiz>{
     @Override
     public DaoType getDaoType() {
         return DaoType.Quiz;
+    }
+    @Override
+    public void cache() {
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            String query = getSelectQuery(TABLE_NAME);
+            statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                cao.add(mapper.mapRow(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            executeFinalBlock(connection, statement, rs);
+        }
     }
 
 }

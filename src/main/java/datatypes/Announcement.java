@@ -1,8 +1,7 @@
 package datatypes;
 
 
-public class Announcement {
-    private int id;
+public class Announcement extends Domain<Integer>{
     private String announcementText;
     private String hyperLink;
     private boolean active;
@@ -19,9 +18,6 @@ public class Announcement {
         this.active = active;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getAnnouncementText() {
         return announcementText;
@@ -29,10 +25,6 @@ public class Announcement {
 
     public String getHyperLink() {
         return hyperLink;
-    }
-
-    public int getId() {
-        return id;
     }
 
     @Override

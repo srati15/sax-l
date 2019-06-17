@@ -2,8 +2,7 @@ package datatypes;
 
 import enums.UserType;
 
-public class User {
-    private int id;
+public class User extends Domain<Integer>{
     private String userName;
     private String firstName;
     private String lastName;
@@ -22,10 +21,6 @@ public class User {
     public User(int id, String userName, String password, String firstName, String lastName, String mail) {
         this(userName, password, firstName, lastName, mail);
         this.id = id;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getUserName() {

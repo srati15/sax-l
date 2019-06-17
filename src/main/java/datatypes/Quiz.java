@@ -2,8 +2,7 @@ package datatypes;
 
 import java.sql.Timestamp;
 
-public class Quiz {
-    private int id;
+public class Quiz extends Domain<Integer> {
     private String quizName;
     private int authorId;
     private int timesDone;
@@ -12,10 +11,6 @@ public class Quiz {
     private boolean onePage;
     private boolean allowedImmediateCorrection;
     private boolean allowedPracticemode;
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getQuizName() {
         return quizName;
@@ -61,10 +56,6 @@ public class Quiz {
 
     public Timestamp getDateCreated() {
         return dateCreated;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public int getAuthorId() {

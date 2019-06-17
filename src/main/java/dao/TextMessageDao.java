@@ -7,8 +7,9 @@ import datatypes.messages.TextMessage;
 import enums.DaoType;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.QueryGenerator.*;
@@ -16,24 +17,10 @@ import static database.mapper.TextMessageMapper.*;
 
 public class TextMessageDao implements Dao<Integer, TextMessage> {
     private DBRowMapper<TextMessage> mapper = new TextMessageMapper();
+    private Cao<Integer, TextMessage> cao = new Cao<>();
     @Override
     public TextMessage findById(Integer id) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            String query = getSelectQuery(TABLE_NAME, TEXT_MESSAGE_ID);
-            statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-            rs = statement.executeQuery();
-            rs.next();
-            return mapper.mapRow(rs);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            executeFinalBlock(connection, statement, rs);
-        }
-        return null;
+        return cao.findById(id);
     }
 
     @Override
@@ -49,11 +36,15 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             statement.setTimestamp(3, entity.getTimestamp());
             statement.setString(4, entity.getTextMessage());
             int result = statement.executeUpdate();
-            if (result == 1) System.out.println("message inserted successfully");
+            if (result == 1) {
+                rs = statement.getGeneratedKeys();
+                rs.next();
+                entity.setId(rs.getInt(1));
+                System.out.println("message inserted successfully");
+                cao.add(entity);
+            }
             else System.out.println("Error inserting message");
-            rs = statement.getGeneratedKeys();
-            rs.next();
-            entity.setId(rs.getInt(1));
+
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -62,25 +53,8 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
     }
 
     @Override
-    public List<TextMessage> findAll() {
-        List<TextMessage> list = new ArrayList<>();
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            String query = getSelectQuery(TABLE_NAME);
-            statement = connection.prepareStatement(query);
-            rs = statement.executeQuery();
-            while(rs.next()){
-                list.add(mapper.mapRow(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            executeFinalBlock(connection, statement, rs);
-        }
-
-        return list;
+    public Collection<TextMessage> findAll() {
+        return cao.findAll();
     }
 
     @Override
@@ -92,8 +66,10 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             int result = statement.executeUpdate();
-            if(result == 1)
+            if(result == 1){
                 System.out.println("message Deleted Successfully");
+                cao.delete(id);
+            }
             else
                 System.out.println("Error Deleting message");
         } catch (SQLException e) {
@@ -113,21 +89,18 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
         return DaoType.TextMessage;
     }
 
-
-    public List<TextMessage> getTextMessagesOfGivenUsers(int senderId, int receiverId){
-        List<TextMessage> list = new ArrayList<>();
+    @Override
+    public void cache() {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
         try {
-            String query = getSelectQuery(TABLE_NAME, SENDER_ID, RECEIVER_ID);
-            query = query + " ORDER BY " + DATE_SENT + " ASC";
+            String query = getSelectQuery(TABLE_NAME);
             statement = connection.prepareStatement(query);
-            statement.setInt(1, senderId);
-            statement.setInt(2, receiverId);
             rs = statement.executeQuery();
             while(rs.next()){
-                list.add(mapper.mapRow(rs));
+                TextMessage message = mapper.mapRow(rs);
+                cao.add(message);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -135,7 +108,11 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             executeFinalBlock(connection, statement, rs);
         }
 
-        return list;
+    }
+
+    public List<TextMessage> getTextMessagesOfGivenUsers(int senderId, int receiverId){
+        //not both sides
+        return cao.findAll().stream().filter(s->s.getSenderId()==senderId && s.getReceiverId() == receiverId).collect(Collectors.toList());
     }
 
 }

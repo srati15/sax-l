@@ -1,10 +1,11 @@
 package datatypes.messages;
 
+import datatypes.Domain;
 import enums.MessageType;
 
 import java.sql.Timestamp;
 
-public abstract class Message {
+public abstract class Message extends Domain<Integer> {
     private final Timestamp timestamp;
     private final int senderId;
     private final int receiverId;

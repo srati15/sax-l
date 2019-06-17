@@ -87,5 +87,4 @@
         <servlet-name>Quiz</servlet-name>
         <url-pattern>/quiz</url-pattern>
     </servlet-mapping>
-
 </web-app>

@@ -1,27 +1,20 @@
 package datatypes.answer;
 
-public class Answer {
+import datatypes.Domain;
+
+public class Answer extends Domain<Integer> {
     private final String answer;
-    private int answerId;
     private int questionId;
 
     public Answer(String answer, int answerId, int questionId) {
         this.answer = answer;
-        this.answerId = answerId;
+        this.id = answerId;
         this.questionId = questionId;
     }
 
     public Answer(String answer, int questionId) {
         this.answer = answer;
         this.questionId = questionId;
-    }
-
-    public void setAnswerId(int answerId) {
-        this.answerId = answerId;
-    }
-
-    public int getAnswerId() {
-        return answerId;
     }
 
     public int getQuestionId() {

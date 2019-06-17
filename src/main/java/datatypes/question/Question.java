@@ -1,15 +1,15 @@
 package datatypes.question;
 
+import datatypes.Domain;
 import enums.QuestionType;
 
-public abstract class Question {
+public abstract class Question extends Domain<Integer> {
     private final String question;
     private int quizId;
-    private int questionId;
 
     public Question(int questionId, int quizId, String question) {
         this.question = question;
-        this.questionId = questionId;
+        this.id = questionId;
         this.quizId = quizId;
     }
 
@@ -20,14 +20,6 @@ public abstract class Question {
 
     public String getQuestion() {
         return question;
-    }
-
-    public void setQuestionId(int questionId) {
-        this.questionId = questionId;
-    }
-
-    public int getQuestionId() {
-        return questionId;
     }
 
     public abstract QuestionType getQuestionType();

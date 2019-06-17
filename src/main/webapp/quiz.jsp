@@ -68,7 +68,7 @@
 <!-- ***** Welcome Area Start ***** -->
 
 <section class="mosh-aboutUs-area">
-    <div class="container" id="createContainer" style="display: inline-block;">
+    <div class="container" id="createContainer">
         <!----quizzes table --->
         <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
             <thead>

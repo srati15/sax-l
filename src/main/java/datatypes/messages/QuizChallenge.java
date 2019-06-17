@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 
 public class QuizChallenge extends Message {
     private final RequestStatus requestStatus;
-    private int id;
     private MessageType messageType = MessageType.Challenge;
     public QuizChallenge(int senderId, int receiverId, Timestamp timestamp, RequestStatus requestStatus) {
         super(senderId, receiverId, timestamp);
@@ -25,10 +24,6 @@ public class QuizChallenge extends Message {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getId() {
-        return id;
     }
 
     @Override

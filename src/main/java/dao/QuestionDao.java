@@ -5,17 +5,17 @@ import datatypes.question.Question;
 import enums.DaoType;
 
 import java.sql.*;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 import static dao.helpers.QueryGenerator.getInsertQuery;
 import static database.mapper.QuestionMapper.*;
 
 public class QuestionDao implements Dao<Integer, Question> {
+    private Cao<Integer, Question> cao = new Cao<>();
     @Override
-    public Question findById(Integer integer) {
-        // TODO: 6/16/19
-        return null;
+    public Question findById(Integer id) {
+        return cao.findById(id);
     }
 
     @Override
@@ -40,8 +40,7 @@ public class QuestionDao implements Dao<Integer, Question> {
             rs = statement.getGeneratedKeys();
             for (Question question : questions) {
                 rs.next();
-                System.out.println(rs.getInt(1));
-                question.setQuestionId(rs.getInt(1));
+                question.setId(rs.getInt(1));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -49,9 +48,8 @@ public class QuestionDao implements Dao<Integer, Question> {
     }
 
     @Override
-    public List<Question> findAll() {
-        // TODO: 6/16/19
-        return null;
+    public Collection<Question> findAll() {
+        return cao.findAll();
     }
 
     @Override
@@ -69,5 +67,10 @@ public class QuestionDao implements Dao<Integer, Question> {
     @Override
     public DaoType getDaoType() {
         return DaoType.Question;
+    }
+
+    @Override
+    public void cache() {
+        // TODO: 6/17/19
     }
 }

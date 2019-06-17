@@ -7,32 +7,17 @@ import datatypes.Announcement;
 import enums.DaoType;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.QueryGenerator.*;
 import static database.mapper.AnnouncementMapper.*;
 public class AnnouncementDao implements Dao<Integer, Announcement> {
     private DBRowMapper<Announcement> mapper = new AnnouncementMapper();
+    private Cao<Integer, Announcement> cao = new Cao<>();
     @Override
     public Announcement findById(Integer id) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            String query = getSelectQuery(TABLE_NAME, ANNOUNCEMENT_ID);
-            statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-            rs = statement.executeQuery();
-            if (rs.next()) return mapper.mapRow(rs);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            executeFinalBlock(connection, statement, rs);
-        }
-
-        return null;
+        return cao.findById(id);
     }
 
 
@@ -49,13 +34,16 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             statement.setString(2, entity.getHyperLink());
             statement.setBoolean(3, entity.isActive());
             int result = statement.executeUpdate();
-            if (result == 1)
+            if (result == 1){
                 System.out.println("Announcement inserted successfully");
+                rs = statement.getGeneratedKeys();
+                rs.next();
+                entity.setId(rs.getInt(1));
+                cao.add(entity);
+            }
             else
                 System.out.println("Error inserting announcement");
-            rs = statement.getGeneratedKeys();
-            rs.next();
-            entity.setId(rs.getInt(1));
+
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -64,24 +52,8 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
     }
 
     @Override
-    public List<Announcement> findAll() {
-        List<Announcement> list = new ArrayList<>();
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            String query = getSelectQuery(TABLE_NAME);
-            statement = connection.prepareStatement(query);
-            rs = statement.executeQuery();
-            while(rs.next()){
-                list.add(mapper.mapRow(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            executeFinalBlock(connection, statement, rs);
-        }
-        return list;
+    public Collection<Announcement> findAll() {
+        return cao.findAll();
     }
 
     @Override
@@ -93,7 +65,10 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             int result = statement.executeUpdate();
-            if(result == 1) System.out.println("Announcement Deleted Successfully");
+            if(result == 1) {
+                cao.delete(id);
+                System.out.println("Announcement Deleted Successfully");
+            }
             else
                 System.out.println("Error Deleting Announcement");
         } catch (SQLException e) {
@@ -115,7 +90,10 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             statement.setBoolean(3, entity.isActive());
             statement.setInt(4, entity.getId());
             int result = statement.executeUpdate();
-            if (result == 1) System.out.println("Announcement updated sucessfully");
+            if (result == 1) {
+                cao.add(entity);
+                System.out.println("Announcement updated sucessfully");
+            }
             else System.out.println("Error updating announcement");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -127,5 +105,25 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
     @Override
     public DaoType getDaoType() {
         return DaoType.Announcement;
+    }
+
+    @Override
+    public void cache() {
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            String query = getSelectQuery(TABLE_NAME);
+            statement = connection.prepareStatement(query);
+            rs = statement.executeQuery();
+            while(rs.next()){
+                Announcement announcement = mapper.mapRow(rs);
+                cao.add(announcement);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            executeFinalBlock(connection, statement, rs);
+        }
     }
 }

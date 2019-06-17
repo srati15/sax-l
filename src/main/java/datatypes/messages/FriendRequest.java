@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 public class FriendRequest extends Message{
     private RequestStatus status;
     private final MessageType messageType = MessageType.FriendRequest;
-    private int id;
     public FriendRequest(int senderId, int recieverId, RequestStatus status, Timestamp sendDate) {
         super(senderId, recieverId, sendDate);
         this.status = status;
@@ -18,9 +17,6 @@ public class FriendRequest extends Message{
         this.id = id;
     }
 
-    public int getId() {
-        return id;
-    }
 
     public RequestStatus getStatus() {
         return status;

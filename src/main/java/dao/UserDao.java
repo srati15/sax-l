@@ -7,54 +7,23 @@ import datatypes.User;
 import enums.DaoType;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.QueryGenerator.*;
 import static database.mapper.UserMapper.*;
+
 public class UserDao implements Dao<Integer, User> {
     private DBRowMapper<User> mapper = new UserMapper();
+    private Cao<Integer, User> cao = new Cao<>();
 
     @Override
     public User findById(Integer id) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try  {
-            String query = getSelectQuery(TABLE_NAME, USER_ID);
-            statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return mapper.mapRow(resultSet);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            executeFinalBlock(connection, statement, resultSet);
-        }
-        return null;
+        return cao.findById(id);
     }
 
     public User findByUserName(String usrName) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try   {
-            String query = getSelectQuery(TABLE_NAME, USER_NAME);
-            statement = connection.prepareStatement(query);
-            statement.setString(1, usrName);
-            resultSet = statement.executeQuery();
-            if (resultSet.next()){
-                return mapper.mapRow(resultSet);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            executeFinalBlock(connection, statement, resultSet);
-        }
-        return null;
+        return cao.findAll().stream().filter(s -> s.getUserName().equals(usrName)).findFirst().orElse(null);
     }
 
     @Override
@@ -77,31 +46,17 @@ public class UserDao implements Dao<Integer, User> {
             rs = statement.getGeneratedKeys();
             rs.next();
             entity.setId(rs.getInt(1));
+            cao.add(entity);
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             executeFinalBlock(connection, statement, rs);
         }
     }
 
     @Override
-    public List<User> findAll() {
-        List<User> users = new ArrayList<>();
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        try {
-            String query = getSelectQuery(TABLE_NAME);
-            statement = connection.prepareStatement(query);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                users.add(mapper.mapRow(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            executeFinalBlock(connection, statement);
-        }
-        return users;
+    public Collection<User> findAll() {
+        return cao.findAll();
     }
 
     @Override
@@ -113,11 +68,13 @@ public class UserDao implements Dao<Integer, User> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             int result = statement.executeUpdate();
-            if (result == 1) System.out.println("Record deleted sucessfully");
-            else System.out.println("Error deleting record");
+            if (result == 1) {
+                cao.delete(id);
+                System.out.println("Record deleted sucessfully");
+            } else System.out.println("Error deleting record");
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             executeFinalBlock(connection, statement);
         }
     }
@@ -134,11 +91,13 @@ public class UserDao implements Dao<Integer, User> {
             statement.setInt(4, user.getUserType().getValue());
             statement.setInt(5, user.getId());
             int result = statement.executeUpdate();
-            if (result == 1) System.out.println("User updated sucessfully");
-            else System.out.println("Error updating user");
+            if (result == 1) {
+                System.out.println("User updated sucessfully");
+                cao.add(user);
+            } else System.out.println("Error updating user");
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             executeFinalBlock(connection, statement);
         }
     }
@@ -146,5 +105,24 @@ public class UserDao implements Dao<Integer, User> {
     @Override
     public DaoType getDaoType() {
         return DaoType.User;
+    }
+
+    @Override
+    public void cache() {
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        try {
+            String query = getSelectQuery(TABLE_NAME);
+            statement = connection.prepareStatement(query);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                User user = mapper.mapRow(rs);
+                cao.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            executeFinalBlock(connection, statement);
+        }
     }
 }
