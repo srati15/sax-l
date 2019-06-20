@@ -1,13 +1,22 @@
 package datatypes;
 
+import anotations.Column;
+import anotations.Entity;
 import enums.UserType;
 
+@Entity(table = "users")
 public class User extends Domain<Integer>{
+    @Column("user_name")
     private String userName;
+    @Column("first_name")
     private String firstName;
+    @Column("last_name")
     private String lastName;
+    @Column("pass")
     private String password;
+    @Column("user_type")
     private UserType userType;
+    @Column("mail")
     private String mail;
     public User(String userName, String password, String firstName, String lastName, String mail) {
         this.userName = userName;

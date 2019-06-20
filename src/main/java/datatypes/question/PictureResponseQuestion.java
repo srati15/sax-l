@@ -1,9 +1,11 @@
 package datatypes.question;
 
+import anotations.Column;
 import enums.QuestionType;
 
 public class PictureResponseQuestion extends Question {
-
+    @Column("question_type_id")
+    private final QuestionType questionType = QuestionType.PictureResponse;
 
     public PictureResponseQuestion(int questionId, int quizId, String question) {
         super(questionId, quizId, question);
@@ -15,6 +17,6 @@ public class PictureResponseQuestion extends Question {
 
     @Override
     public QuestionType getQuestionType() {
-        return QuestionType.PictureResponse;
+        return questionType;
     }
 }

@@ -1,13 +1,17 @@
 package datatypes.messages;
 
+import anotations.Column;
 import datatypes.Domain;
 import enums.MessageType;
 
 import java.sql.Timestamp;
 
 public abstract class Message extends Domain<Integer> {
+    @Column("date_sent")
     private final Timestamp timestamp;
+    @Column("sender_id")
     private final int senderId;
+    @Column("receiver_id")
     private final int receiverId;
 
     public Message(int senderId, int receiverId, Timestamp timestamp) {

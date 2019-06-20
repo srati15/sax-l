@@ -1,12 +1,16 @@
 package dao;
 
+import dao.helpers.EntityPersister;
 import database.CreateConnection;
 import database.mapper.AnnouncementMapper;
 import database.mapper.DBRowMapper;
 import datatypes.Announcement;
 import enums.DaoType;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
@@ -24,30 +28,11 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
 
     @Override
     public void insert(Announcement entity) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            String query = getInsertQuery(TABLE_NAME, ANNOUNCEMENT_TEXT, HYPERLINK, STATUS);
-            statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, entity.getAnnouncementText());
-            statement.setString(2, entity.getHyperLink());
-            statement.setBoolean(3, entity.isActive());
-            int result = statement.executeUpdate();
-            if (result == 1){
-                System.out.println("Announcement inserted successfully");
-                rs = statement.getGeneratedKeys();
-                rs.next();
-                entity.setId(rs.getInt(1));
-                cao.add(entity);
-            }
-            else
-                System.out.println("Error inserting announcement");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            executeFinalBlock(connection, statement, rs);
+        if (EntityPersister.executeInsert(entity)){
+            System.out.println("Announcement inserted successfully");
+            cao.add(entity);
+        }else {
+            System.out.println("Error inserting announcement");
         }
     }
 

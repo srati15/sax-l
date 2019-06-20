@@ -1,5 +1,6 @@
 package dao;
 
+import dao.helpers.EntityPersister;
 import database.CreateConnection;
 import database.mapper.DBRowMapper;
 import database.mapper.FriendRequestMapper;
@@ -7,7 +8,10 @@ import datatypes.messages.FriendRequest;
 import enums.DaoType;
 import enums.RequestStatus;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,32 +32,13 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
 
     @Override
     public void insert(FriendRequest entity) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            String query = getInsertQuery(TABLE_NAME, SENDER_ID, RECEIVER_ID, REQUEST_STATUS, DATE_SENT);
-            statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, entity.getSenderId());
-            statement.setInt(2, entity.getReceiverId());
-            statement.setInt(3, entity.getStatus().getValue());
-            statement.setTimestamp(4, entity.getTimestamp());
-            int result = statement.executeUpdate();
-            if (result == 1) {
-                rs = statement.getGeneratedKeys();
-                rs.next();
-                int id = rs.getInt(1);
-                entity.setId(id);
-                cao.add(entity);
-                System.out.println("Request Added Successfully");
-            } else
-                System.out.println("Error Adding Request");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            executeFinalBlock(connection, statement, rs);
-        }
 
+        if (EntityPersister.executeInsert(entity)) {
+            cao.add(entity);
+            System.out.println("Request Added Successfully");
+        } else{
+            System.out.println("Error Adding Request");
+        }
     }
 
     @Override

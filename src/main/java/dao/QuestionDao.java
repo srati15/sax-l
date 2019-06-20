@@ -1,5 +1,6 @@
 package dao;
 
+import dao.helpers.EntityPersister;
 import database.CreateConnection;
 import datatypes.question.Question;
 import enums.DaoType;
@@ -20,7 +21,12 @@ public class QuestionDao implements Dao<Integer, Question> {
 
     @Override
     public void insert(Question entity) {
-        //use insertAll instead
+        if (EntityPersister.executeInsert(entity)) {
+            System.out.println("Question inserted successfully");
+            cao.add(entity);
+        }else {
+            System.out.println("Error inserting question");
+        }
     }
 
     public void insertAll(Set<Question> questions) {

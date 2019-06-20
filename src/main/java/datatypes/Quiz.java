@@ -1,15 +1,34 @@
 package datatypes;
 
+import anotations.Column;
+import anotations.Entity;
+
 import java.sql.Timestamp;
 
+@Entity(table = "quiz")
 public class Quiz extends Domain<Integer> {
+    @Column("quiz_name")
     private String quizName;
+
+    @Column("quiz_author_id")
     private int authorId;
+
+    @Column("times_done")
     private int timesDone;
+
+    @Column("date_created")
     private Timestamp dateCreated;
+
+    @Column("randomized")
     private boolean randomized;
+
+    @Column("is_single_page")
     private boolean onePage;
+
+    @Column("is_allowed_correction")
     private boolean allowedImmediateCorrection;
+
+    @Column("is_allowed_practice_mode")
     private boolean allowedPracticemode;
 
     public String getQuizName() {

@@ -1,25 +1,29 @@
 package dao;
 
+import dao.helpers.EntityPersister;
 import database.CreateConnection;
 import database.mapper.DBRowMapper;
 import database.mapper.QuizMapper;
 import datatypes.Quiz;
 import enums.DaoType;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
-import static dao.helpers.QueryGenerator.getInsertQuery;
 import static dao.helpers.QueryGenerator.getSelectQuery;
-import static database.mapper.QuizMapper.*;
+import static database.mapper.QuizMapper.TABLE_NAME;
 
-public class QuizDao implements Dao<Integer, Quiz>{
+public class QuizDao implements Dao<Integer, Quiz> {
 
     private final QuestionDao questionDao;
     private final AnswerDao answerDao;
     private DBRowMapper<Quiz> mapper = new QuizMapper();
     private Cao<Integer, Quiz> cao = new Cao<>();
+
     public QuizDao(QuestionDao questionDao, AnswerDao answerDao) {
         this.questionDao = questionDao;
         this.answerDao = answerDao;
@@ -40,35 +44,11 @@ public class QuizDao implements Dao<Integer, Quiz>{
 
     @Override
     public void insert(Quiz entity) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            String query = getInsertQuery(TABLE_NAME, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, TIMES_DONE);
-            statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, entity.getAuthorId());
-            statement.setString(2, entity.getQuizName());
-            statement.setTimestamp(3, entity.getDateCreated());
-            statement.setBoolean(4, entity.isRandomized());
-            statement.setBoolean(5, entity.isAllowedImmediateCorrection());
-            statement.setBoolean(6, entity.isAllowedPracticemode());
-            statement.setBoolean(7, entity.isOnePage());
-            statement.setInt(8, entity.getTimesDone());
-
-            int result = statement.executeUpdate();
-            if (result == 1) {
-                System.out.println("Record inserted sucessfully");
-                rs = statement.getGeneratedKeys();
-                if (rs.next()){
-                    entity.setId(rs.getInt(1));
-                    cao.add(entity);
-                }
-            }
-            else System.out.println("Error inserting record");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            executeFinalBlock(connection, statement, rs);
+        if (EntityPersister.executeInsert(entity)) {
+            System.out.println("Quiz inserted sucessfully");
+            cao.add(entity);
+        }else {
+            System.out.println("Error inserting quiz");
         }
     }
 
@@ -85,13 +65,14 @@ public class QuizDao implements Dao<Integer, Quiz>{
     @Override
     public void update(Quiz entity) {
 
-        // TODO: 6/2/19  
+        // TODO: 6/2/19
     }
 
     @Override
     public DaoType getDaoType() {
         return DaoType.Quiz;
     }
+
     @Override
     public void cache() {
         Connection connection = CreateConnection.getConnection();
@@ -106,7 +87,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             executeFinalBlock(connection, statement, rs);
         }
     }

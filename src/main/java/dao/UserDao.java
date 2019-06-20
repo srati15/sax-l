@@ -1,12 +1,16 @@
 package dao;
 
+import dao.helpers.EntityPersister;
 import database.CreateConnection;
 import database.mapper.DBRowMapper;
 import database.mapper.UserMapper;
 import datatypes.User;
 import enums.DaoType;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
@@ -28,29 +32,11 @@ public class UserDao implements Dao<Integer, User> {
 
     @Override
     public void insert(User entity) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            String query = getInsertQuery(TABLE_NAME, USER_NAME, USER_PASSWORD, FIRST_NAME, LAST_NAME, USER_TYPE, USER_MAIL);
-            statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, entity.getUserName());
-            statement.setString(2, entity.getPassword());
-            statement.setString(3, entity.getFirstName());
-            statement.setString(4, entity.getLastName());
-            statement.setInt(5, entity.getUserType().getValue());
-            statement.setString(6, entity.getMail());
-            int result = statement.executeUpdate();
-            if (result == 1) System.out.println("Record inserted sucessfully");
-            else System.out.println("Error inserting record");
-            rs = statement.getGeneratedKeys();
-            rs.next();
-            entity.setId(rs.getInt(1));
+        if (EntityPersister.executeInsert(entity)) {
+            System.out.println("Record inserted sucessfully");
             cao.add(entity);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            executeFinalBlock(connection, statement, rs);
+        } else {
+            System.out.println("Error inserting record");
         }
     }
 

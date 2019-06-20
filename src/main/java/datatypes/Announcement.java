@@ -1,9 +1,15 @@
 package datatypes;
 
+import anotations.Column;
+import anotations.Entity;
 
+@Entity(table = "announcements")
 public class Announcement extends Domain<Integer>{
+    @Column("announcement_text")
     private String announcementText;
+    @Column("hyperlink")
     private String hyperLink;
+    @Column("active")
     private boolean active;
     public Announcement(String announcementText, String hyperLink, Boolean active) {
         this.announcementText = announcementText;

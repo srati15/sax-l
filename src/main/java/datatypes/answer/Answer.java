@@ -1,9 +1,14 @@
 package datatypes.answer;
 
+import anotations.Column;
+import anotations.Entity;
 import datatypes.Domain;
-
+@Entity(table = "answers")
 public class Answer extends Domain<Integer> {
+    @Column("answer_string")
     private final String answer;
+
+    @Column("question_id")
     private int questionId;
 
     public Answer(String answer, int answerId, int questionId) {
@@ -27,5 +32,14 @@ public class Answer extends Domain<Integer> {
 
     public void setQuestionId(int questionId) {
         this.questionId = questionId;
+    }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "answer='" + answer + '\'' +
+                ", questionId=" + questionId +
+                ", id=" + id +
+                "} " + super.toString();
     }
 }

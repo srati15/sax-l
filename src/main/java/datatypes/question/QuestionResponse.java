@@ -1,8 +1,12 @@
 package datatypes.question;
 
+import anotations.Column;
 import enums.QuestionType;
 
 public class QuestionResponse extends Question {
+    @Column("question_type_id")
+    private final QuestionType questionType = QuestionType.QuestionResponse;
+
     public QuestionResponse(int questionId, int quizId, String question) {
         super(questionId, quizId, question);
     }
@@ -13,7 +17,7 @@ public class QuestionResponse extends Question {
 
     @Override
     public QuestionType getQuestionType() {
-        return QuestionType.QuestionResponse;
+        return questionType;
     }
 
     @Override

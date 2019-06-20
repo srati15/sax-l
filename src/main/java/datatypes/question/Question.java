@@ -1,11 +1,15 @@
 package datatypes.question;
 
+import anotations.Column;
+import anotations.Entity;
 import datatypes.Domain;
 import enums.QuestionType;
-
+@Entity(table = "question")
 public abstract class Question extends Domain<Integer> {
+    @Column("question_text")
     private final String question;
-    private int quizId;
+    @Column("quiz_id")
+    private final int quizId;
 
     public Question(int questionId, int quizId, String question) {
         this.question = question;

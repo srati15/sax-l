@@ -1,8 +1,11 @@
 package datatypes.question;
 
+import anotations.Column;
 import enums.QuestionType;
 
 public class FillBlankQuestion extends Question {
+    @Column("question_type_id")
+    private final QuestionType questionType = QuestionType.FillInTheBlank;
     public FillBlankQuestion(int questionId, int quizId, String question) {
         super(questionId, quizId, question);
     }
@@ -13,6 +16,6 @@ public class FillBlankQuestion extends Question {
 
     @Override
     public QuestionType getQuestionType() {
-        return QuestionType.FillInTheBlank;
+        return questionType;
     }
 }
