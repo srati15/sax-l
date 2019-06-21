@@ -2,7 +2,9 @@ package datatypes.question;
 
 import anotations.Column;
 import anotations.Entity;
+import anotations.OneToOne;
 import datatypes.Domain;
+import datatypes.answer.Answer;
 import enums.QuestionType;
 @Entity(table = "question")
 public abstract class Question extends Domain<Integer> {
@@ -10,7 +12,8 @@ public abstract class Question extends Domain<Integer> {
     private final String question;
     @Column("quiz_id")
     private final int quizId;
-
+    @OneToOne(value = Answer.class, joinColumn = "question_id")
+    private Answer answer;
     public Question(int questionId, int quizId, String question) {
         this.question = question;
         this.id = questionId;
@@ -38,5 +41,9 @@ public abstract class Question extends Domain<Integer> {
         return "Question{" +
                 "question='" + question + '\'' +
                 '}';
+    }
+
+    public void setAnswer(Answer answer) {
+        this.answer = answer;
     }
 }

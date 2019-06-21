@@ -22,6 +22,10 @@ public class Answer extends Domain<Integer> {
         this.questionId = questionId;
     }
 
+    public Answer(String answer) {
+        this.answer = answer;
+    }
+
     public int getQuestionId() {
         return questionId;
     }
