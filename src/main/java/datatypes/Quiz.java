@@ -34,7 +34,7 @@ public class Quiz extends Domain<Integer> {
     public String getQuizName() {
         return quizName;
     }
-
+    public Quiz(){}
     public Quiz(int id, String quizName, int authorId, int timesDone, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode) {
         this.id = id;
         this.quizName = quizName;

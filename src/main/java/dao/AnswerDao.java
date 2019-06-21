@@ -1,18 +1,16 @@
 package dao;
 
-import dao.helpers.EntityPersister;
-import database.CreateConnection;
+import dao.entity.EntityManager;
 import datatypes.answer.Answer;
 import enums.DaoType;
 
-import java.sql.*;
 import java.util.Collection;
+import java.util.List;
 
-import static dao.helpers.QueryGenerator.getInsertQuery;
-import static database.mapper.AnswerMapper.*;
 
 public class AnswerDao implements Dao<Integer, Answer> {
     private Cao<Integer, Answer> cao = new Cao<>();
+    private EntityManager entityManager = EntityManager.getInstance();
     @Override
     public Answer findById(Integer id) {
         return cao.findById(id);
@@ -20,7 +18,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
 
     @Override
     public void insert(Answer entity) {
-        if (EntityPersister.executeInsert(entity)) {
+        if (entityManager.getPersister().executeInsert(entity)) {
             System.out.println("answer inserted successfully: "+entity);
             cao.add(entity);
         }else {
@@ -53,34 +51,11 @@ public class AnswerDao implements Dao<Integer, Answer> {
 
     @Override
     public void cache() {
-
+        List<Answer> answerList = entityManager.getFinder().executeFindAll(Answer.class);
+        answerList.forEach(s->cao.add(s));
     }
 
     public void insertAll(Collection<Answer> values) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        String query = getInsertQuery(TABLE_NAME, QUESTION_ID, ANSWER_TEXT);
-        try {
-            statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            for (Answer answer : values) {
-                statement.setInt(1, answer.getQuestionId());
-                statement.setString(2, answer.getAnswer());
-                statement.addBatch();
-            }
-            statement.executeBatch();
-            rs = statement.getGeneratedKeys();
-            for (Answer answer : values) {
-                if (rs.next()){
-                    System.out.println(rs.getInt(1));
-                    answer.setId(rs.getInt(1));
-                    cao.add(answer);
-                }else {
-                    System.out.println("error in some insertions");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        values.forEach(this::insert);
     }
 }

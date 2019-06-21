@@ -18,6 +18,7 @@ public class User extends Domain<Integer>{
     private UserType userType;
     @Column("mail")
     private String mail;
+    public User(){}
     public User(String userName, String password, String firstName, String lastName, String mail) {
         this.userName = userName;
         this.firstName = firstName;

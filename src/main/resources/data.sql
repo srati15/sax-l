@@ -17,7 +17,7 @@ create table announcements
 
 create table answers
 (
-    answer_id     int auto_increment
+    id            int auto_increment
         primary key,
     question_id   int          not null,
     answer_string varchar(125) not null
@@ -35,7 +35,7 @@ create table friend_requests
 
 create table question
 (
-    question_id      int auto_increment
+    id               int auto_increment
         primary key,
     question_text    varchar(200) not null,
     quiz_id          int          not null,
@@ -57,7 +57,7 @@ alter table questionTypes
 
 create table quiz
 (
-    quiz_id                  int auto_increment
+    id                       int auto_increment
         primary key,
     quiz_name                varchar(100)                         not null,
     quiz_author_id           int                                  not null,
@@ -80,17 +80,17 @@ create table results
 
 create table text_message
 (
-    text_message_id int auto_increment
+    id           int auto_increment
         primary key,
-    sender_id       int                                not null,
-    receiver_id     int                                not null,
-    date_sent       datetime default CURRENT_TIMESTAMP null,
-    message_sent    varchar(1000)                      not null
+    sender_id    int                                not null,
+    receiver_id  int                                not null,
+    date_sent    datetime default CURRENT_TIMESTAMP null,
+    message_sent varchar(1000)                      not null
 );
 
 create table users
 (
-    user_id    int auto_increment
+    id         int auto_increment
         primary key,
     user_name  varchar(50)  not null,
     pass       varchar(255) not null,
@@ -103,5 +103,5 @@ create table users
 );
 
 create index user_id_index
-    on users (user_id);
+    on users (id);
 

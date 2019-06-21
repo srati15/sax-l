@@ -11,6 +11,10 @@ public class Announcement extends Domain<Integer>{
     private String hyperLink;
     @Column("active")
     private boolean active;
+
+    public Announcement() {
+    }
+
     public Announcement(String announcementText, String hyperLink, Boolean active) {
         this.announcementText = announcementText;
         this.active = active;

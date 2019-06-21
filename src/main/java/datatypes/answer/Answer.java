@@ -6,11 +6,11 @@ import datatypes.Domain;
 @Entity(table = "answers")
 public class Answer extends Domain<Integer> {
     @Column("answer_string")
-    private final String answer;
+    private String answer;
 
     @Column("question_id")
     private int questionId;
-
+    public Answer(){}
     public Answer(String answer, int answerId, int questionId) {
         this.answer = answer;
         this.id = answerId;

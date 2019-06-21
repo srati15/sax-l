@@ -21,7 +21,7 @@ create table users
 );
 
 create index user_id_index
-    on users (user_id);
+    on users (id);
 /* Users table end*/
 
 /* Announcements table start*/

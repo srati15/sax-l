@@ -11,6 +11,7 @@ public class FriendRequest extends Message{
     @Column("request_status")
     private RequestStatus status;
     private final MessageType messageType = MessageType.FriendRequest;
+
     public FriendRequest(int senderId, int recieverId, RequestStatus status, Timestamp sendDate) {
         super(senderId, recieverId, sendDate);
         this.status = status;

@@ -1,14 +1,10 @@
-package dao.helpers;
+package dao.entity;
 
 import anotations.Column;
 import anotations.Entity;
 import anotations.OneToOne;
-import dao.QuestionDao;
 import database.CreateConnection;
 import datatypes.Domain;
-import datatypes.answer.Answer;
-import datatypes.question.Question;
-import datatypes.question.QuestionResponse;
 import enums.QuestionType;
 import enums.RequestStatus;
 import enums.UserType;
@@ -19,10 +15,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static dao.entity.EntityFinder.getString;
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 
 public class EntityPersister {
-    public static boolean executeInsert(Domain<Integer> entity) {
+
+    public boolean executeInsert(Domain<Integer> entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -59,7 +57,7 @@ public class EntityPersister {
         return false;
     }
 
-    private static void insert(Map<Object, OneToOne> oneToOneObjects, int foreignId) {
+    private void insert(Map<Object, OneToOne> oneToOneObjects, int foreignId) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -93,26 +91,19 @@ public class EntityPersister {
     }
 
 
-    private static String getTableName(Object entity) {
+    private String getTableName(Object entity) {
         Class clazz = entity.getClass();
-        while (clazz.getSuperclass() != null) {
-            if (clazz.isAnnotationPresent(Entity.class)) {
-                Entity annotation = (Entity) clazz.getAnnotation(Entity.class);
-                return annotation.table();
-            }
-            clazz = clazz.getSuperclass();
-        }
-        return null;
+        return getString(clazz);
     }
 
-    private static Object checkForEnums(Object o) {
+    private Object checkForEnums(Object o) {
         if (o instanceof UserType) return ((UserType) o).getValue();
         if (o instanceof QuestionType) return ((QuestionType) o).getValue();
         if (o instanceof RequestStatus) return ((RequestStatus) o).getValue();
         return o;
     }
 
-    private static String getQuery(ArrayList<String> columnNames, String tableName) {
+    private String getQuery(ArrayList<String> columnNames, String tableName) {
         StringBuilder builder = new StringBuilder();
         builder.append("INSERT INTO ").append(tableName).append(" (");
         for (int i = 0; i < columnNames.size(); i++) {
@@ -124,7 +115,7 @@ public class EntityPersister {
         return builder.toString();
     }
 
-    private static void setColumnsAndValues(Map<String, Object> columnValueMap, Domain<Integer> entity, Map<Object, OneToOne> oneToOneObjects) {
+    private void setColumnsAndValues(Map<String, Object> columnValueMap, Domain<Integer> entity, Map<Object, OneToOne> oneToOneObjects) {
         Class current = entity.getClass();
         while (current.getSuperclass() != null) {
             for (Field field : current.getDeclaredFields()) {
@@ -149,12 +140,5 @@ public class EntityPersister {
             }
             current = current.getSuperclass();
         }
-    }
-
-    public static void main(String[] args) {
-        Answer answer = new Answer("hwr?");
-        Question question = new QuestionResponse("asd", 1);
-        question.setAnswer(answer);
-        new QuestionDao().insert(question);
     }
 }

@@ -9,11 +9,12 @@ import enums.QuestionType;
 @Entity(table = "question")
 public abstract class Question extends Domain<Integer> {
     @Column("question_text")
-    private final String question;
+    private String question;
     @Column("quiz_id")
-    private final int quizId;
+    private int quizId;
     @OneToOne(value = Answer.class, joinColumn = "question_id")
     private Answer answer;
+    public Question(){}
     public Question(int questionId, int quizId, String question) {
         this.question = question;
         this.id = questionId;

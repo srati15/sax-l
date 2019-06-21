@@ -1,27 +1,18 @@
 package dao;
 
-import dao.helpers.EntityPersister;
-import database.CreateConnection;
-import database.mapper.DBRowMapper;
-import database.mapper.QuizMapper;
+import dao.entity.EntityManager;
 import datatypes.Quiz;
 import enums.DaoType;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
-
-import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
-import static dao.helpers.QueryGenerator.getSelectQuery;
-import static database.mapper.QuizMapper.TABLE_NAME;
+import java.util.List;
 
 public class QuizDao implements Dao<Integer, Quiz> {
+    private EntityManager entityManager = EntityManager.getInstance();
+
 
     private final QuestionDao questionDao;
     private final AnswerDao answerDao;
-    private DBRowMapper<Quiz> mapper = new QuizMapper();
     private Cao<Integer, Quiz> cao = new Cao<>();
 
     public QuizDao(QuestionDao questionDao, AnswerDao answerDao) {
@@ -44,7 +35,7 @@ public class QuizDao implements Dao<Integer, Quiz> {
 
     @Override
     public void insert(Quiz entity) {
-        if (EntityPersister.executeInsert(entity)) {
+        if (entityManager.getPersister().executeInsert(entity)) {
             System.out.println("Quiz inserted sucessfully");
             cao.add(entity);
         }else {
@@ -75,21 +66,8 @@ public class QuizDao implements Dao<Integer, Quiz> {
 
     @Override
     public void cache() {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        try {
-            String query = getSelectQuery(TABLE_NAME);
-            statement = connection.prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                cao.add(mapper.mapRow(resultSet));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            executeFinalBlock(connection, statement, rs);
-        }
+        List<Quiz> quizzes = entityManager.getFinder().executeFindAll(Quiz.class);
+        quizzes.forEach(s->cao.add(s));
     }
 
 }
