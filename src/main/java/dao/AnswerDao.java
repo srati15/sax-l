@@ -1,17 +1,29 @@
 package dao;
 
 import database.CreateConnection;
+import database.mapper.AnswerMapper;
 import datatypes.answer.Answer;
 import enums.DaoType;
 
 import java.sql.*;
 import java.util.Collection;
 
+import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.QueryGenerator.getInsertQuery;
+import static dao.helpers.QueryGenerator.getSelectQuery;
 import static database.mapper.AnswerMapper.*;
 
 public class AnswerDao implements Dao<Integer, Answer> {
     private Cao<Integer, Answer> cao = new Cao<>();
+    private AnswerMapper answerMapper = new AnswerMapper();
+    private static final AnswerDao answerDao = new AnswerDao() ;
+    public static AnswerDao getInstance() {
+        return answerDao;
+    }
+    private AnswerDao(){
+
+    }
+
     @Override
     public Answer findById(Integer id) {
         return cao.findById(id);
@@ -45,9 +57,23 @@ public class AnswerDao implements Dao<Integer, Answer> {
         return DaoType.Answer;
     }
 
-    @Override
     public void cache() {
-
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            String query = getSelectQuery(TABLE_NAME);
+            statement = connection.prepareStatement(query);
+            rs = statement.executeQuery();
+            while (rs.next()) {
+                Answer answer = answerMapper.mapRow(rs);
+                cao.add(answer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            executeFinalBlock(connection, statement, rs);
+        }
     }
 
     public void insertAll(Collection<Answer> values) {
@@ -76,5 +102,9 @@ public class AnswerDao implements Dao<Integer, Answer> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Answer findAnswerForQuestion(Integer questionId) {
+        return cao.findAll().stream().filter(answer -> answer.getQuestionId() == questionId).findFirst().get();
     }
 }

@@ -16,7 +16,13 @@ import static database.mapper.UserMapper.*;
 public class UserDao implements Dao<Integer, User> {
     private DBRowMapper<User> mapper = new UserMapper();
     private Cao<Integer, User> cao = new Cao<>();
+    private static final UserDao userDao = new UserDao();
+    public static UserDao getInstance() {
+        return userDao;
+    }
+    private UserDao() {
 
+    }
     @Override
     public User findById(Integer id) {
         return cao.findById(id);
@@ -107,7 +113,6 @@ public class UserDao implements Dao<Integer, User> {
         return DaoType.User;
     }
 
-    @Override
     public void cache() {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
@@ -118,6 +123,11 @@ public class UserDao implements Dao<Integer, User> {
             while (rs.next()) {
                 User user = mapper.mapRow(rs);
                 cao.add(user);
+            }
+            for (User user : cao.findAll()) {
+                user.setQuizzes(QuizDao.getInstance().findAllForUser(user.getId()));
+                user.setFriends(FriendRequestDao.getInstance().getFriendsForUser(user.getId()));
+                user.setPendingFriendRequests(FriendRequestDao.getInstance().getPendingRequestsFor(user.getId()));
             }
         } catch (SQLException e) {
             e.printStackTrace();

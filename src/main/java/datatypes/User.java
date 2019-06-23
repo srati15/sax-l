@@ -1,18 +1,23 @@
 package datatypes;
 
+import datatypes.messages.TextMessage;
 import enums.UserType;
 
-public class User extends Domain<Integer>{
-    private String userName;
-    private String firstName;
-    private String lastName;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class User extends Person {
     private String password;
     private UserType userType;
     private String mail;
+    private List<Person> friends;
+    private List<Quiz> quizzes = new ArrayList<>();
+    private List<Person> pendingFriendRequests = new ArrayList<>();
+    private Map<Person, List<TextMessage>> textMessages = new HashMap<>();
     public User(String userName, String password, String firstName, String lastName, String mail) {
-        this.userName = userName;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        super(userName, firstName, lastName);
         this.password = password;
         this.userType = UserType.User;
         this.mail = mail;
@@ -21,18 +26,6 @@ public class User extends Domain<Integer>{
     public User(int id, String userName, String password, String firstName, String lastName, String mail) {
         this(userName, password, firstName, lastName, mail);
         this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
     }
 
     public String getPassword() {
@@ -55,16 +48,50 @@ public class User extends Domain<Integer>{
         return mail;
     }
 
+    public List<Person> getFriends() {
+        return friends;
+    }
+
+    public List<Quiz> getQuizzes() {
+        return quizzes;
+    }
+
+    public void setQuizzes(List<Quiz> quizzes) {
+        this.quizzes = quizzes;
+    }
+
+    public void setFriends(List<Person> people) {
+        this.friends = people;
+    }
+
+    public void setPendingFriendRequests(List<Person> pendingFriendRequests) {
+        this.pendingFriendRequests = pendingFriendRequests;
+    }
+
+    public List<Person> getPendingFriendRequests() {
+        return pendingFriendRequests;
+    }
+
+    public Map<Person, List<TextMessage>> getTextMessages() {
+        return textMessages;
+    }
+
+    public void setTextMessages(Map<Person, List<TextMessage>> textMessages) {
+        this.textMessages = textMessages;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", password='" + password + '\'' +
+                "password='" + password + '\'' +
+                ", userName='" + getUserName()+'\''+
+                ", firstname='" + getFirstName()+'\''+
+                ", lastName='" + getLastName()+'\''+
                 ", userType=" + userType +
                 ", mail='" + mail + '\'' +
-                '}';
+                ", friends=" + friends +
+                ", friendRequests=" + pendingFriendRequests +
+                ", id=" + id +
+                "} " + super.toString();
     }
 }

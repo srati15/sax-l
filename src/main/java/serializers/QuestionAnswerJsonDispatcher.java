@@ -9,14 +9,16 @@ public class QuestionAnswerJsonDispatcher {
         String type = questionJson.getString("type");
         String questionText = questionJson.getString("question");
         if (type.equals("questionResponse")) {
-            question = new QuestionResponse(questionText, quizId);
+            question = new QuestionResponse(questionText);
         }else if (type.equals("pictureResponse")){
-            question = new PictureResponseQuestion(questionText, quizId);
+            question = new PictureResponseQuestion(questionText);
         }else if (type.equals("fillBlank")) {
-            question = new FillBlankQuestion(questionText, quizId);
+            question = new FillBlankQuestion(questionText);
         }else if (type.equals("multipleChoice")){
-            question = new MultipleChoiceQuestion(questionText, quizId);
+            question = new MultipleChoiceQuestion(questionText);
         }
+        assert question != null;
+        question.setQuizId(quizId);
         return question;
     }
 }

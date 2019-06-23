@@ -1,6 +1,11 @@
 package datatypes;
 
+import datatypes.answer.Answer;
+import datatypes.question.Question;
+
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Quiz extends Domain<Integer> {
     private String quizName;
@@ -12,6 +17,7 @@ public class Quiz extends Domain<Integer> {
     private boolean allowedImmediateCorrection;
     private boolean allowedPracticemode;
 
+    private Map<Question, Answer> questionAnswerMap = new HashMap<>();
     public String getQuizName() {
         return quizName;
     }
@@ -64,6 +70,14 @@ public class Quiz extends Domain<Integer> {
 
     public int getTimesDone() {
         return timesDone;
+    }
+
+    public void setQuestionAnswerMap(Map<Question, Answer> questionAnswerMap) {
+        this.questionAnswerMap = questionAnswerMap;
+    }
+
+    public Map<Question, Answer> getQuestionAnswerMap() {
+        return questionAnswerMap;
     }
 
     @Override

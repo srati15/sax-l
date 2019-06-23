@@ -7,11 +7,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 public class TextMessageMapper implements DBRowMapper<TextMessage> {
-    public static final String TEXT_MESSAGE_ID= "text_message_id";
+    public static final String TEXT_MESSAGE_ID= "id";
     public static final String SENDER_ID = "sender_id";
     public static final String RECEIVER_ID = "receiver_id";
     public static final String DATE_SENT = "date_sent";
-    public static final String MESSAGE_SENT = "message_text";
+    public static final String MESSAGE_SENT = "message_sent";
     public static final String TABLE_NAME = "text_message";
 
     @Override

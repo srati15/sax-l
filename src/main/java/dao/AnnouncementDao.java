@@ -15,6 +15,14 @@ import static database.mapper.AnnouncementMapper.*;
 public class AnnouncementDao implements Dao<Integer, Announcement> {
     private DBRowMapper<Announcement> mapper = new AnnouncementMapper();
     private Cao<Integer, Announcement> cao = new Cao<>();
+    private static AnnouncementDao announcementDao = new AnnouncementDao();
+    public static AnnouncementDao getInstance() {
+        if (announcementDao == null) announcementDao = new AnnouncementDao();
+        return announcementDao;
+    }
+    private AnnouncementDao(){
+    }
+
     @Override
     public Announcement findById(Integer id) {
         return cao.findById(id);
@@ -107,7 +115,6 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
         return DaoType.Announcement;
     }
 
-    @Override
     public void cache() {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;

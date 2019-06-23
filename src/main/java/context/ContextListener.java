@@ -5,10 +5,6 @@ import manager.DaoManager;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpSessionAttributeListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-import javax.servlet.http.HttpSessionBindingEvent;
 
 @WebListener()
 public class ContextListener implements ServletContextListener{
@@ -18,6 +14,6 @@ public class ContextListener implements ServletContextListener{
     }
 
     public void contextDestroyed(ServletContextEvent sce) {
-
+        sce.getServletContext().removeAttribute("manager");
     }
 }

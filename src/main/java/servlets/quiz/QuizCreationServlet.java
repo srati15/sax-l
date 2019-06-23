@@ -1,5 +1,7 @@
 package servlets.quiz;
 
+import dao.AnswerDao;
+import dao.QuestionDao;
 import dao.QuizDao;
 import datatypes.Quiz;
 import datatypes.User;
@@ -43,13 +45,13 @@ public class QuizCreationServlet extends HttpServlet {
         for (int i = 0; i < questionsArray.length(); i++) {
             JSONObject questionJson = questionsArray.getJSONObject(i);
             Question question = QuestionAnswerJsonDispatcher.dispatchQuestion(questionJson, quiz.getId());
-            questionAnswerMap.put(question, new Answer(questionJson.getString("answer"), 0));
+            questionAnswerMap.put(question, new Answer(questionJson.getString("answer")));
         }
-        quizDao.getQuestionDao().insertAll(questionAnswerMap.keySet());
+        QuestionDao.getInstance().insertAll(questionAnswerMap.keySet());
         for (Question question: questionAnswerMap.keySet()) {
             questionAnswerMap.get(question).setQuestionId(question.getId());
         }
-        quizDao.getAnswerDao().insertAll(questionAnswerMap.values());
+        AnswerDao.getInstance().insertAll(questionAnswerMap.values());
         request.getRequestDispatcher("quiz").forward(request, response);
     }
 

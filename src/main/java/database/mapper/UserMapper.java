@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserMapper implements DBRowMapper<User> {
-    public static final String USER_ID = "user_id";
+    public static final String USER_ID = "id";
     public static final String USER_NAME = "user_name";
     public static final String USER_PASSWORD = "pass";
     public static final String FIRST_NAME = "first_name";

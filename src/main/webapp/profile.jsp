@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="dao.FriendRequestDao" %>
 <%@ page import="dao.UserDao" %>
 <%@ page import="datatypes.User" %>
 <%@ page import="enums.DaoType" %>
@@ -36,9 +35,8 @@
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     User user = (User) request.getSession().getAttribute("user");
     UserDao userDao = manager.getDao(DaoType.User);
-    FriendRequestDao requestDao = manager.getDao(DaoType.FriendRequest);
-    pageContext.setAttribute("friendsIds", requestDao.getFriendsIdsFor(user.getId()));
-    pageContext.setAttribute("requestList", requestDao.getPendingRequestsFor(user.getId()));
+    pageContext.setAttribute("friendsIds", user.getFriends());
+    pageContext.setAttribute("requestList", user.getPendingFriendRequests());
     pageContext.setAttribute("userDao", userDao);
 %>
 <!-- ***** Preloader Start ***** -->
@@ -80,7 +78,7 @@
                         class="badge badge-info">${requestList.size()}</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#friends">Friends<span
+                <a class="nav-link" data-toggle="tab" href="#people">Friends<span
                         class="badge badge-info">${friendsIds.size()}</span></a>
             </li>
             <li class="nav-item">
@@ -105,8 +103,8 @@
                     <c:forEach items="${requestList}" var="friendRequest">
                         <tr>
                             <td>
-                                <a href="user-profile?userid=${friendRequest.senderId}">
-                                        ${userDao.findById(friendRequest.senderId).userName} sent you a friend request
+                                <a href="user-profile?userid=${friendRequest.id}">
+                                        ${friendRequest.userName} sent you a friend request
                                 </a>
                             </td>
                             <td>
@@ -114,13 +112,13 @@
                                     <button type="submit" class="btn btn-success btn-sm">
                                         Accept
                                     </button>
-                                    <input type="text" hidden name="receiverId" value="${friendRequest.senderId}"/>
+                                    <input type="text" hidden name="receiverId" value="${friendRequest.id}"/>
                                 </form>
                                 <form action="FriendRequestDeleteServlet" method="post" style="float:left">
                                     <button type="submit" class="btn btn-warning btn-sm">
                                         Reject
                                     </button>
-                                    <input type="text" hidden name="receiverId" value="${friendRequest.senderId}"/>
+                                    <input type="text" hidden name="receiverId" value="${friendRequest.id}"/>
                                     <input type="text" hidden name="callingPage" value="profile">
                                 </form>
                                 <br>
@@ -136,7 +134,7 @@
                     </tfoot>
                 </table>
             </div>
-            <div class="tab-pane fade" id="friends">
+            <div class="tab-pane fade" id="people">
                 <table id="friendsTable" class="table table-striped table-bordered table-sm" cellspacing="0"
                        width="100%">
                     <thead>
@@ -150,18 +148,17 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${friendsIds}" var="friendId">
-                        <% User currentFriend = userDao.findById((Integer) pageContext.getAttribute("friendId"));%>
+                    <c:forEach items="${friendsIds}" var="friend">
                         <tr>
                             <td>
-                                <a href="user-profile?userid=${friendId}"><%=currentFriend.getUserName()%>
+                                <a href="user-profile?userid=${friend.id}">${friend.userName}
                                 </a>
                             </td>
                             <td>
-                                <%=currentFriend.getFirstName()%>
+                                ${friend.firstName}
                             </td>
                             <td>
-                                <%=currentFriend.getLastName()%>
+                                ${friend.lastName}
                             </td>
                             <td>0</td>
                             <td>0</td>
@@ -170,7 +167,7 @@
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <i class="fa fa-trash"></i> Unfriend
                                     </button>
-                                    <input type="text" hidden name="receiverId" value="<%=currentFriend.getId()%>"/>
+                                    <input type="text" hidden name="receiverId" value="${friend.id}"/>
                                     <input type="text" hidden name="callingPage" value="profile">
                                 </form>
                             </td>
@@ -234,9 +231,6 @@
                         <input type="text" hidden name="calledFrom" value="profile">
                     </center>
                 </form>
-                <script>
-                    ${"#editForm"}.validate();
-                </script>
             </div>
 
         </div>
@@ -270,11 +264,7 @@
         $('#friendsTable').DataTable();
         $('.dataTables_length').addClass('bs-select');
     });
-    $('#friendsTable tr').click(function () {
-        $(this).remove();
 
-        return false;
-    });
 </script>
 </body>
 

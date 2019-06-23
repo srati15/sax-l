@@ -4,7 +4,6 @@ import dao.FriendRequestDao;
 import datatypes.User;
 import datatypes.messages.FriendRequest;
 import enums.DaoType;
-import enums.RequestStatus;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -13,8 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @WebServlet("/FriendRequestDeleteServlet")
 public class FriendRequestDeleteServlet extends HttpServlet {
@@ -23,6 +20,7 @@ public class FriendRequestDeleteServlet extends HttpServlet {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
         FriendRequestDao friendRequestDao = manager.getDao(DaoType.FriendRequest);
         User user = (User) request.getSession().getAttribute("user");
+
         int receiverId = Integer.parseInt(request.getParameter("receiverId"));
         FriendRequest request1 = friendRequestDao.findBySenderReceiverId(user.getId(), receiverId);
         FriendRequest request2 = friendRequestDao.findBySenderReceiverId(receiverId, user.getId());

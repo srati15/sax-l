@@ -14,19 +14,15 @@ public class AnnouncementMapper implements DBRowMapper<Announcement> {
 
     @Override
     public Announcement mapRow(ResultSet rs) {
-        String txt = null;
         try {
             int id = rs.getInt(ANNOUNCEMENT_ID);
-            txt = rs.getString(ANNOUNCEMENT_TEXT);
+            String txt = rs.getString(ANNOUNCEMENT_TEXT);
             String hyperLink = rs.getString(HYPERLINK);
-            Boolean isActive = rs.getBoolean(STATUS);
-            Announcement announcement = new Announcement(id,txt,hyperLink, isActive);
-            return announcement;
+            boolean isActive = rs.getBoolean(STATUS);
+            return new Announcement(id,txt,hyperLink, isActive);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
         return null;
     }
 }

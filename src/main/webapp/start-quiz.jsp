@@ -1,7 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="dao.AnnouncementDao" %>
+<%@ page import="dao.QuizDao" %>
+<%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.Quiz" %>
+<%@ page import="datatypes.question.Question" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
+<%@ page import="java.util.Collections" %>
+<%@ page import="java.util.Comparator" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.stream.Collectors" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,7 +39,13 @@
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
+    UserDao userDao = manager.getDao(DaoType.User);
+    QuizDao quizDao = manager.getDao(DaoType.Quiz);
+    pageContext.setAttribute("userDao", userDao);
+    pageContext.setAttribute("quizDao", quizDao);
+    Quiz quiz = quizDao.findById(Integer.valueOf(request.getParameter("quizId")));
 %>
+
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
     <div class="mosh-preloader"></div>
@@ -39,25 +53,37 @@
 
 <!-- ***** Header Area Start ***** -->
 <header class="header_area clearfix">
-
-
     <jsp:include page="components/header.jsp"/>
-
-
 </header>
 <!-- ***** Header Area End ***** -->
-
-<!-- ***** Welcome Area Start ***** -->
-<section class="welcome_area clearfix" id="home" style="background-image: url(img/bg-img/welcome-bg.png)">
-    <div class="hero-slides owl-carousel">
-        <!-- Single Hero Slides -->
-        <div class="single-hero-slide d-flex align-items-end justify-content-center">
-            <div class="hero-slide-content text-center">
-                <h2>Sax-l</h2>
-                <h4>Top Quizzes!</h4>
+<div class="mosh-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12">
+                <div class="bradcumbContent">
+                    <h2>Quizzes</h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Quizzes</li>
+                        </ol>
+                    </nav>
+                </div>
             </div>
         </div>
-        <!-- Single Hero Slides -->
+    </div>
+</div>
+<!-- ***** Welcome Area Start ***** -->
+
+<section class="mosh-aboutUs-area">
+    <div class="container" >
+        <%
+            List<Question> questionList = quiz.getQuestionAnswerMap().keySet().stream().collect(Collectors.toList());
+            if (quiz.isRandomized())
+                Collections.shuffle(questionList);
+            else
+                questionList.sort(Comparator.comparingInt(Question::getId));
+        %>
     </div>
 </section>
 <!-- ***** Welcome Area End ***** -->
@@ -82,17 +108,6 @@
 
 <script src="js/toastr.js"></script>
 
-<script>
-    $(document).ready(function () {
-        toastr.options.closeButton = true;
-        toastr.options.timeOut = 0;
-        toastr.options.extendedTimeOut = 0;
-        toastr.options.positionClass ="toast-bottom-right";
-        <c:forEach items="<%=announcementDao.findAll()%>" var="announcement">
-            toastr.info('${announcement.announcementText}');
-        </c:forEach>
-    });
-</script>
 </body>
 
 </html>

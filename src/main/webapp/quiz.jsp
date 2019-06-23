@@ -88,10 +88,21 @@
                     <td>${quiz.quizName}
                     </td>
                     <td>
-                        ${userDao.findById(quiz.authorId)}
+                        ${userDao.findById(quiz.authorId).userName}
                     </td>
                     <td>
-                        <a href="#" >Start</a>
+                        <c:choose>
+                            <c:when test="${quiz.onePage}">
+                                <a href="start-quiz?quizId=${quiz.id}"><button type="button" class="btn btn-info btn-sm">
+                                    <i class="fa fa-hourglass-start"></i> Start
+                                </button></a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="start-quiz?quizId=${quiz.id}&questionId=1"><button type="button" class="btn btn-info btn-sm">
+                                    <i class="fa fa-hourglass-start"></i> Start
+                                </button></a>
+                            </c:otherwise>
+                        </c:choose>
                     </td>
                 </tr>
                 <c:set var="i" value="${i + 1}" scope="page"/>

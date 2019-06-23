@@ -3,21 +3,21 @@ package datatypes.question;
 import enums.QuestionType;
 
 public class QuestionResponse extends Question {
-    public QuestionResponse(int questionId, int quizId, String question) {
-        super(questionId, quizId, question);
-    }
-
-    public QuestionResponse(String question, int quizId ) {
-        super(question, quizId);
+    private final QuestionType questionType = QuestionType.QuestionResponse;
+    public QuestionResponse(String question) {
+        super(question);
     }
 
     @Override
     public QuestionType getQuestionType() {
-        return QuestionType.QuestionResponse;
+        return questionType;
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "QuestionResponse{" +
+                "questionType=" + questionType +
+                ", id=" + id +
+                "} " + super.toString();
     }
 }

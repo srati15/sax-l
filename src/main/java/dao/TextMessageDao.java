@@ -3,11 +3,15 @@ package dao;
 import database.CreateConnection;
 import database.mapper.DBRowMapper;
 import database.mapper.TextMessageMapper;
+import datatypes.User;
+import datatypes.messages.Message;
 import datatypes.messages.TextMessage;
 import enums.DaoType;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +22,13 @@ import static database.mapper.TextMessageMapper.*;
 public class TextMessageDao implements Dao<Integer, TextMessage> {
     private DBRowMapper<TextMessage> mapper = new TextMessageMapper();
     private Cao<Integer, TextMessage> cao = new Cao<>();
+    private static final TextMessageDao textMessageDao = new TextMessageDao();
+    public static TextMessageDao getInstance() {
+        return textMessageDao;
+    }
+    private TextMessageDao() {
+
+    }
     @Override
     public TextMessage findById(Integer id) {
         return cao.findById(id);
@@ -40,10 +51,11 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 rs = statement.getGeneratedKeys();
                 rs.next();
                 entity.setId(rs.getInt(1));
-                System.out.println("message inserted successfully");
-                cao.add(entity);
+                System.out.println("Text Message inserted successfully");
+                getMessages(entity);
+
             }
-            else System.out.println("Error inserting message");
+            else System.out.println("Error inserting Text Message");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,6 +73,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
     public void deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
+        TextMessage message = findById(id);
         try {
             String query = getDeleteQuery(TABLE_NAME, TEXT_MESSAGE_ID);
             statement = connection.prepareStatement(query);
@@ -69,6 +82,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             if(result == 1){
                 System.out.println("message Deleted Successfully");
                 cao.delete(id);
+
             }
             else
                 System.out.println("Error Deleting message");
@@ -89,7 +103,6 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
         return DaoType.TextMessage;
     }
 
-    @Override
     public void cache() {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
@@ -100,7 +113,8 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             rs = statement.executeQuery();
             while(rs.next()){
                 TextMessage message = mapper.mapRow(rs);
-                cao.add(message);
+                getMessages(message);
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -108,6 +122,21 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             executeFinalBlock(connection, statement, rs);
         }
 
+    }
+
+    private void getMessages(TextMessage message) {
+        cao.add(message);
+        User sender = UserDao.getInstance().findById(message.getSenderId());
+        User receiver = UserDao.getInstance().findById(message.getReceiverId());
+        List<TextMessage> senderMessages = sender.getTextMessages().getOrDefault(receiver, new ArrayList<>());
+        senderMessages.add(message);
+        senderMessages.sort(Comparator.comparing(Message::getTimestamp));
+        sender.getTextMessages().put(receiver, senderMessages);
+
+        List<TextMessage> receiverMessages = receiver.getTextMessages().getOrDefault(sender, new ArrayList<>());
+        receiverMessages.add(message);
+        receiverMessages.sort(Comparator.comparing(Message::getTimestamp));
+        receiver.getTextMessages().put(sender, senderMessages);
     }
 
     public List<TextMessage> getTextMessagesOfGivenUsers(int senderId, int receiverId){

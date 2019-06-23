@@ -8,35 +8,41 @@ import java.sql.SQLException;
 
 public class QuestionMapper implements DBRowMapper<Question> {
     public static final String QUIZ_ID = "quiz_id";
-    public static final String QUESTION_ID = "question_id";
+    public static final String QUESTION_ID = "id";
     public static final String QUESTION_TYPE = "question_type_id";
     public static final String QUESTION_TEXT = "question_text";
     public static final String TABLE_NAME = "question";
+    private static QuestionMapper questionMapper;
+
+    public static QuestionMapper getInstance(){
+        if (questionMapper == null) {
+            questionMapper = new QuestionMapper();
+        }
+        return questionMapper;
+    }
 
     @Override
     public Question mapRow(ResultSet rs) {
-        String txt = null;
         try {
             int quizId = rs.getInt(QUIZ_ID);
             int questionId = rs.getInt(QUESTION_ID);
             int questionTypeId = rs.getInt(QUESTION_TYPE);
             String questionText = rs.getString(QUESTION_TEXT);
             QuestionType questionType = QuestionType.getById(questionTypeId);
+            Question question;
             if (questionType == QuestionType.PictureResponse) {
-                return new PictureResponseQuestion(questionId, quizId, questionText);
+                question = new PictureResponseQuestion(questionText);
             }else if (questionType == QuestionType.FillInTheBlank) {
-                return new FillBlankQuestion(questionId, quizId, questionText);
+                question = new FillBlankQuestion(questionText);
             }else if (questionType == QuestionType.QuestionResponse) {
-                return new QuestionResponse(questionId, quizId, questionText);
-            }else if (questionType == QuestionType.MultipleChoise) {
-                return new MultipleChoiceQuestion(questionId, quizId, questionText);
-            }
-            return null;
+                question = new QuestionResponse(questionText);
+            }else question = new MultipleChoiceQuestion(questionText);
+            question.setQuizId(quizId);
+            question.setId(questionId);
+            return question;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
         return null;
     }
 }
