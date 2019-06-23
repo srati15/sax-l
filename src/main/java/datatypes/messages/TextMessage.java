@@ -1,10 +1,13 @@
 package datatypes.messages;
 
+import anotations.Column;
+import anotations.Entity;
 import enums.MessageType;
 
 import java.sql.Timestamp;
-
+@Entity(table = "text_message")
 public class TextMessage extends Message {
+    @Column("message_sent")
     private final String textMesage;
     private final MessageType messageType = MessageType.TextMessage;
     public TextMessage(int senderId, int receiverId, Timestamp timestamp, String textMessage) {

@@ -6,10 +6,92 @@ DROP TABLE if exists answers;
 DROP table if exists quiz;
 drop table if exists results;
 
-/* Users table start*/
+create table announcements
+(
+    id                int auto_increment
+        primary key,
+    announcement_text varchar(255)             not null,
+    hyperlink         varchar(255) default '/' null,
+    active            tinyint(1)   default 1   null
+);
+
+create table answers
+(
+    id            int auto_increment
+        primary key,
+    question_id   int          not null,
+    answer_string varchar(125) not null
+);
+
+create table friend_requests
+(
+    id             int auto_increment
+        primary key,
+    sender_id      int                                 not null,
+    receiver_id    int                                 not null,
+    request_status int                                 not null,
+    date_sent      timestamp default CURRENT_TIMESTAMP not null
+);
+
+create table question
+(
+    id               int auto_increment
+        primary key,
+    question_text    varchar(200) not null,
+    quiz_id          int          not null,
+    question_type_id int          not null
+);
+
+create table questionTypes
+(
+    question_type_id int auto_increment,
+    question_type    varchar(65) not null,
+    constraint questionTypes_question_type_id_uindex
+        unique (question_type_id),
+    constraint questionTypes_question_type_uindex
+        unique (question_type)
+);
+
+alter table questionTypes
+    add primary key (question_type_id);
+
+create table quiz
+(
+    id                       int auto_increment
+        primary key,
+    quiz_name                varchar(100)                         not null,
+    quiz_author_id           int                                  not null,
+    date_created             datetime   default CURRENT_TIMESTAMP null,
+    randomized               tinyint(1) default 1                 not null,
+    is_allowed_practice_mode tinyint(1) default 1                 null,
+    is_allowed_correction    tinyint(1) default 1                 null,
+    is_single_page           tinyint(1) default 1                 null,
+    times_done               int        default 0                 null
+);
+
+create table results
+(
+    result_id   int auto_increment
+        primary key,
+    user_id     int not null,
+    question_id int not null,
+    score       int not null
+);
+
+create table text_message
+(
+    id           int auto_increment
+        primary key,
+    sender_id    int                                not null,
+    receiver_id  int                                not null,
+    date_sent    datetime default CURRENT_TIMESTAMP null,
+    message_sent varchar(1000)                      not null
+);
+
 create table users
 (
-    user_id    int auto_increment primary key,
+    id         int auto_increment
+        primary key,
     user_name  varchar(50)  not null,
     pass       varchar(255) not null,
     mail       varchar(255) not null,
@@ -21,106 +103,5 @@ create table users
 );
 
 create index user_id_index
-    on users (user_id);
-/* Users table end*/
+    on users (id);
 
-/* Announcements table start*/
-create table announcements
-(
-    id                int auto_increment
-        primary key,
-    announcement_text varchar(255)             not null,
-    hyperlink         varchar(255) default '/' null,
-    active            tinyint(1)   default 1   null
-);
-/* Announcements table end*/
-
-/*QuestionTypes table start*/
-create table questionTypes
-(
-    question_type_id int auto_increment primary KEY not NULL ,
-    question_type varchar(65) not null
-);
-
-create unique index questionTypes_question_type_id_uindex
-    on questionTypes (question_type_id);
-
-create unique index questionTypes_question_type_uindex
-    on questionTypes (question_type);
-
-/*QuestionTypes table end*/
-
-/*answers table start*/
-create table answers
-(
-    answer_id int auto_increment,
-    question_id int not null,
-    answer_string varchar(125) not null,
-    correctness boolean not null,
-    constraint answers_pk
-        primary key (answer_id)
-);
-
-/*answers table end*/
-
-
-/*results table start*/
-create table results
-(
-    result_id int auto_increment,
-    user_id int not null,
-    question_id int not null,
-    score int not null,
-    constraint results_pk
-        primary key (result_id)
-);
-
-/*results table end*/
--- creating question table
-create table question
-(
-    question_id      int auto_increment
-        primary key,
-    question_text    varchar(200) not null,
-    quiz_id          int          not null,
-    question_type_id int          not null
- #   constraint question_questionypes_question_type_id_fk
- #       foreign key (question_type_id) references questionTypes (question_type_id)
-#    constraint question_quiz_quiz_id_fk
-#         foreign key (quiz_id) references quiz (quiz_id)
-);
-
-
--- creating quiz table
-create table quiz(
-                     quiz_id    int auto_increment primary key,
-                     quiz_name  varchar(100)  not null,
-                     quiz_author varchar(100) not null,
-                     date_created datetime default CURRENT_TIMESTAMP
-
-);
-/*friend requests table start*/
-create table friend_requests
-(
-    id int auto_increment,
-    sender_id int not null,
-    receiver_id int not null,
-    request_status int not null,
-    send_date timestamp default now() not null,
-    constraint friend_requests_pk
-        primary key (id)
-);
-/*friend requests table end*/
-
-/*text message table start*/
-create table text_message
-(
-    text_message_id int auto_increment,
-    sender_id int not null,
-    receiver_id int not null,
-    date_sent datetime default current_timestamp,
-    message_sent varchar(1000) not null,
-    constraint text_message_pk
-        primary key (text_message_id)
-);
-/*text message table end*/
