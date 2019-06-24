@@ -10,6 +10,7 @@
 <%@ page import="java.util.Comparator" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.stream.Collectors" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -76,13 +77,20 @@
 <!-- ***** Welcome Area Start ***** -->
 
 <section class="mosh-aboutUs-area">
-    <div class="container" >
+    <div class="container">
         <%
             List<Question> questionList = quiz.getQuestionAnswerMap().keySet().stream().collect(Collectors.toList());
             if (quiz.isRandomized())
                 Collections.shuffle(questionList);
             else
                 questionList.sort(Comparator.comparingInt(Question::getId));
+            if (quiz.isOnePage()) {
+                for (Question question : questionList) {
+        %>
+                    <h:question question="<%=question%>" answer="<%=quiz.getQuestionAnswerMap().get(question)%>"></h:question>
+        <%
+                }
+            }
         %>
     </div>
 </section>

@@ -96,7 +96,7 @@
                     </div>
                     <div class="feature-content">
                         <h4>Quizzes</h4>
-                        <p>Manage Quizzes.</p>
+                        <p><a href="quiz">Manage Quizzes</a></p>
                     </div>
                 </div>
             </div>
