@@ -45,9 +45,7 @@
                     <input type="submit" class="btn btn-primary" value="Create"/>
                 </div>
             </form>
-            <script>
-                ${"#createForm"}.validate();
-            </script>
+
         </div>
     </div>
 </div>

@@ -78,20 +78,29 @@
 
 <section class="mosh-aboutUs-area">
     <div class="container">
-        <%
-            List<Question> questionList = quiz.getQuestionAnswerMap().keySet().stream().collect(Collectors.toList());
-            if (quiz.isRandomized())
-                Collections.shuffle(questionList);
-            else
-                questionList.sort(Comparator.comparingInt(Question::getId));
-            if (quiz.isOnePage()) {
-                for (Question question : questionList) {
-        %>
-                    <h:question question="<%=question%>" answer="<%=quiz.getQuestionAnswerMap().get(question)%>"></h:question>
-        <%
+        <form action="CompleteQuizServlet" method="post">
+
+            <%
+                List<Question> questionList = quiz.getQuestionAnswerMap().keySet().stream().collect(Collectors.toList());
+                if (quiz.isRandomized())
+                    Collections.shuffle(questionList);
+                else
+                    questionList.sort(Comparator.comparingInt(Question::getId));
+                if (quiz.isOnePage()) {
+                    int questionNum = 1;
+                    for (Question question : questionList) {
+            %>
+            <h:question question="<%=question%>" answer="<%=quiz.getQuestionAnswerMap().get(question)%>"
+                        questionNumber="<%=questionNum%>"></h:question>
+            <%
+                        questionNum++;
+                    }
                 }
-            }
-        %>
+            %>
+            <button type="submit" class="btn btn-success"><i class="fa fa-hourglass-end"></i> Finish
+                <input type="text" hidden name="quizId" value="<%=quiz.getId()%>">
+            </button>
+        </form>
     </div>
 </section>
 <!-- ***** Welcome Area End ***** -->

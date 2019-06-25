@@ -88,19 +88,23 @@
                     <td>${quiz.quizName}
                     </td>
                     <td>
-                        ${userDao.findById(quiz.authorId).userName}
+                            ${userDao.findById(quiz.authorId).userName}
                     </td>
                     <td>
                         <c:choose>
                             <c:when test="${quiz.onePage}">
-                                <a href="start-quiz?quizId=${quiz.id}"><button type="button" class="btn btn-info btn-sm">
-                                    <i class="fa fa-hourglass-start"></i> Start
-                                </button></a>
+                                <a href="start-quiz?quizId=${quiz.id}">
+                                    <button type="button" class="btn btn-info btn-sm">
+                                        <i class="fa fa-hourglass-start"></i> Start
+                                    </button>
+                                </a>
                             </c:when>
                             <c:otherwise>
-                                <a href="start-quiz?quizId=${quiz.id}&questionId=1"><button type="button" class="btn btn-info btn-sm">
-                                    <i class="fa fa-hourglass-start"></i> Start
-                                </button></a>
+                                <a href="start-quiz?quizId=${quiz.id}&questionId=1">
+                                    <button type="button" class="btn btn-info btn-sm">
+                                        <i class="fa fa-hourglass-start"></i> Start
+                                    </button>
+                                </a>
                             </c:otherwise>
                         </c:choose>
                     </td>
@@ -128,7 +132,7 @@
                 0%
             </div>
         </div>
-        <div style="float: left; width: 70%">
+        <div style="float: left; width: 70%; display: block">
             <p>
                 <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#questionResponse"
                         aria-expanded="false" aria-controls="collapseExample">
@@ -218,38 +222,39 @@
                 <button type="button" class="btn btn-info" id="fillBlankSubmit">Submit</button>
             </div>
             <div class="collapse" id="multipleChoice">
-                <div class="card card-body">
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="multipleChoiceText">Question</label>
-                        <div class="col-md-8">
-                            <input id="multipleChoiceText" name="multipleChoiceText" type="text" placeholder=""
-                                   class="form-control input-md" required>
+                <form id="multiple">
+                    <div class="card card-body">
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="multipleChoiceText">Question</label>
+                            <div class="col-md-8">
+                                <input id="multipleChoiceText" name="multipleChoiceText" type="text" placeholder=""
+                                       class="form-control input-md" required>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="multipleCorrectAnswer">Correct Answer</label>
-                        <div class="col-md-8">
-                            <input id="multipleCorrectAnswer" name="multipleCorrectAnswer" type="text" placeholder=""
-                                   class="form-control input-md" required>
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="multipleCorrectAnswer">Correct Answer</label>
+                            <div class="col-md-8">
+                                <input id="multipleCorrectAnswer" name="multipleCorrectAnswer" type="text" placeholder=""
+                                       class="form-control input-md" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="multipleWrongAnswer1">Wrong Answers</label>
-                        <div class="col-md-8">
-                            <input id="multipleWrongAnswer1" name="multipleWrongAnswer1" type="text" placeholder=""
-                                   class="form-control input-md" required>
-                            <input id="multipleWrongAnswer2" name="multipleWrongAnswer2" type="text" placeholder=""
-                                   class="form-control input-md" required>
-                            <input id="multipleWrongAnswer3" name="multipleWrongAnswer3" type="text" placeholder=""
-                                   class="form-control input-md" required>
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="multipleWrongAnswer1">Wrong Answers</label>
+                            <div class="col-md-8">
+                                <input id="multipleWrongAnswer1" name="multipleWrongAnswer1" type="text" placeholder=""
+                                       class="form-control input-md" required>
+                                <input id="multipleWrongAnswer2" name="multipleWrongAnswer2" type="text" placeholder=""
+                                       class="form-control input-md" required>
+                                <input id="multipleWrongAnswer3" name="multipleWrongAnswer3" type="text" placeholder=""
+                                       class="form-control input-md" required>
+                            </div>
                         </div>
+                        <button type="button" class="btn btn-info" id="multipleChoiceSubmit">Submit</button>
                     </div>
-
-                </div>
-                <button type="button" class="btn btn-info" id="multipleChoiceSubmit">Submit</button>
+                </form>
             </div>
 
         </div>
@@ -339,6 +344,7 @@
 <script src="js/active.js"></script>
 
 <script src="js/toastr.js"></script>
+<script src="js/jquery.validate.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -394,9 +400,9 @@
         });
         $("#multipleChoiceSubmit").click(function () {
             var question = $('#multipleChoiceText').val();
-            var answer = $('#multipleCorrectAnswer').val()+","+
-                $('#multipleWrongAnswer1').val()+","+
-                $('#multipleWrongAnswer2').val()+","+
+            var answer = $('#multipleCorrectAnswer').val() + "," +
+                $('#multipleWrongAnswer1').val() + "," +
+                $('#multipleWrongAnswer2').val() + "," +
                 $('#multipleWrongAnswer3').val();
             var quest = {};
             quest['type'] = 'multipleChoice';

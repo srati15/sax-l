@@ -65,9 +65,7 @@
             </button>
         </form>
     </div>
-    <script>
-        ${"#loginSection"}.validate();
-    </script>
+
 </section>
 <!-- ***** Login Area End ***** -->
 <footer class="footer-area clearfix">
