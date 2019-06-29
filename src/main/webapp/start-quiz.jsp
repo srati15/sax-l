@@ -3,13 +3,8 @@
 <%@ page import="dao.QuizDao" %>
 <%@ page import="dao.UserDao" %>
 <%@ page import="datatypes.Quiz" %>
-<%@ page import="datatypes.question.Question" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
-<%@ page import="java.util.Collections" %>
-<%@ page import="java.util.Comparator" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.stream.Collectors" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,7 +60,7 @@
                     <h2>Quizzes</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Quizzes</li>
                         </ol>
                     </nav>
@@ -79,24 +74,12 @@
 <section class="mosh-aboutUs-area">
     <div class="container">
         <form action="CompleteQuizServlet" method="post">
-
-            <%
-                List<Question> questionList = quiz.getQuestionAnswerMap().keySet().stream().collect(Collectors.toList());
-                if (quiz.isRandomized())
-                    Collections.shuffle(questionList);
-                else
-                    questionList.sort(Comparator.comparingInt(Question::getId));
-                if (quiz.isOnePage()) {
-                    int questionNum = 1;
-                    for (Question question : questionList) {
-            %>
-            <h:question question="<%=question%>" answer="<%=quiz.getQuestionAnswerMap().get(question)%>"
-                        questionNumber="<%=questionNum%>"></h:question>
-            <%
-                        questionNum++;
-                    }
-                }
-            %>
+            <c:set var="questionNum" value="1"/>
+            <c:forEach items="${requestScope.currentQuizQuestions}" var="question">
+                <h:question question="${question}" answer="${requestScope.questionAnswerMap.get(question)}"
+                            questionNumber="${questionNum}"/>
+                <c:set var="questionNum" value="${questionNum+1}"/>
+            </c:forEach>
             <button type="submit" class="btn btn-success"><i class="fa fa-hourglass-end"></i> Finish
                 <input type="text" hidden name="quizId" value="<%=quiz.getId()%>">
             </button>

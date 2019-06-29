@@ -150,7 +150,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
             String query = getSelectQuery(TABLE_NAME);
             statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 cao.add(mapper.mapRow(resultSet));
             }
             for (Quiz quiz : cao.findAll()) {

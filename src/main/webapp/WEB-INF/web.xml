@@ -89,15 +89,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>StartQuiz</servlet-name>
-        <jsp-file>/start-quiz.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>StartQuiz</servlet-name>
-        <url-pattern>/start-quiz</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>QuizResult</servlet-name>
         <jsp-file>/quiz-result.jsp</jsp-file>
     </servlet>

@@ -39,6 +39,7 @@ public class QuestionMapper implements DBRowMapper<Question> {
             }else question = new MultipleChoiceQuestion(questionText);
             question.setQuizId(quizId);
             question.setId(questionId);
+            System.out.println(question);
             return question;
         } catch (SQLException e) {
             e.printStackTrace();

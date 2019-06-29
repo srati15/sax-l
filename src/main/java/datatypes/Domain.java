@@ -1,9 +1,7 @@
 package datatypes;
 
-import anotations.Column;
 
 public class Domain<ID> {
-    @Column("id")
     protected ID id;
 
     public ID getId() {

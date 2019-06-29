@@ -12,9 +12,10 @@ public class FillBlankQuestion extends Question {
     public QuestionType getQuestionType() {
         return questionType;
     }
+
     @Override
     public String toString() {
-        return "QuestionResponse{" +
+        return "FillBlankQuestion{" +
                 "questionType=" + questionType +
                 ", id=" + id +
                 "} " + super.toString();

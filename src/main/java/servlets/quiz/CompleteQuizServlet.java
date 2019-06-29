@@ -25,9 +25,10 @@ public class CompleteQuizServlet extends HttpServlet {
         User user = (User) request.getSession().getAttribute("user");
         params.keySet().stream().filter(question->question.startsWith("questionN")).forEach(question->questionAnswers.put(Integer.valueOf(question.substring(question.lastIndexOf("N")+1)), request.getParameter(question)));
         Quiz quiz = QuizDao.getInstance().findById(Integer.valueOf(request.getParameter("quizId")));
+
         for (Question question : quiz.getQuestionAnswerMap().keySet()) {
             String answer = quiz.getQuestionAnswerMap().get(question).getAnswer().split(",")[0];
-            if (questionAnswers.get(question.getId()).equalsIgnoreCase(answer)) {
+            if (questionAnswers.get(question.getId())!= null && questionAnswers.get(question.getId()).equalsIgnoreCase(answer)) {
                 quizResults.put(question, true);
             }else {
                 quizResults.put(question, false);
@@ -40,10 +41,5 @@ public class CompleteQuizServlet extends HttpServlet {
         request.setAttribute("userAnswers", questionAnswers);
         request.setAttribute("score", result);
         request.getRequestDispatcher("quiz-result?quizId="+quiz.getId()).forward(request, response);
-    }
-    public static void main(String[] args) {
-        String asd = "adksda";
-        String k = asd.split(",")[0];
-        System.out.println(k);
     }
 }

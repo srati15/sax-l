@@ -6,11 +6,11 @@ public class QueryGenerator {
      */
     public static String getSelectQuery(String tableName, String... whereColumnNames) {
         StringBuilder builder = new StringBuilder();
-        builder.append("SELECT * FROM "+tableName);
+        builder.append("SELECT * FROM ").append(tableName);
         builder.append(whereColumnNames.length>0?" WHERE ":"");
         for (int i = 0; i < whereColumnNames.length ; i++) {
-            if (i+1 == whereColumnNames.length) builder.append(whereColumnNames[i]+"=?");
-            else builder.append(whereColumnNames[i]+"=? AND ");
+            if (i+1 == whereColumnNames.length) builder.append(whereColumnNames[i]).append("=?");
+            else builder.append(whereColumnNames[i]).append("=? AND ");
         }
         return builder.toString();
     }
@@ -21,16 +21,16 @@ public class QueryGenerator {
     public static String getUpdateQuery(String tableName, String whereColumn, String... columnNames){
         StringBuilder query = new StringBuilder("UPDATE "+tableName+" set ");
         for (String column : columnNames) {
-            query.append(column+"=?, ");
+            query.append(column).append("=?, ");
         }
         query.deleteCharAt(query.lastIndexOf(","));
-        query.append("WHERE "+whereColumn+" =?");
+        query.append("WHERE ").append(whereColumn).append(" =?");
         return query.toString();
     }
 
     public static String getInsertQuery(String tableName, String... columnNames) {
         StringBuilder builder = new StringBuilder();
-        builder.append("INSERT INTO "+tableName+" (");
+        builder.append("INSERT INTO ").append(tableName).append(" (");
         for (int i = 0; i < columnNames.length ; i++) {
             builder.append( (i+1 != columnNames.length) ?columnNames[i]+", ":columnNames[i]+") VALUES (");
         }
@@ -40,8 +40,6 @@ public class QueryGenerator {
         return builder.toString();
     }
     public static String getDeleteQuery(String tableName, String whereColumnName) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("DELETE FROM "+tableName+ " WHERE "+whereColumnName+" =?");
-        return builder.toString();
+        return "DELETE FROM " + tableName + " WHERE " + whereColumnName + " =?";
     }
 }

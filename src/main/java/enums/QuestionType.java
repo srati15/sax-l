@@ -14,7 +14,7 @@ public enum QuestionType {
 
     public static QuestionType getById(int value) {
         for (QuestionType type: QuestionType.values()) {
-            if (type.getValue() == value) return type;
+            if (type.value == value) return type;
         }
         return null;
     }
