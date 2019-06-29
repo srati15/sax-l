@@ -95,7 +95,7 @@
         <h3 class="mb-30">Users List</h3>
         <h:create entityName="User" selectFields="<%=createSelectField%>" actionServlet="CreateUserServlet" formFields="<%=formFields%>" formId="createUserForm"/>
 
-        <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+        <table id="myTable" class="table table-striped table-bordered table-sm">
             <thead>
             <tr>
                 <th>#</th>

@@ -56,7 +56,7 @@
                     <h2>Quizzes</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Quizzes</li>
                         </ol>
                     </nav>
@@ -70,7 +70,7 @@
 <section class="mosh-aboutUs-area">
     <div class="container" id="createContainer">
         <!----quizzes table --->
-        <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+        <table id="myTable" class="table table-striped table-bordered table-sm">
             <thead>
             <tr>
                 <th>#</th>
@@ -123,12 +123,17 @@
         </table>
 
         <!------quizzes table-->
+    </div>
+</section>
+<!-- ***** Welcome Area End ***** -->
 
-
+<!-- ***** Clients Area Start ***** -->
+<section class="mosh-clients-area section_padding_100 clearfix">
+    <div class="container">
         <h2 id="questionNum">Question N1</h2>
         <div class="progress" id="progressBar">
             <div class="progress-bar progress-bar-striped" id="progressLabel" role="progressbar" aria-valuenow="0"
-                 aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                 aria-valuemin="0" aria-valuemax="100" style="width:0">
                 0%
             </div>
         </div>
@@ -172,8 +177,10 @@
                                    class="form-control input-md" required>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-info" id="simpleQuestionSubmit">Submit</button>
 
+                    <div class="form-group">
+                        <button type="button" class="btn btn-info" id="simpleQuestionSubmit">Submit</button>
+                    </div>
                 </div>
             </div>
             <div class="collapse" id="pictureResponse">
@@ -196,30 +203,42 @@
                                    class="form-control input-md" required>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-info" id="pictureSubmit">Submit</button>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-info" id="pictureSubmit">Submit</button>
             </div>
             <div class="collapse" id="fillBlank">
                 <div class="card card-body">
                     <!-- Text input-->
                     <div class="form-group">
-                        <label class="col-md-4 control-label" for="pictureQuestionText">Question</label>
-                        <div class="col-md-8">
-                            <input id="fillBlankText" name="fillBlankText" type="text" placeholder=""
-                                   class="form-control input-md" required>
+                        <label class="col-md-4 control-label" for="fillBlankText1">Question</label>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <input id="fillBlankText1" name="fillBlankText1" type="text"
+                                       placeholder="Question before blank"
+                                       class="form-control input-md" required>
+                            </div>
+                            <div class="col-md-8">
+                                <input id="fillBlankText2" name="fillBlankText2" type="text"
+                                       placeholder="Question after blank"
+                                       class="form-control input-md" required>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Text input-->
                     <div class="form-group">
-                        <label class="col-md-4 control-label" for="pictureAnswerText">Answer</label>
+                        <label class="col-md-4 control-label" for="fillBlankAnswer">Answer</label>
                         <div class="col-md-8">
                             <input id="fillBlankAnswer" name="fillBlankAnswer" type="text" placeholder=""
                                    class="form-control input-md" required>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-info" id="fillBlankSubmit">Submit</button>
+                    </div>
                 </div>
-                <button type="button" class="btn btn-info" id="fillBlankSubmit">Submit</button>
             </div>
             <div class="collapse" id="multipleChoice">
                 <form id="multiple">
@@ -237,7 +256,8 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="multipleCorrectAnswer">Correct Answer</label>
                             <div class="col-md-8">
-                                <input id="multipleCorrectAnswer" name="multipleCorrectAnswer" type="text" placeholder=""
+                                <input id="multipleCorrectAnswer" name="multipleCorrectAnswer" type="text"
+                                       placeholder=""
                                        class="form-control input-md" required>
                             </div>
                         </div>
@@ -252,7 +272,9 @@
                                        class="form-control input-md" required>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-info" id="multipleChoiceSubmit">Submit</button>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" id="multipleChoiceSubmit">Submit</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -323,7 +345,7 @@
         </div>
     </div>
 </section>
-<!-- ***** Welcome Area End ***** -->
+<!-- ***** Clients Area End ***** -->
 
 
 <!-- ***** Footer Area Start ***** -->
@@ -369,47 +391,68 @@
         $("#simpleQuestionSubmit").click(function () {
             var question = $('#simpleQuestionText').val();
             var answer = $('#simpleAnswerText').val();
-            var pictQuest = {};
-            pictQuest['type'] = 'questionResponse';
-            pictQuest['question'] = question;
-            pictQuest['answer'] = answer;
-            questionsList.push(pictQuest);
-            checker(questionsList);
+            if (question === "" || answer === ""){
+                toastr.options.timeOut = 100;
+                toastr.error("Please, fill all fields");
+            }else {
+                var pictQuest = {};
+                pictQuest['type'] = 'questionResponse';
+                pictQuest['question'] = question;
+                pictQuest['answer'] = answer;
+                questionsList.push(pictQuest);
+                checker(questionsList);
+            }
         });
 
 
         $("#pictureSubmit").click(function () {
             var question = $('#pictureQuestionText').val();
             var answer = $('#pictureAnswerText').val();
-            var pictQuest = {};
-            pictQuest['type'] = 'pictureResponse';
-            pictQuest['question'] = question;
-            pictQuest['answer'] = answer;
-            questionsList.push(pictQuest);
-            checker();
+            if (question === "" || answer === ""){
+                toastr.options.timeOut = 100;
+                toastr.error("Please, fill all fields");
+            }else {
+                var pictQuest = {};
+                pictQuest['type'] = 'pictureResponse';
+                pictQuest['question'] = question;
+                pictQuest['answer'] = answer;
+                questionsList.push(pictQuest);
+                checker();
+            }
         });
         $("#fillBlankSubmit").click(function () {
-            var question = $('#fillBlankText').val();
+            var question = $('#fillBlankText1').val() + "_" + $('#fillBlankText2').val();
             var answer = $('#fillBlankAnswer').val();
-            var quest = {};
-            quest['type'] = 'fillBlank';
-            quest['question'] = question;
-            quest['answer'] = answer;
-            questionsList.push(quest);
-            checker();
+            if (question === "" || answer === ""){
+                toastr.options.timeOut = 100;
+                toastr.error("Please, fill all fields");
+            } else {
+                var quest = {};
+                quest['type'] = 'fillBlank';
+                quest['question'] = question;
+                quest['answer'] = answer;
+                questionsList.push(quest);
+                checker();
+            }
         });
         $("#multipleChoiceSubmit").click(function () {
             var question = $('#multipleChoiceText').val();
-            var answer = $('#multipleCorrectAnswer').val() + "," +
-                $('#multipleWrongAnswer1').val() + "," +
-                $('#multipleWrongAnswer2').val() + "," +
-                $('#multipleWrongAnswer3').val();
-            var quest = {};
-            quest['type'] = 'multipleChoice';
-            quest['question'] = question;
-            quest['answer'] = answer;
-            questionsList.push(quest);
-            checker();
+            var wrongAnswer1 = $('#multipleWrongAnswer1').val();
+            var wrongAnswer2 = $('#multipleWrongAnswer2').val();
+            var wrongAnswer3 = $('#multipleWrongAnswer3').val();
+            var correctAnswer = $('#multipleCorrectAnswer').val();
+            if (question === "" || wrongAnswer1 === "" || wrongAnswer2 === "" || wrongAnswer3 === "" || correctAnswer === "") {
+                toastr.options.timeOut = 100;
+                toastr.error("Please, fill all fields");
+            }else {
+                var answer = correctAnswer + "," + wrongAnswer1 + "," + wrongAnswer2 + "," + wrongAnswer3;
+                var quest = {};
+                quest['type'] = 'multipleChoice';
+                quest['question'] = question;
+                quest['answer'] = answer;
+                questionsList.push(quest);
+                checker();
+            }
         });
 
         function checker() {

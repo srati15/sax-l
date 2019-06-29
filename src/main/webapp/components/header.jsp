@@ -10,16 +10,11 @@
             <div class="menu_area h-100">
                 <nav class="navbar h-100 navbar-expand-lg align-items-center">
                     <!-- Logo -->
-                    <a class="navbar-brand" href="/"><img src="../img/core-img/logo.png" alt="logo"></a>
-
-                    <!-- Menu Area -->
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mosh-navbar"
-                            aria-controls="mosh-navbar" aria-expanded="false" aria-label="Toggle navigation"><span
-                            class="navbar-toggler-icon"></span></button>
+                    <a class="navbar-brand" href="${pageContext.request.contextPath}/"><img src="../img/core-img/logo.png" alt="logo"></a>
 
                     <div class="collapse navbar-collapse justify-content-end" id="mosh-navbar">
                         <ul class="navbar-nav animated" id="nav">
-                            <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/">Home</a></li>
                             <%if (user != null) {%>
                             <li class="nav-item"><a class="nav-link" href="profile">Profile</a></li>
                             <li class="nav-item"><a class="nav-link" href="users-list">Users</a></li>
@@ -30,19 +25,7 @@
                             <li class="nav-item"><a class="nav-link" href="admin">Administration</a></li>
                             <%}%>
                         </ul>
-                        <!-- Search Form Area Start -->
-                        <div class="search-form-area animated">
-                            <form action="#" method="post">
-                                <input type="search" name="search" id="search"
-                                       placeholder="Type keywords &amp; hit enter">
-                                <button type="submit" class="d-none"><img src="../img/core-img/search-icon.png"
-                                                                          alt="Search"></button>
-                            </form>
-                        </div>
-                        <!-- Search btn -->
-                        <div class="search-button">
-                            <a href="#" id="search-btn"><img src="../img/core-img/search-icon.png" alt="Search"></a>
-                        </div>
+
                         <!-- Login/Register btn -->
                         <%if (user == null) {%>
                         <div class="login-register-btn">

@@ -83,7 +83,7 @@
         <!-- ***** create announcement modal ***** -->
         <h:create entityName="Announcement" selectFields="<%=field%>" actionServlet="CreateAnnouncementServlet" formFields="<%=formFields%>" formId="createAnnouncementForm"/>
 
-        <table id="myTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+        <table id="myTable" class="table table-striped table-bordered table-sm">
             <thead>
             <tr>
                 <th>#</th>

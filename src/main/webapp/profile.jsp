@@ -59,7 +59,7 @@
                     <h2><%=user.getUserName()%>'s Profile</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page"><%=user.getUserName()%>'s profile
                             </li>
                         </ol>
@@ -91,8 +91,7 @@
         <div id="myTabContent" class="tab-content">
 
             <div class="tab-pane fade active show" id="requests">
-                <table id="friendRequestTable" class="table table-striped table-bordered table-sm" cellspacing="0"
-                       width="100%">
+                <table id="friendRequestTable" class="table table-striped table-bordered table-sm">
                     <thead>
                     <tr>
                         <th>Friend Request</th>
@@ -135,8 +134,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="people">
-                <table id="friendsTable" class="table table-striped table-bordered table-sm" cellspacing="0"
-                       width="100%">
+                <table id="friendsTable" class="table table-striped table-bordered table-sm" >
                     <thead>
                     <tr>
                         <th>Username</th>
@@ -209,7 +207,7 @@
                         <br>
 
                         <label>
-                            <input type="email" disabled placeholder="E-mail" name="mail" required>
+                            <input type="email" disabled placeholder="<%=user.getMail()%>" name="mail" required>
                         </label>
                         <br>
 

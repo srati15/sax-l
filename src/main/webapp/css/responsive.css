@@ -86,9 +86,6 @@
     .testimonial-content p {
         font-size: 13px;
     }
-    .mosh-cool-facts-area .counter-area > h3 {
-        font-size: 40px;
-    }
 }
 
 @media (min-width: 320px) and (max-width: 767px) {
@@ -236,9 +233,6 @@
     }
     .testimonial-content p {
         font-size: 13px;
-    }
-    .mosh-cool-facts-area .counter-area > h3 {
-        font-size: 20px;
     }
     .testimonials-slides:after {
         text-align: right;
