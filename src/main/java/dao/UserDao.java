@@ -20,7 +20,7 @@ public class UserDao implements Dao<Integer, User> {
     public static UserDao getInstance() {
         return userDao;
     }
-    private UserDao() {
+    public UserDao() {
 
     }
     @Override
@@ -124,11 +124,7 @@ public class UserDao implements Dao<Integer, User> {
                 User user = mapper.mapRow(rs);
                 cao.add(user);
             }
-            for (User user : cao.findAll()) {
-                user.setQuizzes(QuizDao.getInstance().findAllForUser(user.getId()));
-                user.setFriends(FriendRequestDao.getInstance().getFriendsForUser(user.getId()));
-                user.setPendingFriendRequests(FriendRequestDao.getInstance().getPendingRequestsFor(user.getId()));
-            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

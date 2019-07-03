@@ -74,13 +74,15 @@
 <section class="mosh-aboutUs-area">
     <div class="container">
         <form action="CompleteQuizServlet" method="post">
+            <h2 id="quizTimer"><time>00:00:00</time></h2>
+            <input type="hidden" id="completeTime" name="completeTime" value="">
             <c:set var="questionNum" value="1"/>
             <c:forEach items="${requestScope.currentQuizQuestions}" var="question">
                 <h:question question="${question}" answer="${requestScope.questionAnswerMap.get(question)}"
                             questionNumber="${questionNum}"/>
                 <c:set var="questionNum" value="${questionNum+1}"/>
             </c:forEach>
-            <button type="submit" class="btn btn-success"><i class="fa fa-hourglass-end"></i> Finish
+            <button type="submit" class="btn btn-success" id="clear"><i class="fa fa-hourglass-end"></i> Finish
                 <input type="text" hidden name="quizId" value="<%=quiz.getId()%>">
             </button>
         </form>
@@ -107,6 +109,8 @@
 <script src="js/active.js"></script>
 
 <script src="js/toastr.js"></script>
+
+<script src="js/stopwatch.js"></script>
 
 </body>
 

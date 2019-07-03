@@ -15,6 +15,7 @@ public class User extends Person {
     private List<Person> friends;
     private List<Quiz> quizzes = new ArrayList<>();
     private List<Person> pendingFriendRequests = new ArrayList<>();
+    private List<QuizResult> quizResults = new ArrayList<>();
     private Map<Person, List<TextMessage>> textMessages = new HashMap<>();
     public User(String userName, String password, String firstName, String lastName, String mail) {
         super(userName, firstName, lastName);
@@ -78,6 +79,10 @@ public class User extends Person {
 
     public void setTextMessages(Map<Person, List<TextMessage>> textMessages) {
         this.textMessages = textMessages;
+    }
+
+    public void setQuizResults(List<QuizResult> quizResults) {
+        this.quizResults = quizResults;
     }
 
     @Override

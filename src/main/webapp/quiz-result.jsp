@@ -45,7 +45,7 @@
                     <h2>Quizzes</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Quiz Result</li>
                         </ol>
                     </nav>
@@ -58,7 +58,7 @@
 
 <section class="mosh-aboutUs-area">
     <div class="container" >
-        <h2>Result ${requestScope.score} / ${requestScope.results.size()} </h2>
+        <h2>Result: ${requestScope.score} / ${requestScope.results.size()} Time: ${requestScope.timespent} </h2>
         <table id="myTable" class="table table-striped table-bordered table-sm " style="width: auto">
             <thead>
             <tr>

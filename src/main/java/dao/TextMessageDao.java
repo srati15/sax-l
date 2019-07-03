@@ -22,11 +22,7 @@ import static database.mapper.TextMessageMapper.*;
 public class TextMessageDao implements Dao<Integer, TextMessage> {
     private DBRowMapper<TextMessage> mapper = new TextMessageMapper();
     private Cao<Integer, TextMessage> cao = new Cao<>();
-    private static final TextMessageDao textMessageDao = new TextMessageDao();
-    public static TextMessageDao getInstance() {
-        return textMessageDao;
-    }
-    private TextMessageDao() {
+    public TextMessageDao() {
 
     }
     @Override
@@ -82,7 +78,6 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             if(result == 1){
                 System.out.println("message Deleted Successfully");
                 cao.delete(id);
-
             }
             else
                 System.out.println("Error Deleting message");
@@ -113,8 +108,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             rs = statement.executeQuery();
             while(rs.next()){
                 TextMessage message = mapper.mapRow(rs);
-                getMessages(message);
-
+                cao.add(message);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -125,18 +119,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
     }
 
     private void getMessages(TextMessage message) {
-        cao.add(message);
-        User sender = UserDao.getInstance().findById(message.getSenderId());
-        User receiver = UserDao.getInstance().findById(message.getReceiverId());
-        List<TextMessage> senderMessages = sender.getTextMessages().getOrDefault(receiver, new ArrayList<>());
-        senderMessages.add(message);
-        senderMessages.sort(Comparator.comparing(Message::getTimestamp));
-        sender.getTextMessages().put(receiver, senderMessages);
 
-        List<TextMessage> receiverMessages = receiver.getTextMessages().getOrDefault(sender, new ArrayList<>());
-        receiverMessages.add(message);
-        receiverMessages.sort(Comparator.comparing(Message::getTimestamp));
-        receiver.getTextMessages().put(sender, senderMessages);
     }
 
     public List<TextMessage> getTextMessagesOfGivenUsers(int senderId, int receiverId){

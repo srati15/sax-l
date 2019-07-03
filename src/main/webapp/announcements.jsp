@@ -39,7 +39,6 @@
 
 <%
     DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
-    User user = (User) request.getSession().getAttribute("user");
     AnnouncementDao announcementDao = daoManager.getDao(DaoType.Announcement);
 %>
 <!-- ***** Preloader Start ***** -->
@@ -60,7 +59,7 @@
                     <h2>Announcements List</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Announcements</li>
                         </ol>
                     </nav>

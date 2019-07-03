@@ -2,39 +2,98 @@ package manager;
 
 
 import dao.*;
+import datatypes.Person;
+import datatypes.Quiz;
+import datatypes.User;
+import datatypes.answer.Answer;
+import datatypes.messages.FriendRequest;
+import datatypes.messages.Message;
+import datatypes.messages.TextMessage;
+import datatypes.question.Question;
 import enums.DaoType;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class DaoManager {
     private Map<DaoType, Dao > map;
+    private AnnouncementDao announcementDao = new AnnouncementDao();
+    private AnswerDao answerDao = new AnswerDao();
+    private QuestionDao questionDao = new QuestionDao();
+    private FriendRequestDao friendRequestDao = new FriendRequestDao();
+    private TextMessageDao textMessageDao = new TextMessageDao();
+    private QuizDao quizDao = new QuizDao();
+    private UserDao userDao = new UserDao();
+    private QuizResultDao quizResultDao = new QuizResultDao();
     public DaoManager(){
         map = new HashMap<>();
-        AnnouncementDao announcementDao = AnnouncementDao.getInstance();
         announcementDao.cache();
-        AnswerDao answerDao = AnswerDao.getInstance();
         answerDao.cache();
-        QuestionDao questionDao = QuestionDao.getInstance();
         questionDao.cache();
-        FriendRequestDao friendRequestDao = FriendRequestDao.getInstance();
-        friendRequestDao.cache();
-        TextMessageDao textMessageDao = TextMessageDao.getInstance();
-        textMessageDao.cache();
-        QuizDao quizDao = QuizDao.getInstance();
         quizDao.cache();
-        UserDao userDao = UserDao.getInstance();
         userDao.cache();
-        map.put(DaoType.Announcement, AnnouncementDao.getInstance());
-        map.put(DaoType.Answer, AnswerDao.getInstance());
-        map.put(DaoType.Question, QuestionDao.getInstance());
-        map.put(DaoType.User, UserDao.getInstance());
-        map.put(DaoType.Quiz, QuizDao.getInstance());
-        map.put(DaoType.FriendRequest, FriendRequestDao.getInstance());
-        map.put(DaoType.TextMessage, TextMessageDao.getInstance());
+        textMessageDao.cache();
+
+        map.put(DaoType.Announcement, announcementDao);
+        map.put(DaoType.Answer, answerDao);
+        map.put(DaoType.Question, questionDao);
+        map.put(DaoType.User, userDao);
+        map.put(DaoType.Quiz, quizDao);
+        map.put(DaoType.FriendRequest, friendRequestDao);
+        map.put(DaoType.TextMessage, textMessageDao);
+        setQuizFields();
+        setUserFields();
+        setTextMessages();
+    }
+
+    private void setTextMessages() {
+        for (TextMessage message : textMessageDao.findAll()) {
+            User sender = userDao.findById(message.getSenderId());
+            User receiver = userDao.findById(message.getReceiverId());
+            List<TextMessage> senderMessages = sender.getTextMessages().getOrDefault(receiver, new ArrayList<>());
+            senderMessages.add(message);
+            senderMessages.sort(Comparator.comparing(Message::getTimestamp));
+            sender.getTextMessages().put(receiver, senderMessages);
+            List<TextMessage> receiverMessages = receiver.getTextMessages().getOrDefault(sender, new ArrayList<>());
+            receiverMessages.add(message);
+            receiverMessages.sort(Comparator.comparing(Message::getTimestamp));
+            receiver.getTextMessages().put(sender, senderMessages);
+        }
+    }
+
+    private void setQuizFields() {
+        for (Quiz quiz : quizDao.findAll()) {
+            Map<Question, Answer> questionAnswerMap = new HashMap<>();
+            List<Question> questions =  questionDao.getQuestionForQuiz(quiz.getId());
+            questions.forEach(question->questionAnswerMap.put(question, answerDao.findAnswerForQuestion(question.getId())));
+            quiz.setQuestionAnswerMap(questionAnswerMap);
+        }
+    }
+
+    private void setUserFields() {
+        for (User user : userDao.findAll()) {
+            user.setQuizzes(quizDao.findAllForUser(user.getId()));
+            user.setFriends(friendRequestDao.getFriendsForUser(user.getId()));
+            user.setPendingFriendRequests(friendRequestDao.getPendingRequestsFor(user.getId()));
+        }
     }
 
     public  <E extends Dao> E getDao(DaoType daoType){
         return (E) map.get(daoType);
+    }
+
+    public void insert(FriendRequest friendRequest) {
+        Person sender = userDao.findById(friendRequest.getSenderId());
+        userDao.findById(friendRequest.getReceiverId()).getPendingFriendRequests().add(sender);
+    }
+
+    public void insert(Quiz quiz) {
+        questionDao.insertAll(quiz.getQuestionAnswerMap().keySet());
+        answerDao.insertAll(quiz.getQuestionAnswerMap().values());
+        User creator = userDao.findById(quiz.getAuthorId());
+        creator.getQuizzes().add(quiz);
+    }
+
+    public void delete(User deleteUser) {
+
     }
 }

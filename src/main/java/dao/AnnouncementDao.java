@@ -15,12 +15,8 @@ import static database.mapper.AnnouncementMapper.*;
 public class AnnouncementDao implements Dao<Integer, Announcement> {
     private DBRowMapper<Announcement> mapper = new AnnouncementMapper();
     private Cao<Integer, Announcement> cao = new Cao<>();
-    private static AnnouncementDao announcementDao = new AnnouncementDao();
-    public static AnnouncementDao getInstance() {
-        if (announcementDao == null) announcementDao = new AnnouncementDao();
-        return announcementDao;
-    }
-    private AnnouncementDao(){
+
+    public AnnouncementDao(){
     }
 
     @Override

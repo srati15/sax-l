@@ -21,11 +21,7 @@ import static database.mapper.FriendRequestMapper.*;
 public class FriendRequestDao implements Dao<Integer, FriendRequest> {
     private DBRowMapper<FriendRequest> mapper = new FriendRequestMapper();
     private Cao<Integer, FriendRequest> cao = new Cao<>();
-    private static final FriendRequestDao friendRequestDao = new FriendRequestDao();
-    public static FriendRequestDao getInstance() {
-        return friendRequestDao;
-    }
-    private FriendRequestDao(){
+    public FriendRequestDao(){
     }
     @Override
     public FriendRequest findById(Integer id) {
@@ -51,8 +47,6 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 int id = rs.getInt(1);
                 entity.setId(id);
                 cao.add(entity);
-                Person sender = UserDao.getInstance().findById(entity.getSenderId());
-                UserDao.getInstance().findById(entity.getReceiverId()).getPendingFriendRequests().add(sender);
                 System.out.println("Request Added Successfully");
             } else
                 System.out.println("Error Adding Request");

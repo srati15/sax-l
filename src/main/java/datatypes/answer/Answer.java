@@ -21,4 +21,13 @@ public class Answer extends Domain<Integer> {
     public void setQuestionId(int questionId) {
         this.questionId = questionId;
     }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "answer='" + answer + '\'' +
+                ", questionId=" + questionId +
+                ", id=" + id +
+                '}';
+    }
 }

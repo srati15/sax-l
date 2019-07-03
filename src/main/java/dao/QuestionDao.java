@@ -19,11 +19,7 @@ import static database.mapper.QuestionMapper.*;
 public class QuestionDao implements Dao<Integer, Question> {
     private Cao<Integer, Question> cao = new Cao<>();
     private QuestionMapper questionMapper = new QuestionMapper();
-    private static final QuestionDao questionDao = new QuestionDao();
-    public static QuestionDao getInstance() {
-        return questionDao;
-    }
-    private QuestionDao(){
+    public QuestionDao(){
     }
     @Override
     public Question findById(Integer id) {

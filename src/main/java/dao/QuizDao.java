@@ -25,11 +25,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
     private DBRowMapper<Quiz> mapper = new QuizMapper();
     private Cao<Integer, Quiz> cao = new Cao<>();
 
-    private static final QuizDao quizDao = new QuizDao();
-    public static QuizDao getInstance() {
-        return quizDao;
-    }
-    private QuizDao() {
+    public QuizDao() {
 
     }
 
@@ -55,8 +51,6 @@ public class QuizDao implements Dao<Integer, Quiz>{
                 if (rs.next()){
                     entity.setId(rs.getInt(1));
                     cao.add(entity);
-                    User creator = UserDao.getInstance().findById(entity.getAuthorId());
-                    creator.getQuizzes().add(entity);
                 }
             }
             else System.out.println("Error inserting record");
@@ -152,12 +146,6 @@ public class QuizDao implements Dao<Integer, Quiz>{
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 cao.add(mapper.mapRow(resultSet));
-            }
-            for (Quiz quiz : cao.findAll()) {
-                Map<Question, Answer> questionAnswerMap = new HashMap<>();
-                List<Question> questions =  QuestionDao.getInstance().getQuestionForQuiz(quiz.getId());
-                questions.forEach(question->questionAnswerMap.put(question, AnswerDao.getInstance().findAnswerForQuestion(question.getId())));
-                quiz.setQuestionAnswerMap(questionAnswerMap);
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -39,6 +39,6 @@ public class RegisterServlet extends HttpServlet {
         User user = new User(userName, password, firstName, lastName, mail);
         userRepository.insert(user);
         request.getSession().setAttribute("user", userRepository.findByUserName(userName));
-        request.getRequestDispatcher("/").forward(request, response);
+        request.getRequestDispatcher("").forward(request, response);
     }
 }

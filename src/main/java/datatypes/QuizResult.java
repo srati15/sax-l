@@ -4,11 +4,17 @@ public class QuizResult extends Domain<Integer>{
     private int quizId;
     private int userId;
     private int score;
+    private int timeSpent;
 
-    public QuizResult(int quizId, int userId, int score) {
+    public QuizResult(int quizId, int userId, int score, int timeSpent) {
         this.quizId = quizId;
         this.userId = userId;
         this.score = score;
+        this.timeSpent = timeSpent;
+    }
+
+    public int getTimeSpent() {
+        return timeSpent;
     }
 
     public int getQuizId() {
@@ -29,6 +35,7 @@ public class QuizResult extends Domain<Integer>{
                 "quizId=" + quizId +
                 ", userId=" + userId +
                 ", score=" + score +
+                ", timeSpent=" + timeSpent +
                 ", id=" + id +
                 '}';
     }

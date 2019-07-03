@@ -20,7 +20,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
     public static AnswerDao getInstance() {
         return answerDao;
     }
-    private AnswerDao(){
+    public AnswerDao(){
 
     }
 

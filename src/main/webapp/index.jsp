@@ -53,8 +53,6 @@
         <!-- Single Hero Slides -->
         <div class="single-hero-slide d-flex align-items-end justify-content-center">
             <div class="hero-slide-content text-center">
-                <h2>Sax-l</h2>
-                <h4>Top Quizzes!</h4>
             </div>
         </div>
         <!-- Single Hero Slides -->
