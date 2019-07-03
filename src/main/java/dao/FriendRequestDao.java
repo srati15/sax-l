@@ -3,16 +3,11 @@ package dao;
 import database.CreateConnection;
 import database.mapper.DBRowMapper;
 import database.mapper.FriendRequestMapper;
-import datatypes.Person;
-import datatypes.User;
 import datatypes.messages.FriendRequest;
 import enums.DaoType;
-import enums.RequestStatus;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.QueryGenerator.*;
@@ -74,11 +69,6 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             statement.setInt(1, id);
             int result = statement.executeUpdate();
             if (result == 1) {
-                User receiver = UserDao.getInstance().findById(request.getReceiverId());
-                receiver.getPendingFriendRequests().removeIf(person->person.getId().equals(request.getSenderId()));
-                receiver.getFriends().removeIf(person -> person.getId() == request.getSenderId());
-                User sender = UserDao.getInstance().findById(request.getSenderId());
-                sender.getFriends().removeIf(person -> person.getId() == request.getReceiverId());
                 System.out.println("Request Deleted Successfully");
                 cao.delete(id);
             } else
@@ -103,16 +93,6 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             if (result == 1) {
                 System.out.println("Request accepted Successfully");
                 cao.add(entity);
-                User sender = UserDao.getInstance().findById(entity.getSenderId());
-                User receiver = UserDao.getInstance().findById(entity.getReceiverId());
-                receiver.getPendingFriendRequests().removeIf(request-> request.getId().equals(sender.getId()));
-                sender.getPendingFriendRequests().removeIf(request->request.getId().equals(receiver.getId()));
-                List<Person> friends = sender.getFriends();
-                friends.add(receiver);
-                sender.setFriends(friends);
-                List<Person> receiverFriends = receiver.getFriends();
-                receiverFriends.add(sender);
-                receiver.setFriends(receiverFriends);
             } else
                 System.out.println("Error accepting Request");
         } catch (SQLException e) {
@@ -132,23 +112,6 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
         return cao.findAll().stream().filter(s -> s.getSenderId() == senderId && s.getReceiverId() == receiverId).findFirst().orElse(null);
     }
 
-    public List<Person> getPendingRequestsFor(int receiverId) {
-        List<Integer> pendingRequests = new ArrayList<>();
-        cao.findAll().stream().filter(s -> s.getReceiverId() == receiverId && s.getStatus()==RequestStatus.Pending).
-                forEach(s->pendingRequests.add(s.getSenderId()));
-        List<Person> friendRequests = new ArrayList<>();
-        pendingRequests.forEach(request->friendRequests.add(UserDao.getInstance().findById(request)));
-        return friendRequests;
-    }
-
-    public List<Person> getFriendsForUser(int id) {
-        List<Integer> friendsIds = new ArrayList<>();
-        cao.findAll().stream().filter(s -> s.getReceiverId() == id && s.getStatus() == RequestStatus.Accepted).forEach(s -> friendsIds.add(s.getSenderId()));
-        cao.findAll().stream().filter(s -> s.getSenderId() == id && s.getStatus() == RequestStatus.Accepted).forEach(s -> friendsIds.add(s.getReceiverId()));
-        List<Person> people = new ArrayList<>();
-        friendsIds.forEach(friendId-> people.add(UserDao.getInstance().findById(friendId)));
-        return people;
-    }
 
     public void cache() {
         Connection connection = CreateConnection.getConnection();

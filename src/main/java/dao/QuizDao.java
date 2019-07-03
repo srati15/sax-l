@@ -4,16 +4,11 @@ import database.CreateConnection;
 import database.mapper.DBRowMapper;
 import database.mapper.QuizMapper;
 import datatypes.Quiz;
-import datatypes.User;
-import datatypes.answer.Answer;
-import datatypes.question.Question;
 import enums.DaoType;
 
 import java.sql.*;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
@@ -79,8 +74,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
             int result = statement.executeUpdate();
             if (result == 1) {
                 System.out.println("Quiz deleted sucessfully");
-                User creator = UserDao.getInstance().findById(quiz.getAuthorId());
-                creator.getQuizzes().removeIf(entity->entity.getId().equals(id));
+
             }
             else System.out.println("Error inserting record");
         } catch (SQLException e) {
@@ -108,9 +102,6 @@ public class QuizDao implements Dao<Integer, Quiz>{
                 if (rs.next()){
                     entity.setId(rs.getInt(1));
                     cao.add(entity);
-                    User creator = UserDao.getInstance().findById(entity.getAuthorId());
-                    creator.getQuizzes().removeIf(quiz->quiz.getId().equals(entity.getId()));
-                    creator.getQuizzes().add(entity);
                 }
             }
             else System.out.println("Error inserting record");

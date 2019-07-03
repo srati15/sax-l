@@ -19,12 +19,6 @@ public class QuizMapper implements DBRowMapper<Quiz> {
     public static final String TABLE_NAME = "quiz";
     private static QuizMapper quizMapper;
 
-    public static QuizMapper getInstance(){
-        if (quizMapper == null) {
-            quizMapper = new QuizMapper();
-        }
-        return quizMapper;
-    }
     @Override
     public Quiz mapRow(ResultSet rs) {
         try {

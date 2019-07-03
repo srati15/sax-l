@@ -12,14 +12,7 @@ public class QuestionMapper implements DBRowMapper<Question> {
     public static final String QUESTION_TYPE = "question_type_id";
     public static final String QUESTION_TEXT = "question_text";
     public static final String TABLE_NAME = "question";
-    private static QuestionMapper questionMapper;
 
-    public static QuestionMapper getInstance(){
-        if (questionMapper == null) {
-            questionMapper = new QuestionMapper();
-        }
-        return questionMapper;
-    }
 
     @Override
     public Question mapRow(ResultSet rs) {

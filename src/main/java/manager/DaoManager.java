@@ -11,6 +11,7 @@ import datatypes.messages.Message;
 import datatypes.messages.TextMessage;
 import datatypes.question.Question;
 import enums.DaoType;
+import enums.RequestStatus;
 
 import java.util.*;
 
@@ -32,6 +33,7 @@ public class DaoManager {
         quizDao.cache();
         userDao.cache();
         textMessageDao.cache();
+        quizResultDao.cache();
 
         map.put(DaoType.Announcement, announcementDao);
         map.put(DaoType.Answer, answerDao);
@@ -40,6 +42,8 @@ public class DaoManager {
         map.put(DaoType.Quiz, quizDao);
         map.put(DaoType.FriendRequest, friendRequestDao);
         map.put(DaoType.TextMessage, textMessageDao);
+        map.put(DaoType.QuizResult, quizResultDao);
+
         setQuizFields();
         setUserFields();
         setTextMessages();
@@ -72,11 +76,27 @@ public class DaoManager {
     private void setUserFields() {
         for (User user : userDao.findAll()) {
             user.setQuizzes(quizDao.findAllForUser(user.getId()));
-            user.setFriends(friendRequestDao.getFriendsForUser(user.getId()));
-            user.setPendingFriendRequests(friendRequestDao.getPendingRequestsFor(user.getId()));
+            user.setFriends(getFriendsForUser(user.getId()));
+            user.setPendingFriendRequests(getPendingRequestsFor(user.getId()));
         }
     }
 
+    private List<Person> getPendingRequestsFor(int receiverId) {
+        List<Integer> pendingRequests = new ArrayList<>();
+        friendRequestDao.findAll().stream().filter(s -> s.getReceiverId() == receiverId && s.getStatus()==RequestStatus.Pending).
+                forEach(s->pendingRequests.add(s.getSenderId()));
+        List<Person> friendRequests = new ArrayList<>();
+        pendingRequests.forEach(request->friendRequests.add(UserDao.getInstance().findById(request)));
+        return friendRequests;
+    }
+    private List<Person> getFriendsForUser(int id) {
+        List<Integer> friendsIds = new ArrayList<>();
+        friendRequestDao.findAll().stream().filter(s -> s.getReceiverId() == id && s.getStatus() == RequestStatus.Accepted).forEach(s -> friendsIds.add(s.getSenderId()));
+        friendRequestDao.findAll().stream().filter(s -> s.getSenderId() == id && s.getStatus() == RequestStatus.Accepted).forEach(s -> friendsIds.add(s.getReceiverId()));
+        List<Person> people = new ArrayList<>();
+        friendsIds.forEach(friendId-> people.add(UserDao.getInstance().findById(friendId)));
+        return people;
+    }
     public  <E extends Dao> E getDao(DaoType daoType){
         return (E) map.get(daoType);
     }
@@ -87,13 +107,13 @@ public class DaoManager {
     }
 
     public void insert(Quiz quiz) {
-        questionDao.insertAll(quiz.getQuestionAnswerMap().keySet());
-        answerDao.insertAll(quiz.getQuestionAnswerMap().values());
+        quizDao.insert(quiz);
         User creator = userDao.findById(quiz.getAuthorId());
         creator.getQuizzes().add(quiz);
     }
 
     public void delete(User deleteUser) {
+        userDao.deleteById(deleteUser.getId());
 
     }
 }

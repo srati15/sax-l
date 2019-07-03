@@ -65,6 +65,7 @@
         </div>
     </div>
 </div>
+
 <!-- ***** Welcome Area Start ***** -->
 
 <section class="mosh-aboutUs-area">

@@ -27,10 +27,11 @@ import java.util.Map;
 @WebServlet("/QuizCreationServlet")
 public class QuizCreationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-        QuestionDao questionDao = manager.getDao(DaoType.Question);
-        AnswerDao answerDao = manager.getDao(DaoType.Answer);
 
+        DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
+        QuizDao quizDao= manager.getDao(DaoType.Quiz);
+        QuestionDao questionDao= manager.getDao(DaoType.Question);
+        AnswerDao answerDao = manager.getDao(DaoType.Answer);
         User user = (User) request.getSession().getAttribute("user");
         //parameter values
         boolean autoCorrection = request.getParameter("correction").equals("yes");
@@ -39,19 +40,20 @@ public class QuizCreationServlet extends HttpServlet {
         boolean randomized = request.getParameter("randomized").equals("yes");
         String quizName = request.getParameter("quizname");
         Quiz quiz = new Quiz(quizName, user.getId(), Timestamp.valueOf(LocalDateTime.now()), randomized, singlePage, autoCorrection, practiceMode);
-        Map<Question, Answer> questionAnswerMap = new HashMap<>();
+        manager.insert(quiz);
         JSONArray questionsArray = new JSONArray(request.getParameter("questions"));
+        Map<Question, Answer> questionAnswerMap = new HashMap<>();
         for (int i = 0; i < questionsArray.length(); i++) {
             JSONObject questionJson = questionsArray.getJSONObject(i);
             Question question = QuestionAnswerJsonDispatcher.dispatchQuestion(questionJson, quiz.getId());
             questionAnswerMap.put(question, new Answer(questionJson.getString("answer")));
         }
+        questionDao.insertAll(questionAnswerMap.keySet());
         for (Question question: questionAnswerMap.keySet()) {
             questionAnswerMap.get(question).setQuestionId(question.getId());
         }
+        answerDao.insertAll(questionAnswerMap.values());
         quiz.setQuestionAnswerMap(questionAnswerMap);
-
-        manager.insert(quiz);
 
         request.getRequestDispatcher("quiz").forward(request, response);
     }

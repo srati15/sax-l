@@ -17,7 +17,6 @@
 
     <!-- Favicon -->
     <link rel="icon" href="img/core-img/favicon.ico">
-
     <!-- Core Stylesheet -->
     <link href="style.css" rel="stylesheet">
     <!-- Responsive CSS -->
@@ -79,6 +78,7 @@
 <script src="js/active.js"></script>
 
 <script src="js/toastr.js"></script>
+
 
 <script>
     $(document).ready(function () {
