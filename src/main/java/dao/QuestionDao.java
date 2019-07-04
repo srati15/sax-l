@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
+import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.getInsertQuery;
 import static dao.helpers.QueryGenerator.getSelectQuery;
 import static database.mapper.QuestionMapper.*;
@@ -45,6 +46,7 @@ public class QuestionDao implements Dao<Integer, Question> {
                 statement.addBatch();
             }
             statement.executeBatch();
+            connection.commit();
             rs = statement.getGeneratedKeys();
             for (Question question : questions) {
                 rs.next();
@@ -52,6 +54,9 @@ public class QuestionDao implements Dao<Integer, Question> {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            rollback(connection);
+        }finally {
+            executeFinalBlock(connection, statement, rs);
         }
     }
 

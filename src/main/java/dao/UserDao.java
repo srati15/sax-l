@@ -10,6 +10,7 @@ import java.sql.*;
 import java.util.Collection;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
+import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 import static database.mapper.UserMapper.*;
 
@@ -20,9 +21,7 @@ public class UserDao implements Dao<Integer, User> {
     public static UserDao getInstance() {
         return userDao;
     }
-    public UserDao() {
 
-    }
     @Override
     public User findById(Integer id) {
         return cao.findById(id);
@@ -47,6 +46,7 @@ public class UserDao implements Dao<Integer, User> {
             statement.setInt(5, entity.getUserType().getValue());
             statement.setString(6, entity.getMail());
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1) System.out.println("Record inserted sucessfully");
             else System.out.println("Error inserting record");
             rs = statement.getGeneratedKeys();
@@ -55,6 +55,7 @@ public class UserDao implements Dao<Integer, User> {
             cao.add(entity);
         } catch (SQLException e) {
             e.printStackTrace();
+            rollback(connection);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -97,12 +98,14 @@ public class UserDao implements Dao<Integer, User> {
             statement.setInt(4, user.getUserType().getValue());
             statement.setInt(5, user.getId());
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1) {
                 System.out.println("User updated sucessfully");
                 cao.add(user);
             } else System.out.println("Error updating user");
         } catch (SQLException e) {
             e.printStackTrace();
+            rollback(connection);
         } finally {
             executeFinalBlock(connection, statement);
         }

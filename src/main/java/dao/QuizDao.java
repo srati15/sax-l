@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
+import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 import static database.mapper.QuizMapper.*;
 
@@ -96,17 +97,14 @@ public class QuizDao implements Dao<Integer, Quiz>{
             statement.setInt(9, entity.getId());
 
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1) {
-                System.out.println("Record inserted sucessfully");
-                rs = statement.getGeneratedKeys();
-                if (rs.next()){
-                    entity.setId(rs.getInt(1));
-                    cao.add(entity);
-                }
+                System.out.println("Record updated sucessfully");
             }
             else System.out.println("Error inserting record");
         } catch (SQLException e) {
             e.printStackTrace();
+            rollback(connection);
         }finally {
             executeFinalBlock(connection, statement, rs);
         }

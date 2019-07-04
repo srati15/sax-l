@@ -10,6 +10,7 @@ import java.sql.*;
 import java.util.Collection;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
+import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 import static database.mapper.FriendRequestMapper.*;
 
@@ -36,6 +37,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             statement.setInt(3, entity.getStatus().getValue());
             statement.setTimestamp(4, entity.getTimestamp());
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1) {
                 rs = statement.getGeneratedKeys();
                 rs.next();
@@ -47,6 +49,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 System.out.println("Error Adding Request");
         } catch (SQLException e) {
             e.printStackTrace();
+            rollback(connection);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -68,12 +71,14 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1) {
                 System.out.println("Request Deleted Successfully");
                 cao.delete(id);
             } else
                 System.out.println("Error Deleting Request");
         } catch (SQLException e) {
+            rollback(connection);
             e.printStackTrace();
         } finally {
             executeFinalBlock(connection, statement);
@@ -90,6 +95,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             statement.setInt(1, entity.getStatus().getValue());
             statement.setInt(2, entity.getId());
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1) {
                 System.out.println("Request accepted Successfully");
                 cao.add(entity);
@@ -97,6 +103,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 System.out.println("Error accepting Request");
         } catch (SQLException e) {
             e.printStackTrace();
+            rollback(connection);
         } finally {
             executeFinalBlock(connection, statement);
         }

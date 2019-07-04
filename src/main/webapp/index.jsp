@@ -2,6 +2,8 @@
 <%@ page import="dao.AnnouncementDao" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
+<%@ page import="java.util.Collection" %>
+<%@ page import="datatypes.Quiz" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -47,17 +49,29 @@
 <!-- ***** Header Area End ***** -->
 
 <!-- ***** Welcome Area Start ***** -->
-<section class="welcome_area clearfix" id="home" style="background-image: url(img/bg-img/welcome-bg.png)">
-    <div class="hero-slides owl-carousel">
-        <!-- Single Hero Slides -->
-        <div class="single-hero-slide d-flex align-items-end justify-content-center">
-            <div class="hero-slide-content text-center">
+
+<div class="mosh-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12">
+                <div class="bradcumbContent">
+                    <h2>Main Page</h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active"><a href="${pageContext.request.contextPath}/">Home</a></li>
+                        </ol>
+                    </nav>
+                </div>
             </div>
         </div>
-        <!-- Single Hero Slides -->
     </div>
-</section>
-<!-- ***** Welcome Area End ***** -->
+</div>
+<%
+    Collection<Quiz> quizzes = (Collection<Quiz>) request.getAttribute("topQuizzes");
+    pageContext.setAttribute("topQuizzes", quizzes);
+%>
+<!-- ***** Top quizzes Area Start ***** -->
+<jsp:include page="components/top-quizzes.jsp"/>
 
 
 <!-- ***** Footer Area Start ***** -->

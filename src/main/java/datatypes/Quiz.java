@@ -6,6 +6,7 @@ import datatypes.question.Question;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Quiz extends Domain<Integer> {
     private String quizName;
@@ -78,6 +79,10 @@ public class Quiz extends Domain<Integer> {
         this.questionAnswerMap = questionAnswerMap;
     }
 
+    public void setTimesDone(int timesDone) {
+        this.timesDone = timesDone;
+    }
+
     public Map<Question, Answer> getQuestionAnswerMap() {
         return questionAnswerMap;
     }
@@ -85,8 +90,7 @@ public class Quiz extends Domain<Integer> {
     @Override
     public String toString() {
         return "Quiz{" +
-                "id=" + id +
-                ", quizName='" + quizName + '\'' +
+                "quizName='" + quizName + '\'' +
                 ", authorId=" + authorId +
                 ", timesDone=" + timesDone +
                 ", dateCreated=" + dateCreated +
@@ -94,6 +98,29 @@ public class Quiz extends Domain<Integer> {
                 ", onePage=" + onePage +
                 ", allowedImmediateCorrection=" + allowedImmediateCorrection +
                 ", allowedPracticemode=" + allowedPracticemode +
+                ", id=" + id +
+                ", questionAnswerMap=" + questionAnswerMap +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Quiz quiz = (Quiz) o;
+        return authorId == quiz.authorId &&
+                timesDone == quiz.timesDone &&
+                randomized == quiz.randomized &&
+                onePage == quiz.onePage &&
+                allowedImmediateCorrection == quiz.allowedImmediateCorrection &&
+                allowedPracticemode == quiz.allowedPracticemode &&
+                Objects.equals(quizName, quiz.quizName) &&
+                Objects.equals(dateCreated, quiz.dateCreated) &&
+                Objects.equals(questionAnswerMap, quiz.questionAnswerMap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(quizName, authorId, timesDone, dateCreated, randomized, onePage, allowedImmediateCorrection, allowedPracticemode, questionAnswerMap);
     }
 }

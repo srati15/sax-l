@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
+import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 import static database.mapper.TextMessageMapper.*;
 
@@ -43,18 +44,18 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             statement.setTimestamp(3, entity.getTimestamp());
             statement.setString(4, entity.getTextMessage());
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1) {
                 rs = statement.getGeneratedKeys();
                 rs.next();
                 entity.setId(rs.getInt(1));
                 System.out.println("Text Message inserted successfully");
-                getMessages(entity);
-
             }
             else System.out.println("Error inserting Text Message");
 
         } catch (SQLException e) {
             e.printStackTrace();
+            rollback(connection);
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -75,6 +76,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             int result = statement.executeUpdate();
+            connection.commit();
             if(result == 1){
                 System.out.println("message Deleted Successfully");
                 cao.delete(id);
@@ -83,6 +85,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 System.out.println("Error Deleting message");
         } catch (SQLException e) {
             e.printStackTrace();
+            rollback(connection);
         } finally {
             executeFinalBlock(connection, statement);
         }
@@ -116,15 +119,6 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             executeFinalBlock(connection, statement, rs);
         }
 
-    }
-
-    private void getMessages(TextMessage message) {
-
-    }
-
-    public List<TextMessage> getTextMessagesOfGivenUsers(int senderId, int receiverId){
-        //not both sides
-        return cao.findAll().stream().filter(s->s.getSenderId()==senderId && s.getReceiverId() == receiverId).collect(Collectors.toList());
     }
 
 }

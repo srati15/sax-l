@@ -44,7 +44,8 @@ public class CompleteQuizServlet extends HttpServlet {
         int result = (int) quizResults.values().stream().filter(s -> s).count();
         QuizResult quizResult = new QuizResult(quiz.getId(), user.getId(), result, seconds );
         quizResultDao.insert(quizResult);
-
+        quiz.setTimesDone(quiz.getTimesDone()+1);
+        quizDao.update(quiz);
         request.setAttribute("results", quizResults);
         request.setAttribute("userAnswers", questionAnswers);
         request.setAttribute("score", result);

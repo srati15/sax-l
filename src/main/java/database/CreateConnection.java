@@ -25,7 +25,9 @@ public class CreateConnection {
     public static Connection getConnection() {
         if (dataSource == null) initDataSource();
         try {
-            return dataSource.getConnection();
+            Connection connection = dataSource.getConnection();
+            connection.setAutoCommit(false);
+            return connection;
         } catch (SQLException e) {
             e.printStackTrace();
         }

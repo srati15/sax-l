@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.Collection;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
+import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.getInsertQuery;
 import static dao.helpers.QueryGenerator.getSelectQuery;
 import static database.mapper.AnswerMapper.*;
@@ -16,10 +17,6 @@ import static database.mapper.AnswerMapper.*;
 public class AnswerDao implements Dao<Integer, Answer> {
     private Cao<Integer, Answer> cao = new Cao<>();
     private AnswerMapper answerMapper = new AnswerMapper();
-    private static final AnswerDao answerDao = new AnswerDao() ;
-    public static AnswerDao getInstance() {
-        return answerDao;
-    }
     public AnswerDao(){
 
     }
@@ -89,10 +86,10 @@ public class AnswerDao implements Dao<Integer, Answer> {
                 statement.addBatch();
             }
             statement.executeBatch();
+            connection.commit();
             rs = statement.getGeneratedKeys();
             for (Answer answer : values) {
                 if (rs.next()){
-                    System.out.println(rs.getInt(1));
                     answer.setId(rs.getInt(1));
                     cao.add(answer);
                 }else {
@@ -100,7 +97,10 @@ public class AnswerDao implements Dao<Integer, Answer> {
                 }
             }
         } catch (SQLException e) {
+            rollback(connection);
             e.printStackTrace();
+        }finally {
+            executeFinalBlock(connection, statement, rs);
         }
     }
 

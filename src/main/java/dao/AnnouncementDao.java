@@ -10,6 +10,7 @@ import java.sql.*;
 import java.util.Collection;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
+import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 import static database.mapper.AnnouncementMapper.*;
 public class AnnouncementDao implements Dao<Integer, Announcement> {
@@ -38,6 +39,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             statement.setString(2, entity.getHyperLink());
             statement.setBoolean(3, entity.isActive());
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1){
                 System.out.println("Announcement inserted successfully");
                 rs = statement.getGeneratedKeys();
@@ -47,13 +49,15 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             }
             else
                 System.out.println("Error inserting announcement");
-
         } catch (SQLException e) {
+            rollback(connection);
             e.printStackTrace();
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
     }
+
+
 
     @Override
     public Collection<Announcement> findAll() {
@@ -69,6 +73,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             int result = statement.executeUpdate();
+            connection.commit();
             if(result == 1) {
                 cao.delete(id);
                 System.out.println("Announcement Deleted Successfully");
@@ -76,6 +81,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             else
                 System.out.println("Error Deleting Announcement");
         } catch (SQLException e) {
+            rollback(connection);
             e.printStackTrace();
         }finally {
             executeFinalBlock(connection,statement);
@@ -94,12 +100,14 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             statement.setBoolean(3, entity.isActive());
             statement.setInt(4, entity.getId());
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1) {
                 cao.add(entity);
                 System.out.println("Announcement updated sucessfully");
             }
             else System.out.println("Error updating announcement");
         } catch (SQLException e) {
+            rollback(connection);
             e.printStackTrace();
         }finally {
             executeFinalBlock(connection, statement);
