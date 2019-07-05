@@ -17,6 +17,8 @@ public class User extends Person {
     private List<Person> pendingFriendRequests = new ArrayList<>();
     private List<QuizResult> quizResults = new ArrayList<>();
     private Map<Person, List<TextMessage>> textMessages = new HashMap<>();
+    private List<Achievement> achievements = new ArrayList<>();
+
     public User(String userName, String password, String firstName, String lastName, String mail) {
         super(userName, firstName, lastName);
         this.password = password;
@@ -69,6 +71,14 @@ public class User extends Person {
         this.pendingFriendRequests = pendingFriendRequests;
     }
 
+    public List<Achievement> getAchievements() {
+        return achievements;
+    }
+
+    public void setAchievements(List<Achievement> achievements) {
+        this.achievements = achievements;
+    }
+
     public List<Person> getPendingFriendRequests() {
         return pendingFriendRequests;
     }
@@ -83,6 +93,10 @@ public class User extends Person {
 
     public void setQuizResults(List<QuizResult> quizResults) {
         this.quizResults = quizResults;
+    }
+
+    public List<QuizResult> getQuizResults() {
+        return quizResults;
     }
 
     @Override

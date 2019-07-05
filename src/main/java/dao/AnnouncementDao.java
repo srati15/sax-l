@@ -8,6 +8,7 @@ import enums.DaoType;
 
 import java.sql.*;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
@@ -16,12 +17,13 @@ import static database.mapper.AnnouncementMapper.*;
 public class AnnouncementDao implements Dao<Integer, Announcement> {
     private DBRowMapper<Announcement> mapper = new AnnouncementMapper();
     private Cao<Integer, Announcement> cao = new Cao<>();
-
+    private AtomicBoolean isCached = new AtomicBoolean(false);
     public AnnouncementDao(){
     }
 
     @Override
     public Announcement findById(Integer id) {
+        if (!isCached.get()) cache();
         return cao.findById(id);
     }
 
@@ -61,6 +63,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
 
     @Override
     public Collection<Announcement> findAll() {
+        if (!isCached.get()) cache();
         return cao.findAll();
     }
 
@@ -120,6 +123,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
     }
 
     public void cache() {
+        if (isCached.get()) return;
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -131,6 +135,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
                 Announcement announcement = mapper.mapRow(rs);
                 cao.add(announcement);
             }
+            isCached.set(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {

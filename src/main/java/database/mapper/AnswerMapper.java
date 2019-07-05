@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AnswerMapper implements DBRowMapper<Answer> {
-    private static final String ANSWER_ID = "id";
+    public static final String ANSWER_ID = "id";
     public static final String QUESTION_ID = "question_id";
     public static final String ANSWER_TEXT = "answer_string";
     public static final String TABLE_NAME = "answers";

@@ -2,7 +2,9 @@
 <%@ page import="dao.AnnouncementDao" %>
 <%@ page import="dao.QuizDao" %>
 <%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.User" %>
 <%@ page import="enums.DaoType" %>
+<%@ page import="enums.UserType" %>
 <%@ page import="manager.DaoManager" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,6 +38,8 @@
     UserDao userDao = manager.getDao(DaoType.User);
     QuizDao quizDao = manager.getDao(DaoType.Quiz);
     pageContext.setAttribute("userDao", userDao);
+    User user = (User) request.getSession().getAttribute("user");
+    pageContext.setAttribute("user", user);
 %>
 
 <!-- ***** Preloader Start ***** -->
@@ -95,19 +99,27 @@
                         <c:choose>
                             <c:when test="${quiz.onePage}">
                                 <a href="start-quiz?quizId=${quiz.id}">
-                                    <button type="button" class="btn btn-info btn-sm">
+                                    <button type="button" class="btn btn-info btn-sm"  style="float:left">
                                         <i class="fa fa-hourglass-start"></i> Start
                                     </button>
                                 </a>
                             </c:when>
                             <c:otherwise>
                                 <a href="start-quiz?quizId=${quiz.id}&questionId=1">
-                                    <button type="button" class="btn btn-info btn-sm">
+                                    <button type="button" class="btn btn-info btn-sm"  style="float:left">
                                         <i class="fa fa-hourglass-start"></i> Start
                                     </button>
                                 </a>
                             </c:otherwise>
                         </c:choose>
+                        <%if (user.getUserType() == UserType.Admin) {%>
+                        <form action="DeleteQuizServlet" method="post" style="float:left">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa fa-remove"></i> Delete
+                            </button>
+                            <input type="hidden" name="deleteQuizId" value="${quiz.id}">
+                        </form>
+                        <%}%>
                     </td>
                 </tr>
                 <c:set var="i" value="${i + 1}" scope="page"/>
@@ -289,6 +301,16 @@
                         <label for="quizname">Quiz Name</label>
                         <div>
                             <input id="quizname" name="quizname" type="text" placeholder=""
+                                   class="form-control input-md"
+                                   required="">
+                        </div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label for="quizname">Quiz Image URL</label>
+                        <div>
+                            <input id="quizImageUrl" name="quizImageUrl" type="text" placeholder=""
                                    class="form-control input-md"
                                    required="">
                         </div>

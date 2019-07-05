@@ -8,6 +8,7 @@ import enums.DaoType;
 
 import java.sql.*;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
@@ -17,17 +18,15 @@ import static database.mapper.UserMapper.*;
 public class UserDao implements Dao<Integer, User> {
     private DBRowMapper<User> mapper = new UserMapper();
     private Cao<Integer, User> cao = new Cao<>();
-    private static final UserDao userDao = new UserDao();
-    public static UserDao getInstance() {
-        return userDao;
-    }
-
+    private AtomicBoolean isCached = new AtomicBoolean(false);
     @Override
     public User findById(Integer id) {
+        if (!isCached.get()) cache();
         return cao.findById(id);
     }
 
     public User findByUserName(String usrName) {
+        if (!isCached.get()) cache();
         return cao.findAll().stream().filter(s -> s.getUserName().equals(usrName)).findFirst().orElse(null);
     }
 
@@ -47,8 +46,8 @@ public class UserDao implements Dao<Integer, User> {
             statement.setString(6, entity.getMail());
             int result = statement.executeUpdate();
             connection.commit();
-            if (result == 1) System.out.println("Record inserted sucessfully");
-            else System.out.println("Error inserting record");
+            if (result == 1) System.out.println("User inserted sucessfully");
+            else System.out.println("Error inserting User");
             rs = statement.getGeneratedKeys();
             rs.next();
             entity.setId(rs.getInt(1));
@@ -63,6 +62,7 @@ public class UserDao implements Dao<Integer, User> {
 
     @Override
     public Collection<User> findAll() {
+        if (!isCached.get()) cache();
         return cao.findAll();
     }
 
@@ -77,8 +77,8 @@ public class UserDao implements Dao<Integer, User> {
             int result = statement.executeUpdate();
             if (result == 1) {
                 cao.delete(id);
-                System.out.println("Record deleted sucessfully");
-            } else System.out.println("Error deleting record");
+                System.out.println("User deleted sucessfully");
+            } else System.out.println("Error deleting User");
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -117,6 +117,7 @@ public class UserDao implements Dao<Integer, User> {
     }
 
     public void cache() {
+        if (isCached.get()) return;
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -127,7 +128,7 @@ public class UserDao implements Dao<Integer, User> {
                 User user = mapper.mapRow(rs);
                 cao.add(user);
             }
-
+            isCached.set(true);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

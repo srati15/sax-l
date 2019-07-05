@@ -8,6 +8,7 @@ import enums.DaoType;
 
 import java.sql.*;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
@@ -17,10 +18,13 @@ import static database.mapper.FriendRequestMapper.*;
 public class FriendRequestDao implements Dao<Integer, FriendRequest> {
     private DBRowMapper<FriendRequest> mapper = new FriendRequestMapper();
     private Cao<Integer, FriendRequest> cao = new Cao<>();
+    private AtomicBoolean isCached = new AtomicBoolean(false);
+
     public FriendRequestDao(){
     }
     @Override
     public FriendRequest findById(Integer id) {
+        if (!isCached.get()) cache();
         return cao.findById(id);
     }
 
@@ -58,6 +62,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
 
     @Override
     public Collection<FriendRequest> findAll() {
+        if (!isCached.get()) cache();
         return cao.findAll();
     }
 
@@ -121,6 +126,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
 
 
     public void cache() {
+        if (isCached.get()) return;
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -132,6 +138,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 FriendRequest request = mapper.mapRow(rs);
                 cao.add(request);
             }
+            isCached.set(true);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

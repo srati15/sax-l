@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.Achievement" %>
 <%@ page import="datatypes.User" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
@@ -83,6 +84,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#messages">Messages</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#achievements">Achievements</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#edit">Edit Profile</a>
@@ -188,6 +192,16 @@
             <div class="tab-pane fade" id="messages">
 
             </div>
+
+            <div class="tab-pane fade" id="achievements">
+                <ul>
+                    <%for (Achievement achievement: user.getAchievements()) {%>
+                    <li><%=achievement.getAchievementName()%></li>
+                    <%}%>
+                </ul>
+            </div>
+
+
             <div class="tab-pane fade" id="edit">
                 <form action="UpdateUserServlet" method="post" id="editForm">
                     <center>

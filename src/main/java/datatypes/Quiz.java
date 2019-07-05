@@ -17,7 +17,7 @@ public class Quiz extends Domain<Integer> {
     private boolean onePage;
     private boolean allowedImmediateCorrection;
     private boolean allowedPracticemode;
-
+    private String quizImageURL;
     private Map<Question, Answer> questionAnswerMap = new HashMap<>();
     public String getQuizName() {
         return quizName;
@@ -25,7 +25,7 @@ public class Quiz extends Domain<Integer> {
     public Quiz(){
 
     }
-    public Quiz(int id, String quizName, int authorId, int timesDone, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode) {
+    public Quiz(int id, String quizName, int authorId, int timesDone, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL) {
         this.id = id;
         this.quizName = quizName;
         this.authorId = authorId;
@@ -35,9 +35,10 @@ public class Quiz extends Domain<Integer> {
         this.onePage = onePage;
         this.allowedImmediateCorrection = allowedImmediateCorrection;
         this.allowedPracticemode = allowedPracticemode;
+        this.quizImageURL = quizImageURL;
     }
 
-    public Quiz(String quizName, int authorId, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode) {
+    public Quiz(String quizName, int authorId, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL) {
         this.quizName = quizName;
         this.authorId = authorId;
         this.dateCreated = dateCreated;
@@ -45,6 +46,7 @@ public class Quiz extends Domain<Integer> {
         this.onePage = onePage;
         this.allowedImmediateCorrection = allowedImmediateCorrection;
         this.allowedPracticemode = allowedPracticemode;
+        this.quizImageURL = quizImageURL;
     }
 
     public boolean isRandomized() {
@@ -87,20 +89,8 @@ public class Quiz extends Domain<Integer> {
         return questionAnswerMap;
     }
 
-    @Override
-    public String toString() {
-        return "Quiz{" +
-                "quizName='" + quizName + '\'' +
-                ", authorId=" + authorId +
-                ", timesDone=" + timesDone +
-                ", dateCreated=" + dateCreated +
-                ", randomized=" + randomized +
-                ", onePage=" + onePage +
-                ", allowedImmediateCorrection=" + allowedImmediateCorrection +
-                ", allowedPracticemode=" + allowedPracticemode +
-                ", id=" + id +
-                ", questionAnswerMap=" + questionAnswerMap +
-                '}';
+    public String getQuizImageURL() {
+        return quizImageURL;
     }
 
     @Override
@@ -122,5 +112,22 @@ public class Quiz extends Domain<Integer> {
     @Override
     public int hashCode() {
         return Objects.hash(quizName, authorId, timesDone, dateCreated, randomized, onePage, allowedImmediateCorrection, allowedPracticemode, questionAnswerMap);
+    }
+
+    @Override
+    public String toString() {
+        return "Quiz{" +
+                "quizName='" + quizName + '\'' +
+                ", authorId=" + authorId +
+                ", timesDone=" + timesDone +
+                ", dateCreated=" + dateCreated +
+                ", randomized=" + randomized +
+                ", onePage=" + onePage +
+                ", allowedImmediateCorrection=" + allowedImmediateCorrection +
+                ", allowedPracticemode=" + allowedPracticemode +
+                ", quizImageURL='" + quizImageURL + '\'' +
+                ", questionAnswerMap=" + questionAnswerMap +
+                ", id=" + id +
+                '}';
     }
 }

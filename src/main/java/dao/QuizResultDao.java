@@ -8,6 +8,7 @@ import enums.DaoType;
 
 import java.sql.*;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
@@ -17,11 +18,13 @@ import static database.mapper.QuizResultMapper.*;
 public class QuizResultDao implements Dao<Integer, QuizResult> {
     private DBRowMapper<QuizResult> mapper = new QuizResultMapper();
     private Cao<Integer, QuizResult> cao = new Cao<>();
+    private AtomicBoolean isCached = new AtomicBoolean(false);
     public QuizResultDao(){
     }
 
     @Override
     public QuizResult findById(Integer integer) {
+        if (!isCached.get()) cache();
         return cao.findById(integer);
     }
 
@@ -59,6 +62,7 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
 
     @Override
     public Collection<QuizResult> findAll() {
+        if (!isCached.get()) cache();
         return cao.findAll();
     }
 
@@ -121,6 +125,7 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
 
     @Override
     public void cache() {
+        if (isCached.get()) return;
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -132,6 +137,7 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
                 QuizResult quizResult = mapper.mapRow(rs);
                 cao.add(quizResult);
             }
+            isCached.set(true);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
