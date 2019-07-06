@@ -7,6 +7,7 @@ import datatypes.User;
 import datatypes.messages.Message;
 import datatypes.messages.TextMessage;
 import enums.DaoType;
+import org.w3c.dom.Text;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -119,6 +120,23 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             executeFinalBlock(connection, statement, rs);
         }
 
+    }
+    /*messeges of given users sorted by send time*/
+    public List<TextMessage> getTextMessagesOfGivenUsers(int senderId, int receiverId){
+        List<TextMessage> m1 = cao.findAll().stream().filter(s->s.getSenderId()==senderId && s.getReceiverId() == receiverId).collect(Collectors.toList());
+        List<TextMessage> m2 = cao.findAll().stream().filter(s->s.getSenderId()==receiverId && s.getReceiverId() == senderId).collect(Collectors.toList());
+        m1.addAll(m2);
+        m1.sort(new Comparator<TextMessage>() {
+            @Override
+            public int compare(TextMessage o1, TextMessage o2) {
+                if(o1.getTimestamp().before(o2.getTimestamp())){
+                    return -1;
+                }else{
+                    return 1;
+                }
+            }
+        });
+        return m1;
     }
 
 }

@@ -106,6 +106,10 @@ public class DaoManager {
         userDao.findById(friendRequest.getReceiverId()).getPendingFriendRequests().add(sender);
     }
 
+    public void insert(TextMessage message){
+        textMessageDao.insert(message);
+        textMessageDao.cache();
+    }
     public void insert(Quiz quiz) {
         quizDao.insert(quiz);
         User creator = userDao.findById(quiz.getAuthorId());
