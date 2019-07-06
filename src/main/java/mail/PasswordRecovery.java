@@ -12,7 +12,7 @@ import java.util.Properties;
 public class PasswordRecovery {
     private static Properties properties = new MailInfo().getProperties();
     private static String htmlTemplate = new TemplateReader().getText();
-    public static boolean send(User user) {
+    public static boolean send(User user, String password) {
         Session session = Session.getInstance(properties,
                 new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
@@ -28,7 +28,7 @@ public class PasswordRecovery {
             copy = copy.replaceAll("%USERNAME%", user.getUserName());
             copy = copy.replaceAll("%FIRSTNAME%", user.getFirstName());
             copy = copy.replaceAll("%LASTNAME%", user.getLastName());
-            copy = copy.replaceAll("%TEMP_PASSWORD%", user.getPassword());
+            copy = copy.replaceAll("%TEMP_PASSWORD%", password);
 
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
             mimeBodyPart.setContent(copy, "text/html");

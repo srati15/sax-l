@@ -113,4 +113,8 @@ public class User extends Person {
                 ", id=" + id +
                 "} " + super.toString();
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

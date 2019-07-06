@@ -5,6 +5,7 @@ import datatypes.User;
 import enums.DaoType;
 import enums.UserType;
 import manager.DaoManager;
+import security.Cracker;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,10 +47,11 @@ public class UpdateUserServlet extends HttpServlet {
             else request.getRequestDispatcher("profile").forward(request, response);
             return;
         }
-        User updatedUser = new User(userName, password, firstName, lastName, mail);
-        updatedUser.setId(id);
-        updatedUser.setUserType(userType);
-        userDao.update(updatedUser);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setPassword(new Cracker().code(password));
+        user.setUserType(userType);
+        userDao.update(user);
         if (user.getUserType()== UserType.Admin) request.getRequestDispatcher("users-list").forward(request, response);
         else request.getRequestDispatcher("profile").forward(request, response);
     }
