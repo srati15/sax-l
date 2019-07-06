@@ -114,6 +114,7 @@ public class DaoManager {
     }
 
     public void insert(FriendRequest friendRequest) {
+        friendRequestDao.insert(friendRequest);
         Person sender = userDao.findById(friendRequest.getSenderId());
         userDao.findById(friendRequest.getReceiverId()).getPendingFriendRequests().add(sender);
     }
@@ -211,5 +212,23 @@ public class DaoManager {
         }else{
             receiver.getTextMessages().put(sender, new ArrayList<>(Arrays.asList(mes)));
         }
+    }
+
+    public void update(FriendRequest request) {
+        friendRequestDao.update(request);
+        User sender = userDao.findById(request.getSenderId());
+        User receiver = userDao.findById(request.getReceiverId());
+        sender.getFriends().add(receiver);
+        receiver.getFriends().add(sender);
+        receiver.getPendingFriendRequests().remove(sender);
+    }
+
+    public void delete(FriendRequest request) {
+        friendRequestDao.deleteById(request.getId());
+        User sender = userDao.findById(request.getSenderId());
+        User receiver = userDao.findById(request.getReceiverId());
+        sender.getFriends().remove(receiver);
+        receiver.getFriends().remove(sender);
+        receiver.getPendingFriendRequests().remove(sender);
     }
 }

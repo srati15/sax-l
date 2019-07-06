@@ -25,9 +25,9 @@ public class FriendRequestDeleteServlet extends HttpServlet {
         FriendRequest request1 = friendRequestDao.findBySenderReceiverId(user.getId(), receiverId);
         FriendRequest request2 = friendRequestDao.findBySenderReceiverId(receiverId, user.getId());
         if(request1 != null)
-            friendRequestDao.deleteById(request1.getId());
+            manager.delete(request1);
         else if(request2 != null)
-                friendRequestDao.deleteById(request2.getId());
+                manager.delete(request2);
         String callingPage = request.getParameter("callingPage");
 
         if (callingPage!=null && callingPage.equals("profile")){

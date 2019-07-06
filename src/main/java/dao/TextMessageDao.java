@@ -50,11 +50,11 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             statement.setString(4, entity.getTextMessage());
             int result = statement.executeUpdate();
             connection.commit();
-            cao.add(entity);
             if (result == 1) {
                 rs = statement.getGeneratedKeys();
                 rs.next();
                 entity.setId(rs.getInt(1));
+                cao.add(entity);
                 System.out.println("Text Message inserted successfully");
             }
             else System.out.println("Error inserting Text Message");
