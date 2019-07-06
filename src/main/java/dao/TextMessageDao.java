@@ -60,6 +60,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
+        isCached.set(false);
     }
 
     @Override
@@ -91,6 +92,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
         } finally {
             executeFinalBlock(connection, statement);
         }
+        isCached.set(false);
     }
 
     @Override
@@ -126,6 +128,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
     }
     /*messeges of given users sorted by send time*/
     public List<TextMessage> getTextMessagesOfGivenUsers(int senderId, int receiverId){
+        cache();
         List<TextMessage> m1 = cao.findAll().stream().filter(s->s.getSenderId()==senderId && s.getReceiverId() == receiverId).collect(Collectors.toList());
         List<TextMessage> m2 = cao.findAll().stream().filter(s->s.getSenderId()==receiverId && s.getReceiverId() == senderId).collect(Collectors.toList());
         m1.addAll(m2);
