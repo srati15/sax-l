@@ -1,8 +1,6 @@
 package dao;
 
 import database.CreateConnection;
-import database.mapper.AnnouncementMapper;
-import database.mapper.DBRowMapper;
 import datatypes.Announcement;
 import enums.DaoType;
 
@@ -13,8 +11,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
-import static database.mapper.AnnouncementMapper.*;
 public class AnnouncementDao implements Dao<Integer, Announcement> {
+    public static final String ANNOUNCEMENT_ID = "id";
+    public static final String ANNOUNCEMENT_TEXT = "announcement_text";
+    public static final String HYPERLINK = "hyperlink";
+    public static final String STATUS = "active";
+    public static final String TABLE_NAME = "announcements";
+
     private DBRowMapper<Announcement> mapper = new AnnouncementMapper();
     private Cao<Integer, Announcement> cao = new Cao<>();
     private AtomicBoolean isCached = new AtomicBoolean(false);
@@ -142,4 +145,22 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             executeFinalBlock(connection, statement, rs);
         }
     }
+
+    private class AnnouncementMapper implements DBRowMapper<Announcement> {
+
+        @Override
+        public Announcement mapRow(ResultSet rs) {
+            try {
+                int id = rs.getInt(ANNOUNCEMENT_ID);
+                String txt = rs.getString(ANNOUNCEMENT_TEXT);
+                String hyperLink = rs.getString(HYPERLINK);
+                boolean isActive = rs.getBoolean(STATUS);
+                return new Announcement(id,txt,hyperLink, isActive);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 }

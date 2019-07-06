@@ -1,7 +1,6 @@
 package dao;
 
 import database.CreateConnection;
-import database.mapper.AnswerMapper;
 import datatypes.answer.Answer;
 import enums.DaoType;
 
@@ -12,12 +11,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
-import static database.mapper.AnswerMapper.*;
 
 public class AnswerDao implements Dao<Integer, Answer> {
     private Cao<Integer, Answer> cao = new Cao<>();
     private AnswerMapper answerMapper = new AnswerMapper();
     private AtomicBoolean isCached = new AtomicBoolean(false);
+    public static final String ANSWER_ID = "id";
+    public static final String QUESTION_ID = "question_id";
+    public static final String ANSWER_TEXT = "answer_string";
+    public static final String TABLE_NAME = "answers";
+
 
     public AnswerDao(){
 
@@ -132,4 +135,23 @@ public class AnswerDao implements Dao<Integer, Answer> {
             executeFinalBlock(connection, statement, rs);
         }
     }
+
+    private class AnswerMapper implements DBRowMapper<Answer> {
+        @Override
+        public Answer mapRow(ResultSet rs) {
+            try {
+                int answerId = rs.getInt(ANSWER_ID);
+                int questionId = rs.getInt(QUESTION_ID);
+                String answerText = rs.getString(ANSWER_TEXT);
+                Answer answer = new Answer(answerText);
+                answer.setId(answerId);
+                answer.setQuestionId(questionId);
+                return answer;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 }

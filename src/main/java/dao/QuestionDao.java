@@ -1,9 +1,9 @@
 package dao;
 
 import database.CreateConnection;
-import database.mapper.QuestionMapper;
-import datatypes.question.Question;
+import datatypes.question.*;
 import enums.DaoType;
+import enums.QuestionType;
 
 import java.sql.*;
 import java.util.Collection;
@@ -15,12 +15,17 @@ import java.util.stream.Collectors;
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
-import static database.mapper.QuestionMapper.*;
 
 public class QuestionDao implements Dao<Integer, Question> {
     private Cao<Integer, Question> cao = new Cao<>();
     private QuestionMapper questionMapper = new QuestionMapper();
     private AtomicBoolean isCached = new AtomicBoolean(false);
+    public static final String QUIZ_ID = "quiz_id";
+    public static final String QUESTION_ID = "id";
+    public static final String QUESTION_TYPE = "question_type_id";
+    public static final String QUESTION_TEXT = "question_text";
+    public static final String TABLE_NAME = "question";
+
 
     public QuestionDao(){
     }
@@ -133,4 +138,32 @@ public class QuestionDao implements Dao<Integer, Question> {
             executeFinalBlock(connection, statement, rs);
         }
     }
+
+    private class QuestionMapper implements DBRowMapper<Question> {
+        @Override
+        public Question mapRow(ResultSet rs) {
+            try {
+                int quizId = rs.getInt(QUIZ_ID);
+                int questionId = rs.getInt(QUESTION_ID);
+                int questionTypeId = rs.getInt(QUESTION_TYPE);
+                String questionText = rs.getString(QUESTION_TEXT);
+                QuestionType questionType = QuestionType.getById(questionTypeId);
+                Question question;
+                if (questionType == QuestionType.PictureResponse) {
+                    question = new PictureResponseQuestion(questionText);
+                }else if (questionType == QuestionType.FillInTheBlank) {
+                    question = new FillBlankQuestion(questionText);
+                }else if (questionType == QuestionType.QuestionResponse) {
+                    question = new QuestionResponse(questionText);
+                }else question = new MultipleChoiceQuestion(questionText);
+                question.setQuizId(quizId);
+                question.setId(questionId);
+                return question;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 }

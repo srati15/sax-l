@@ -1,10 +1,9 @@
 package dao;
 
 import database.CreateConnection;
-import database.mapper.DBRowMapper;
-import database.mapper.UserMapper;
 import datatypes.User;
 import enums.DaoType;
+import enums.UserType;
 
 import java.sql.*;
 import java.util.Collection;
@@ -13,12 +12,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
-import static database.mapper.UserMapper.*;
 
 public class UserDao implements Dao<Integer, User> {
     private DBRowMapper<User> mapper = new UserMapper();
     private Cao<Integer, User> cao = new Cao<>();
     private AtomicBoolean isCached = new AtomicBoolean(false);
+    public static final String USER_ID = "id";
+    public static final String USER_NAME = "user_name";
+    public static final String USER_PASSWORD = "pass";
+    public static final String FIRST_NAME = "first_name";
+    public static final String LAST_NAME = "last_name";
+    public static final String USER_MAIL = "mail";
+    public static final String USER_TYPE = "user_type";
+    public static final String TABLE_NAME = "users";
+
     @Override
     public User findById(Integer id) {
         if (!isCached.get()) cache();
@@ -135,4 +142,27 @@ public class UserDao implements Dao<Integer, User> {
             executeFinalBlock(connection, statement);
         }
     }
+
+    private class UserMapper implements DBRowMapper<User> {
+        @Override
+        public User mapRow(ResultSet rs) {
+            try {
+                int userId = rs.getInt(USER_ID);
+                String userName = rs.getString(USER_NAME);
+                String passwordHash = rs.getString(USER_PASSWORD);
+                String firstName = rs.getString(FIRST_NAME);
+                String lastName = rs.getString(LAST_NAME);
+                String mail = rs.getString(USER_MAIL);
+                UserType type = UserType.getById(rs.getInt(USER_TYPE));
+                User user = new User(userName, passwordHash, firstName, lastName, mail);
+                user.setUserType(type);
+                user.setId(userId);
+                return user;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 }

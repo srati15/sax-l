@@ -1,4 +1,4 @@
-package database.mapper;
+package dao;
 
 import java.sql.ResultSet;
 

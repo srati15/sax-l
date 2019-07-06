@@ -1,11 +1,3 @@
-DROP TABLE if exists users;
-DROP TABLE if exists announcements;
-DROP TABLE if exists questionTypes;
-DROP TABLE if exists question;
-DROP TABLE if exists answers;
-DROP table if exists quiz;
-drop table if exists results;
-
 create table achievements
 (
     id               int auto_increment
@@ -91,10 +83,11 @@ create table text_message
 (
     id           int auto_increment
         primary key,
-    sender_id    int                                not null,
-    receiver_id  int                                not null,
-    date_sent    datetime default CURRENT_TIMESTAMP null,
-    message_sent varchar(1000)                      not null
+    sender_id    int                                  not null,
+    receiver_id  int                                  not null,
+    date_sent    datetime   default CURRENT_TIMESTAMP null,
+    message_sent varchar(1000)                        not null,
+    seen         tinyint(1) default 0                 null
 );
 
 create table user_achievements
