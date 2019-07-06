@@ -3,18 +3,13 @@ package dao;
 import database.CreateConnection;
 import database.mapper.DBRowMapper;
 import database.mapper.TextMessageMapper;
-import datatypes.User;
-import datatypes.messages.Message;
 import datatypes.messages.TextMessage;
 import enums.DaoType;
 import org.w3c.dom.Text;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
@@ -24,11 +19,13 @@ import static database.mapper.TextMessageMapper.*;
 public class TextMessageDao implements Dao<Integer, TextMessage> {
     private DBRowMapper<TextMessage> mapper = new TextMessageMapper();
     private Cao<Integer, TextMessage> cao = new Cao<>();
+    private AtomicBoolean isCached = new AtomicBoolean(false);
     public TextMessageDao() {
 
     }
     @Override
     public TextMessage findById(Integer id) {
+        if (!isCached.get()) cache();
         return cao.findById(id);
     }
 
@@ -64,6 +61,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
 
     @Override
     public Collection<TextMessage> findAll() {
+        if (!isCached.get()) cache();
         return cao.findAll();
     }
 
@@ -103,6 +101,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
     }
 
     public void cache() {
+        if (isCached.get()) return;
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -114,6 +113,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 TextMessage message = mapper.mapRow(rs);
                 cao.add(message);
             }
+            isCached.set(true);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

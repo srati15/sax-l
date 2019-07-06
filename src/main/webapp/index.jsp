@@ -2,8 +2,6 @@
 <%@ page import="dao.AnnouncementDao" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
-<%@ page import="java.util.Collection" %>
-<%@ page import="datatypes.Quiz" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,11 +38,7 @@
 
 <!-- ***** Header Area Start ***** -->
 <header class="header_area clearfix">
-
-
     <jsp:include page="components/header.jsp"/>
-
-
 </header>
 <!-- ***** Header Area End ***** -->
 
@@ -58,7 +52,8 @@
                     <h2>Main Page</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active"><a href="${pageContext.request.contextPath}/">Home</a></li>
+                            <li class="breadcrumb-item active"><a href="${pageContext.request.contextPath}/">Home</a>
+                            </li>
                         </ol>
                     </nav>
                 </div>
@@ -66,14 +61,13 @@
         </div>
     </div>
 </div>
-<%
-    Collection<Quiz> quizzes = (Collection<Quiz>) request.getAttribute("topQuizzes");
-    pageContext.setAttribute("topQuizzes", quizzes);
-%>
+
 <!-- ***** Top quizzes Area Start ***** -->
+<% if (request.getSession().getAttribute("user") != null) { %>
 <jsp:include page="components/top-quizzes.jsp"/>
-
-
+<jsp:include page="components/recent-quizzes.jsp"/>
+<jsp:include page="components/quiz-activities.jsp"/>
+<% } %>
 <!-- ***** Footer Area Start ***** -->
 <footer class="footer-area clearfix">
     <jsp:include page="components/footer.jsp"/>
@@ -99,9 +93,9 @@
         toastr.options.closeButton = true;
         toastr.options.timeOut = 0;
         toastr.options.extendedTimeOut = 0;
-        toastr.options.positionClass ="toast-bottom-right";
+        toastr.options.positionClass = "toast-bottom-right";
         <c:forEach items="<%=announcementDao.findAll()%>" var="announcement">
-            toastr.info('${announcement.announcementText}');
+        toastr.info('${announcement.announcementText}');
         </c:forEach>
     });
 </script>

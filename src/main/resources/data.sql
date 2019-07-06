@@ -6,6 +6,13 @@ DROP TABLE if exists answers;
 DROP table if exists quiz;
 drop table if exists results;
 
+create table achievements
+(
+    id               int auto_increment
+        primary key,
+    achievement_name varchar(255) null
+);
+
 create table announcements
 (
     id                int auto_increment
@@ -62,6 +69,7 @@ create table quiz
     quiz_name                varchar(100)                         not null,
     quiz_author_id           int                                  not null,
     date_created             datetime   default CURRENT_TIMESTAMP null,
+    quiz_image_url           varchar(255)                         null,
     randomized               tinyint(1) default 1                 not null,
     is_allowed_practice_mode tinyint(1) default 1                 null,
     is_allowed_correction    tinyint(1) default 1                 null,
@@ -71,11 +79,12 @@ create table quiz
 
 create table results
 (
-    result_id   int auto_increment
+    result_id  int auto_increment
         primary key,
-    user_id     int not null,
-    question_id int not null,
-    score       int not null
+    user_id    int not null,
+    quiz_id    int not null,
+    score      int not null,
+    time_spent int null
 );
 
 create table text_message
@@ -86,6 +95,14 @@ create table text_message
     receiver_id  int                                not null,
     date_sent    datetime default CURRENT_TIMESTAMP null,
     message_sent varchar(1000)                      not null
+);
+
+create table user_achievements
+(
+    id             int auto_increment
+        primary key,
+    user_id        int null,
+    achievement_id int null
 );
 
 create table users

@@ -9,6 +9,7 @@ import enums.DaoType;
 import java.sql.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
@@ -20,13 +21,14 @@ public class QuizDao implements Dao<Integer, Quiz>{
 
     private DBRowMapper<Quiz> mapper = new QuizMapper();
     private Cao<Integer, Quiz> cao = new Cao<>();
-
+    private AtomicBoolean isCached = new AtomicBoolean(false);
     public QuizDao() {
 
     }
 
     @Override
     public Quiz findById(Integer id) {
+        if (!isCached.get()) cache();
         return cao.findById(id);
     }
 
@@ -36,22 +38,24 @@ public class QuizDao implements Dao<Integer, Quiz>{
         PreparedStatement statement = null;
         ResultSet rs = null;
         try {
-            String query = getInsertQuery(TABLE_NAME, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, TIMES_DONE);
+            String query = getInsertQuery(TABLE_NAME, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, TIMES_DONE, QUIZ_IMAGE);
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             setParameters(entity, statement);
 
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1) {
-                System.out.println("Record inserted sucessfully");
+                System.out.println("Quiz inserted sucessfully");
                 rs = statement.getGeneratedKeys();
                 if (rs.next()){
                     entity.setId(rs.getInt(1));
                     cao.add(entity);
                 }
             }
-            else System.out.println("Error inserting record");
+            else System.out.println("Error inserting Quiz");
         } catch (SQLException e) {
             e.printStackTrace();
+            rollback(connection);
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -59,6 +63,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
 
     @Override
     public Collection<Quiz> findAll() {
+        if (!isCached.get()) cache();
         return cao.findAll();
     }
 
@@ -73,11 +78,12 @@ public class QuizDao implements Dao<Integer, Quiz>{
             statement = connection.prepareStatement(query);
             statement.setInt(1,id);
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1) {
                 System.out.println("Quiz deleted sucessfully");
-
+                cao.delete(id);
             }
-            else System.out.println("Error inserting record");
+            else System.out.println("Error inserting Quiz");
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -91,17 +97,18 @@ public class QuizDao implements Dao<Integer, Quiz>{
         PreparedStatement statement = null;
         ResultSet rs = null;
         try {
-            String query = getUpdateQuery(TABLE_NAME, QUIZ_ID, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, TIMES_DONE);
+            String query = getUpdateQuery(TABLE_NAME, QUIZ_ID, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, TIMES_DONE, QUIZ_IMAGE);
             statement = connection.prepareStatement(query);
             setParameters(entity, statement);
-            statement.setInt(9, entity.getId());
+            statement.setInt(10, entity.getId());
 
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                System.out.println("Record updated sucessfully");
+                System.out.println("Quiz updated sucessfully");
+                cao.add(entity);
             }
-            else System.out.println("Error inserting record");
+            else System.out.println("Error inserting Quiz");
         } catch (SQLException e) {
             e.printStackTrace();
             rollback(connection);
@@ -119,6 +126,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
         statement.setBoolean(6, entity.isAllowedPracticemode());
         statement.setBoolean(7, entity.isOnePage());
         statement.setInt(8, entity.getTimesDone());
+        statement.setString(9, entity.getQuizImageURL());
     }
 
     @Override
@@ -126,6 +134,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
         return DaoType.Quiz;
     }
     public void cache() {
+        if (isCached.get()) return;
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -136,6 +145,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
             while (resultSet.next()) {
                 cao.add(mapper.mapRow(resultSet));
             }
+            isCached.set(true);
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -144,6 +154,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
     }
 
     public List<Quiz> findAllForUser(int userId) {
+        if (!isCached.get()) cache();
         return findAll().stream().filter(quiz -> quiz.getAuthorId() == userId).collect(Collectors.toList());
     }
 }

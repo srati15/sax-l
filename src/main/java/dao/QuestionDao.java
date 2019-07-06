@@ -9,21 +9,24 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
-import static dao.helpers.QueryGenerator.getInsertQuery;
-import static dao.helpers.QueryGenerator.getSelectQuery;
+import static dao.helpers.QueryGenerator.*;
 import static database.mapper.QuestionMapper.*;
 
 public class QuestionDao implements Dao<Integer, Question> {
     private Cao<Integer, Question> cao = new Cao<>();
     private QuestionMapper questionMapper = new QuestionMapper();
+    private AtomicBoolean isCached = new AtomicBoolean(false);
+
     public QuestionDao(){
     }
     @Override
     public Question findById(Integer id) {
+        if (!isCached.get()) cache();
         return cao.findById(id);
     }
 
@@ -62,6 +65,7 @@ public class QuestionDao implements Dao<Integer, Question> {
 
     @Override
     public Collection<Question> findAll() {
+        if (!isCached.get()) cache();
         return cao.findAll();
     }
 
@@ -83,6 +87,7 @@ public class QuestionDao implements Dao<Integer, Question> {
     }
 
     public void cache() {
+        if (isCached.get()) return;
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -94,6 +99,7 @@ public class QuestionDao implements Dao<Integer, Question> {
                 Question question = questionMapper.mapRow(rs);
                 cao.add(question);
             }
+            isCached.set(true);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -102,6 +108,29 @@ public class QuestionDao implements Dao<Integer, Question> {
     }
 
     public List<Question> getQuestionForQuiz(int quizId) {
+        if (!isCached.get()) cache();
+
         return cao.findAll().stream().filter(question -> question.getQuizId() == quizId).collect(Collectors.toList());
+    }
+
+    public void deleteAll(Set<Question> keySet) {
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        String query = getDeleteQuery(TABLE_NAME, QUESTION_ID );
+        try {
+            statement = connection.prepareStatement(query);
+            for (Question question : keySet) {
+                statement.setInt(1, question.getId());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+            connection.commit();
+        } catch (SQLException e) {
+            rollback(connection);
+            e.printStackTrace();
+        }finally {
+            executeFinalBlock(connection, statement, rs);
+        }
     }
 }

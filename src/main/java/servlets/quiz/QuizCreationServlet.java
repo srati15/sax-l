@@ -39,7 +39,8 @@ public class QuizCreationServlet extends HttpServlet {
         boolean singlePage = request.getParameter("singlepage").equals("yes");
         boolean randomized = request.getParameter("randomized").equals("yes");
         String quizName = request.getParameter("quizname");
-        Quiz quiz = new Quiz(quizName, user.getId(), Timestamp.valueOf(LocalDateTime.now()), randomized, singlePage, autoCorrection, practiceMode);
+        String quizImageURL = request.getParameter("quizImageUrl");
+        Quiz quiz = new Quiz(quizName, user.getId(), Timestamp.valueOf(LocalDateTime.now()), randomized, singlePage, autoCorrection, practiceMode, quizImageURL);
         manager.insert(quiz);
         JSONArray questionsArray = new JSONArray(request.getParameter("questions"));
         Map<Question, Answer> questionAnswerMap = new HashMap<>();

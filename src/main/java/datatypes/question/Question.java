@@ -25,11 +25,12 @@ public abstract class Question extends Domain<Integer> {
         return quizId;
     }
 
-
     @Override
     public String toString() {
         return "Question{" +
                 "question='" + question + '\'' +
+                ", quizId=" + quizId +
+                ", id=" + id +
                 '}';
     }
 }
