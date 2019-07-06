@@ -23,7 +23,7 @@
                     num++;
                     if (num > 5) break;
             %>
-            <div class="card border-dark mb-3" style="width: 18rem; float: left;">
+            <div class="card border-dark mb-3" style="max-width: 20%; float: left;">
                 <img class="card-img-top" src="<%=quiz.getQuizImageURL()%>" alt="<%=quiz.getQuizName()%>">
                 <div class="card-header">
                     <h5 class="card-title"><%=quiz.getQuizName()%>
