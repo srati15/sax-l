@@ -1,8 +1,6 @@
 package dao;
 
 import database.CreateConnection;
-import database.mapper.DBRowMapper;
-import database.mapper.TextMessageMapper;
 import datatypes.messages.Message;
 import datatypes.messages.TextMessage;
 import enums.DaoType;
@@ -17,12 +15,18 @@ import java.util.stream.Collectors;
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
-import static database.mapper.TextMessageMapper.*;
 
 public class TextMessageDao implements Dao<Integer, TextMessage> {
     private DBRowMapper<TextMessage> mapper = new TextMessageMapper();
     private Cao<Integer, TextMessage> cao = new Cao<>();
     private AtomicBoolean isCached = new AtomicBoolean(false);
+    public static final String TEXT_MESSAGE_ID= "id";
+    public static final String SENDER_ID = "sender_id";
+    public static final String RECEIVER_ID = "receiver_id";
+    public static final String DATE_SENT = "date_sent";
+    public static final String MESSAGE_SENT = "message_sent";
+    public static final String TABLE_NAME = "text_message";
+
     public TextMessageDao() {
 
     }
@@ -132,6 +136,24 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
         m1.addAll(m2);
         m1.sort(Comparator.comparing(Message::getTimestamp));
         return m1;
+    }
+
+    private class TextMessageMapper implements DBRowMapper<TextMessage> {
+        @Override
+        public TextMessage mapRow(ResultSet rs) {
+            try {
+                int textMessageId = rs.getInt(TEXT_MESSAGE_ID);
+                int senderId = rs.getInt(SENDER_ID);
+                int receiverId = rs.getInt(RECEIVER_ID);
+                Timestamp sendDate = rs.getTimestamp(DATE_SENT);
+                String messageSent = rs.getString(MESSAGE_SENT);
+                TextMessage tMessage = new TextMessage(textMessageId, senderId, receiverId, sendDate, messageSent);
+                return tMessage;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 }

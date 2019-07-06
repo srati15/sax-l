@@ -93,8 +93,13 @@
 <section class="mosh-aboutUs-area">
     <div class="container">
         <h3 class="mb-30">Users List</h3>
+        <%
+        if(user.getUserType() == UserType.Admin){
+        %>
         <h:create entityName="User" selectFields="<%=createSelectField%>" actionServlet="CreateUserServlet" formFields="<%=formFields%>" formId="createUserForm"/>
-
+        <%
+        }
+        %>
         <table id="myTable" class="table table-striped table-bordered table-sm">
             <thead>
             <tr>

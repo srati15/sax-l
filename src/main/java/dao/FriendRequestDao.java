@@ -1,10 +1,9 @@
 package dao;
 
 import database.CreateConnection;
-import database.mapper.DBRowMapper;
-import database.mapper.FriendRequestMapper;
 import datatypes.messages.FriendRequest;
 import enums.DaoType;
+import enums.RequestStatus;
 
 import java.sql.*;
 import java.util.Collection;
@@ -13,12 +12,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
-import static database.mapper.FriendRequestMapper.*;
 
 public class FriendRequestDao implements Dao<Integer, FriendRequest> {
     private DBRowMapper<FriendRequest> mapper = new FriendRequestMapper();
     private Cao<Integer, FriendRequest> cao = new Cao<>();
     private AtomicBoolean isCached = new AtomicBoolean(false);
+    public static final String SENDER_ID = "sender_id";
+    public static final String RECEIVER_ID = "receiver_id";
+    public static final String REQUEST_STATUS = "request_status";
+    public static final String DATE_SENT = "date_sent";
+    public static final String REQUEST_ID = "id";
+    public static final String TABLE_NAME = "friend_requests";
+
 
     public FriendRequestDao(){
     }
@@ -145,4 +150,23 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             executeFinalBlock(connection, statement, rs);
         }
     }
+    private class FriendRequestMapper implements DBRowMapper<FriendRequest> {
+        @Override
+        public FriendRequest mapRow(ResultSet rs) {
+            try {
+                int requestId = rs.getInt(REQUEST_ID);
+                int senderId = rs.getInt(SENDER_ID);
+                int receiverId = rs.getInt(RECEIVER_ID);
+                int requestStatus = rs.getInt(REQUEST_STATUS);
+                RequestStatus status = RequestStatus.getByValue(requestStatus);
+                Timestamp sendDate = rs.getTimestamp(DATE_SENT);
+                FriendRequest friendRequest = new FriendRequest(requestId, senderId, receiverId, status, sendDate);
+                return friendRequest;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
 }

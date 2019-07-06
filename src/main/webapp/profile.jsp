@@ -2,8 +2,13 @@
 <%@ page import="dao.UserDao" %>
 <%@ page import="datatypes.Achievement" %>
 <%@ page import="datatypes.User" %>
+<%@ page import="datatypes.messages.Message" %>
+<%@ page import="datatypes.messages.TextMessage" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Comparator" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -190,7 +195,19 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="messages">
-
+                <%
+                    List<TextMessage> textMessages = new ArrayList<>();
+                    for (List<TextMessage> messages : user.getTextMessages().values()) {
+                        for (TextMessage message : messages) {
+                            if (message.getSenderId() != user.getId()) textMessages.add(message);
+                        }
+                    }
+                    textMessages.sort(Comparator.comparing(Message::getTimestamp).reversed());
+                    for (int i = 0 ; i < Math.min(textMessages.size(), 5); i++) {
+                    User sender = userDao.findById(textMessages.get(i).getSenderId());
+                %>
+                <p class="text-primary"><a href="user-profile?userid=<%=sender.getId()%>"><%=userDao.findById(textMessages.get(i).getSenderId()).getUserName()%> : <%=textMessages.get(i).getTextMessage()%></a></p>
+                    <%}%>
             </div>
 
             <div class="tab-pane fade" id="achievements">

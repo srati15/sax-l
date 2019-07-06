@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="dao.AnnouncementDao" %>
+<%@ page import="datatypes.User" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
 <!DOCTYPE html>
@@ -30,6 +31,10 @@
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
+    User user = (User) request.getSession().getAttribute("user");
+    if (user != null) {
+        System.out.println(user.getTextMessages().values());
+    }
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">

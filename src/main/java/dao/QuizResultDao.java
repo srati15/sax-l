@@ -1,8 +1,6 @@
 package dao;
 
 import database.CreateConnection;
-import database.mapper.DBRowMapper;
-import database.mapper.QuizResultMapper;
 import datatypes.QuizResult;
 import enums.DaoType;
 
@@ -13,12 +11,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
-import static database.mapper.QuizResultMapper.*;
 
 public class QuizResultDao implements Dao<Integer, QuizResult> {
     private DBRowMapper<QuizResult> mapper = new QuizResultMapper();
     private Cao<Integer, QuizResult> cao = new Cao<>();
     private AtomicBoolean isCached = new AtomicBoolean(false);
+    public static final String RESULT_ID = "result_id";
+    public static final String USER_ID = "user_id";
+    public static final String QUIZ_ID = "quiz_id";
+    public static final String SCORE = "score";
+    public static final String TIME_SPENT = "time_spent";
+    public static final String TABLE_NAME = "results";
+
     public QuizResultDao(){
     }
 
@@ -144,4 +148,28 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
             executeFinalBlock(connection, statement, rs);
         }
     }
+    private class QuizResultMapper implements DBRowMapper<QuizResult> {
+        @Override
+        public QuizResult mapRow(ResultSet rs) {
+            try {
+                int resultId = rs.getInt(RESULT_ID);
+                int userId = rs.getInt(USER_ID);
+                int quizId = rs.getInt(QUIZ_ID);
+                int score = rs.getInt(SCORE);
+                int timeSpent = rs.getInt(TIME_SPENT);
+
+                QuizResult quizResult = new QuizResult(quizId,userId,score,timeSpent);
+                quizResult.setId(resultId);
+                return quizResult;
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
+
+
 }

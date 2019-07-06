@@ -5,7 +5,6 @@ import dao.*;
 import datatypes.*;
 import datatypes.answer.Answer;
 import datatypes.messages.FriendRequest;
-import datatypes.messages.Message;
 import datatypes.messages.TextMessage;
 import datatypes.question.Question;
 import enums.DaoType;
@@ -74,14 +73,17 @@ public class DaoManager {
         for (TextMessage message : textMessageDao.findAll()) {
             User sender = userDao.findById(message.getSenderId());
             User receiver = userDao.findById(message.getReceiverId());
-            List<TextMessage> senderMessages = sender.getTextMessages().getOrDefault(receiver, new ArrayList<>());
-            senderMessages.add(message);
-            senderMessages.sort(Comparator.comparing(Message::getTimestamp));
-            sender.getTextMessages().put(receiver, senderMessages);
-            List<TextMessage> receiverMessages = receiver.getTextMessages().getOrDefault(sender, new ArrayList<>());
-            receiverMessages.add(message);
-            receiverMessages.sort(Comparator.comparing(Message::getTimestamp));
-            receiver.getTextMessages().put(sender, senderMessages);
+            if (sender.getTextMessages().containsKey(receiver)) {
+                sender.getTextMessages().get(receiver).add(message);
+            }else {
+                sender.getTextMessages().put(receiver, new ArrayList<>(Arrays.asList(message)));
+            }
+            if (receiver.getTextMessages().containsKey(sender)) {
+                receiver.getTextMessages().get(sender).add(message);
+            }else {
+                receiver.getTextMessages().put(sender, new ArrayList<>(Arrays.asList(message)));
+            }
+
         }
     }
 
