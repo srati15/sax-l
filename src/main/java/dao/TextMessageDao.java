@@ -3,14 +3,14 @@ package dao;
 import database.CreateConnection;
 import database.mapper.DBRowMapper;
 import database.mapper.TextMessageMapper;
+import datatypes.messages.Message;
 import datatypes.messages.TextMessage;
 import enums.DaoType;
 
-import java.util.Comparator;
-import java.util.List;
-
 import java.sql.*;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -126,19 +126,11 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
     }
     /*messeges of given users sorted by send time*/
     public List<TextMessage> getTextMessagesOfGivenUsers(int senderId, int receiverId){
+        if (!isCached.get()) cache();
         List<TextMessage> m1 = cao.findAll().stream().filter(s->s.getSenderId()==senderId && s.getReceiverId() == receiverId).collect(Collectors.toList());
         List<TextMessage> m2 = cao.findAll().stream().filter(s->s.getSenderId()==receiverId && s.getReceiverId() == senderId).collect(Collectors.toList());
         m1.addAll(m2);
-        m1.sort(new Comparator<TextMessage>() {
-            @Override
-            public int compare(TextMessage o1, TextMessage o2) {
-                if(o1.getTimestamp().before(o2.getTimestamp())){
-                    return -1;
-                }else{
-                    return 1;
-                }
-            }
-        });
+        m1.sort(Comparator.comparing(Message::getTimestamp));
         return m1;
     }
 
