@@ -1,6 +1,9 @@
 package dao;
 
+import datatypes.Announcement;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class AnnouncementDaoTest extends DaoTest{
@@ -12,7 +15,11 @@ public class AnnouncementDaoTest extends DaoTest{
     @Test
     public void findById() {
         AnnouncementDao announcementDao = new AnnouncementDao();
-        //test findById()
+        Announcement announcement = new Announcement("ajs", "jads", true);
+        announcementDao.insert(announcement);
+        assertEquals(1, announcementDao.findAll().size());
+
+
     }
 
     @Test

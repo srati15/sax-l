@@ -8,12 +8,15 @@ import java.sql.Timestamp;
 public class QuizChallenge extends Message {
     private final RequestStatus requestStatus;
     private MessageType messageType = MessageType.Challenge;
-    public QuizChallenge(int senderId, int receiverId, Timestamp timestamp, RequestStatus requestStatus) {
+    private int quizId;
+    public QuizChallenge(int senderId, int receiverId, Timestamp timestamp, int quizID, RequestStatus requestStatus) {
         super(senderId, receiverId, timestamp);
+        quizId = quizID;
         this.requestStatus = requestStatus;
     }
-    public QuizChallenge(int id, int senderId, int receiverId, Timestamp timestamp, RequestStatus requestStatus) {
+    public QuizChallenge(int id, int senderId, int receiverId,int quizID, RequestStatus requestStatus,  Timestamp timestamp) {
         super(senderId, receiverId, timestamp);
+        quizId = quizID;
         this.requestStatus = requestStatus;
         this.id = id;
     }
@@ -21,6 +24,8 @@ public class QuizChallenge extends Message {
     public RequestStatus getRequestStatus() {
         return requestStatus;
     }
+
+    public int getQuizId(){return quizId;}
 
     public void setId(int id) {
         this.id = id;

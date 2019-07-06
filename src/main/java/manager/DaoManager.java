@@ -24,6 +24,7 @@ public class DaoManager {
     private UserDao userDao = new UserDao();
     private QuizResultDao quizResultDao = new QuizResultDao();
     private UserAchievementDao userAchievementDao = new UserAchievementDao();
+    private QuizChallengeDao quizChallengeDao = new QuizChallengeDao();
     public DaoManager(){
         map = new HashMap<>();
         map.put(DaoType.Announcement, announcementDao);
@@ -35,6 +36,7 @@ public class DaoManager {
         map.put(DaoType.TextMessage, textMessageDao);
         map.put(DaoType.QuizResult, quizResultDao);
         map.put(DaoType.UserAchievement, userAchievementDao);
+        map.put(DaoType.QuizChallenge, quizChallengeDao);
         map.values().forEach(Dao::cache);
         setQuizFields();
         setUserFields();
