@@ -50,6 +50,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             statement.setString(4, entity.getTextMessage());
             int result = statement.executeUpdate();
             connection.commit();
+            cao.add(entity);
             if (result == 1) {
                 rs = statement.getGeneratedKeys();
                 rs.next();

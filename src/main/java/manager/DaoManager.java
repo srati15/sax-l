@@ -71,18 +71,7 @@ public class DaoManager {
 
     private void setTextMessages() {
         for (TextMessage message : textMessageDao.findAll()) {
-            User sender = userDao.findById(message.getSenderId());
-            User receiver = userDao.findById(message.getReceiverId());
-            if (sender.getTextMessages().containsKey(receiver)) {
-                sender.getTextMessages().get(receiver).add(message);
-            }else {
-                sender.getTextMessages().put(receiver, new ArrayList<>(Arrays.asList(message)));
-            }
-            if (receiver.getTextMessages().containsKey(sender)) {
-                receiver.getTextMessages().get(sender).add(message);
-            }else {
-                receiver.getTextMessages().put(sender, new ArrayList<>(Arrays.asList(message)));
-            }
+            setMessages(message);
 
         }
     }
@@ -202,5 +191,25 @@ public class DaoManager {
         resultsInThisQuiz.forEach(quizResult -> quizResultDao.deleteById(quizResult.getId()));
         //delete quizResults of this quiz from runtime users
         resultsInThisQuiz.forEach(quizResult -> userDao.findById(quizResult.getUserId()).getQuizResults().remove(quizResult));
+    }
+
+    public void insert(TextMessage mes) {
+        textMessageDao.insert(mes);
+        setMessages(mes);
+    }
+
+    private void setMessages(TextMessage mes) {
+        User sender = userDao.findById(mes.getSenderId());
+        User receiver = userDao.findById(mes.getReceiverId());
+        if (sender.getTextMessages().containsKey(receiver)){
+            sender.getTextMessages().get(receiver).add(mes);
+        }else{
+            sender.getTextMessages().put(receiver, new ArrayList<>(Arrays.asList(mes)));
+        }
+        if (receiver.getTextMessages().containsKey(sender)){
+            receiver.getTextMessages().get(sender).add(mes);
+        }else{
+            receiver.getTextMessages().put(sender, new ArrayList<>(Arrays.asList(mes)));
+        }
     }
 }
