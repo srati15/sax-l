@@ -206,7 +206,9 @@
                     for (int i = 0 ; i < Math.min(textMessages.size(), 5); i++) {
                     User sender = userDao.findById(textMessages.get(i).getSenderId());
                 %>
-                <p class="text-primary"><a href="user-profile?userid=<%=sender.getId()%>"><%=userDao.findById(textMessages.get(i).getSenderId()).getUserName()%> : <%=textMessages.get(i).getTextMessage()%></a></p>
+                <ul class="list-group">
+                    <li class="list-group-item"><a href="user-profile?userid=<%=sender.getId()%>"><%=userDao.findById(textMessages.get(i).getSenderId()).getUserName()%></a> : <%=textMessages.get(i).getTextMessage()%></li>
+                </ul>
                     <%}%>
             </div>
 
