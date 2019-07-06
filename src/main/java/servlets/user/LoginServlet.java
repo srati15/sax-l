@@ -4,6 +4,7 @@ import dao.UserDao;
 import datatypes.User;
 import enums.DaoType;
 import manager.DaoManager;
+import security.Cracker;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,7 +19,8 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         UserDao userRepository = ((DaoManager) request.getServletContext().getAttribute("manager")).getDao(DaoType.User);
         String userName = request.getParameter("username");
-        String password = request.getParameter("password");
+        Cracker cracker = new Cracker();
+        String passwordHash = cracker.code(request.getParameter("password"));
         User user = userRepository.findByUserName(userName);
         if (user == null) {
             request.setAttribute("error", "Wrong login credentials");
@@ -26,7 +28,7 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("login").forward(request, response);
             return;
         }
-        if (!user.getPassword().equals(password)) {
+        if (!user.getPassword().equals(passwordHash)) {
             request.setAttribute("error", "Wrong login credentials");
             System.out.println("Wrong login credentials");
             request.getRequestDispatcher("login").forward(request, response);
