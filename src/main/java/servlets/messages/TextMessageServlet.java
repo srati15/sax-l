@@ -25,7 +25,7 @@ public class TextMessageServlet extends HttpServlet {
         Timestamp dateSent = Timestamp.valueOf(LocalDateTime.now());
         String message = request.getParameter("msg");
         TextMessage mes = new TextMessage(user.getId(), receiverId, dateSent, message);
-        manager.insert(mes);
+        textMessageDao.insert(mes);
         request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
     }
 
