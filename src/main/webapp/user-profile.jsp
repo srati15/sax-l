@@ -137,7 +137,6 @@
         </div>
         <textarea placeholder="Type message.." name="msg" required></textarea>
         <input type="text" hidden name="receiverId" value="<%=id%>"/>
-        <input type="text" hidden name="callerPage" value="user-profile"/>
         <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-paper-plane"></i> Send</button>
         <button type="button" class="btn btn-warning btn-sm" onclick="closeForm()">Close</button>
     </form>
