@@ -26,11 +26,11 @@ public class FriendRequestAcceptServlet extends HttpServlet {
         FriendRequest request2 = friendRequestDao.findBySenderReceiverId(receiverId, user.getId());
         if(request1 != null){
             request1.setStatus(RequestStatus.Accepted);
-            friendRequestDao.update(request1);
+            manager.update(request1);
         }
         else if(request2 != null){
             request2.setStatus(RequestStatus.Accepted);
-            friendRequestDao.update(request2);
+            manager.update(request2);
         }
         request.getRequestDispatcher("profile").forward(request, response);
     }

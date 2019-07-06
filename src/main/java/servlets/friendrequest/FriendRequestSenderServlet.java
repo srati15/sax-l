@@ -1,13 +1,10 @@
 package servlets.friendrequest;
 
 import dao.FriendRequestDao;
-import dao.UserDao;
 import datatypes.User;
 import datatypes.messages.FriendRequest;
 import enums.DaoType;
-import enums.FormFields;
 import enums.RequestStatus;
-import enums.UserType;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -29,7 +26,7 @@ public class FriendRequestSenderServlet extends HttpServlet {
         int receiverId = Integer.parseInt(request.getParameter("receiverId"));
         Timestamp dateSent = Timestamp.valueOf(LocalDateTime.now());
         FriendRequest friendRequest = new FriendRequest(user.getId(), receiverId, RequestStatus.Pending, dateSent );
-        friendRequestDao.insert(friendRequest);
+        manager.insert(friendRequest);
         request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
     }
 }
