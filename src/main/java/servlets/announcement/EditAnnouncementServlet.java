@@ -1,8 +1,7 @@
 package servlets.announcement;
 
-import dao.AnnouncementDao;
 import datatypes.Announcement;
-import enums.DaoType;
+import datatypes.User;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -16,14 +15,14 @@ import java.io.IOException;
 public class EditAnnouncementServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-        AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
+        User user = (User) request.getSession().getAttribute("user");
         String announcementText = request.getParameter("announcementText");
         String hyperlink = request.getParameter("hyperlink");
         if (hyperlink == null) hyperlink="/";
         boolean active = request.getParameter("activeOrNot").equals("Active");
         int id = Integer.parseInt(request.getParameter("editAnnouncementId"));
-        Announcement announcement = new Announcement(id, announcementText, hyperlink, active);
-        announcementDao.update(announcement);
+        Announcement announcement = new Announcement(id, user.getId(), announcementText, hyperlink, active);
+        manager.update(announcement);
         request.getRequestDispatcher("announcements").forward(request, response);
     }
 

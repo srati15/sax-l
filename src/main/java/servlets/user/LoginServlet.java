@@ -1,6 +1,8 @@
 package servlets.user;
 
+import dao.ActivityDao;
 import dao.UserDao;
+import datatypes.Activity;
 import datatypes.User;
 import enums.DaoType;
 import manager.DaoManager;
@@ -13,11 +15,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        UserDao userRepository = ((DaoManager) request.getServletContext().getAttribute("manager")).getDao(DaoType.User);
+        DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
+        UserDao userRepository = manager.getDao(DaoType.User);
         String userName = request.getParameter("username");
         Cracker cracker = new Cracker();
         String passwordHash = cracker.code(request.getParameter("password"));
@@ -35,6 +39,8 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         request.getSession().setAttribute("user", user);
+        ActivityDao activityDao = manager.getDao(DaoType.Activity);
+        activityDao.insert(new Activity(user.getId(), "logged in", LocalDateTime.now()));
         RequestDispatcher dispatcher = request.getRequestDispatcher("");
         dispatcher.forward(request, response);
     }

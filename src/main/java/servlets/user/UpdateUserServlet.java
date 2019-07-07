@@ -51,7 +51,8 @@ public class UpdateUserServlet extends HttpServlet {
         user.setLastName(lastName);
         user.setPassword(new Cracker().code(password));
         user.setUserType(userType);
-        userDao.update(user);
+        manager.update(user);
+
         if (user.getUserType()== UserType.Admin) request.getRequestDispatcher("users-list").forward(request, response);
         else request.getRequestDispatcher("profile").forward(request, response);
     }

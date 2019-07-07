@@ -17,6 +17,7 @@ import java.io.IOException;
 @WebServlet("/CreateUserServlet")
 public class CreateUserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
         UserDao userRepository = ((DaoManager) getServletContext().getAttribute("manager")).getDao(DaoType.User);
         String userName = request.getParameter(FormFields.username.getValue());
         String password = request.getParameter(FormFields.password.getValue());
@@ -40,7 +41,7 @@ public class CreateUserServlet extends HttpServlet {
 
         User user = new User(userName, password, firstName, lastName, mail);
         user.setUserType(userType);
-        userRepository.insert(user);
+        manager.insert(user);
         request.getRequestDispatcher("users-list").forward(request, response);
     }
 }
