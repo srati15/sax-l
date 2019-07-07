@@ -2,3 +2,4 @@
 target/
 resources/database.properties
 database.properties
+logs/
