@@ -17,7 +17,6 @@ import java.io.IOException;
 public class RegisterServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
         UserDao userRepository = ((DaoManager) request.getServletContext().getAttribute("manager")).getDao(DaoType.User);
         String userName = request.getParameter("username");
         Cracker cracker = new Cracker();
@@ -40,8 +39,7 @@ public class RegisterServlet extends HttpServlet {
         }
 
         User user = new User(userName, passwordHash, firstName, lastName, mail);
-        DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
-        manager.insert(user);
+        userRepository.insert(user);
         request.getSession().setAttribute("user", userRepository.findByUserName(userName));
         request.getRequestDispatcher("").forward(request, response);
     }

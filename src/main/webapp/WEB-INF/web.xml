@@ -96,13 +96,4 @@
         <servlet-name>QuizResult</servlet-name>
         <url-pattern>/quiz-result</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>Activities</servlet-name>
-        <jsp-file>/activities.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Activities</servlet-name>
-        <url-pattern>/activities</url-pattern>
-    </servlet-mapping>
 </web-app>

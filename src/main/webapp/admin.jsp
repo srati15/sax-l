@@ -100,18 +100,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-12 col-sm-6 col-md-4">
-                <div class="single-feature-area d-flex mb-100">
-                    <div class="feature-icon mr-30">
-                        <img src="img/core-img/activities.png" alt="">
-                    </div>
-                    <div class="feature-content">
-                        <h4>Activity logs</h4>
-                        <p><a href="activities">Manage activities</a></p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>
