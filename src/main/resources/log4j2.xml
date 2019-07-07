@@ -20,10 +20,11 @@
     </Appenders>
     <Loggers>
         <Logger name="com.saxl" level="debug" additivity="true">
-            <appender-ref ref="fileLogger" level="debug" />
+            <appender-ref ref="fileLogger" />
         </Logger>
         <Root level="debug" additivity="false">
             <appender-ref ref="console" />
+            <appender-ref ref="fileLogger"/>
         </Root>
     </Loggers>
 </Configuration>

@@ -27,11 +27,9 @@ public class QuestionAnswerJsonDispatcher {
         commandMap.put("multipleChoice", multipleChoice);
     }
 
-    public Question dispatchQuestion(JSONObject questionJson, int quizId) {
+    public Question dispatchQuestion(JSONObject questionJson) {
         String type = questionJson.getString("type");
         Question question = commandMap.get(type).dispatch(questionJson);
-        assert question != null;
-        question.setQuizId(quizId);
         return question;
     }
 }

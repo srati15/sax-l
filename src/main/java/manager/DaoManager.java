@@ -36,7 +36,7 @@ public class DaoManager {
         map.put(DaoType.TextMessage, textMessageDao);
         map.put(DaoType.QuizResult, quizResultDao);
         map.put(DaoType.UserAchievement, userAchievementDao);
-        map.put(DaoType.QuizChallenge, quizChallengeDao);
+        //map.put(DaoType.QuizChallenge, quizChallengeDao);
         map.values().forEach(Dao::cache);
         setQuizFields();
         setUserFields();
@@ -116,27 +116,35 @@ public class DaoManager {
     }
 
     public void insert(Quiz quiz) {
-        quizDao.insert(quiz);
-        
+        new Thread(() -> {
+            quizDao.insert(quiz);
+            quiz.getQuestionAnswerMap().keySet().forEach(s->s.setQuizId(quiz.getId()));
+            questionDao.insertAll(quiz.getQuestionAnswerMap().keySet());
+            for (Question question: quiz.getQuestionAnswerMap().keySet()) {
+                quiz.getQuestionAnswerMap().get(question).setQuestionId(question.getId());
+            }
+            answerDao.insertAll(quiz.getQuestionAnswerMap().values());
+            quiz.setQuestionAnswerMap(quiz.getQuestionAnswerMap());
 
-        User creator = userDao.findById(quiz.getAuthorId());
-        creator.getQuizzes().add(quiz);
-        User user = userDao.findById(quiz.getAuthorId());
-        Achievement achievement = new Achievement("Amateur Author");
-        if (!user.getAchievements().contains(achievement)) {
-            UserAchievement userAchievement = new UserAchievement(user.getId(), achievement);
-            insert(userAchievement);
-        }
-        Achievement prolificAchievement = new Achievement("Prolific Author");
-        if (!user.getAchievements().contains(prolificAchievement) && user.getQuizzes().size() == 5) {
-            UserAchievement userAchievement = new UserAchievement(user.getId(), prolificAchievement);
-            insert(userAchievement);
-        }
-        Achievement prodigiousAchievement = new Achievement("Prodigious Author");
-        if (!user.getAchievements().contains(prodigiousAchievement) && user.getQuizzes().size() == 10) {
-            UserAchievement userAchievement = new UserAchievement(user.getId(), prodigiousAchievement);
-            insert(userAchievement);
-        }
+            User creator = userDao.findById(quiz.getAuthorId());
+            creator.getQuizzes().add(quiz);
+            User user = userDao.findById(quiz.getAuthorId());
+            Achievement achievement = new Achievement("Amateur Author");
+            if (!user.getAchievements().contains(achievement)) {
+                UserAchievement userAchievement = new UserAchievement(user.getId(), achievement);
+                insert(userAchievement);
+            }
+            Achievement prolificAchievement = new Achievement("Prolific Author");
+            if (!user.getAchievements().contains(prolificAchievement) && user.getQuizzes().size() == 5) {
+                UserAchievement userAchievement = new UserAchievement(user.getId(), prolificAchievement);
+                insert(userAchievement);
+            }
+            Achievement prodigiousAchievement = new Achievement("Prodigious Author");
+            if (!user.getAchievements().contains(prodigiousAchievement) && user.getQuizzes().size() == 10) {
+                UserAchievement userAchievement = new UserAchievement(user.getId(), prodigiousAchievement);
+                insert(userAchievement);
+            }
+        }).start();
     }
 
     public void delete(User deleteUser) {
@@ -145,30 +153,34 @@ public class DaoManager {
     }
 
     public void insert(UserAchievement userAchievement) {
-        userAchievementDao.insert(userAchievement);
-        userDao.findById(userAchievement.getUserId()).getAchievements().add(userAchievement.getAchievement());
+        new Thread(()->{
+            userAchievementDao.insert(userAchievement);
+            userDao.findById(userAchievement.getUserId()).getAchievements().add(userAchievement.getAchievement());
+        }).start();
     }
 
     public void insert(QuizResult quizResult) {
-        quizResultDao.insert(quizResult);
-        User user = userDao.findById(quizResult.getUserId());
-        user.getQuizResults().add(quizResult);
-        Achievement possibleAchievement = new Achievement("Quiz Machine");
-        if (!user.getAchievements().contains(possibleAchievement) && user.getQuizResults().size() == 10) {
-            userAchievementDao.insert(new UserAchievement(user.getId(), possibleAchievement));
-            user.getAchievements().add(possibleAchievement);
-        }
+        new Thread(()->{
+            quizResultDao.insert(quizResult);
+            User user = userDao.findById(quizResult.getUserId());
+            user.getQuizResults().add(quizResult);
+            Achievement possibleAchievement = new Achievement("Quiz Machine");
+            if (!user.getAchievements().contains(possibleAchievement) && user.getQuizResults().size() == 10) {
+                userAchievementDao.insert(new UserAchievement(user.getId(), possibleAchievement));
+                user.getAchievements().add(possibleAchievement);
+            }
 
-        List<QuizResult> allQuizResultsOfThisQuiz = quizResultDao.findAll().stream().
-                filter(result -> result.getQuizId() == quizResult.getQuizId()).
-                sorted(Comparator.comparingInt(QuizResult::getScore).reversed().
-                thenComparing(QuizResult::getTimeSpent)).
-                collect(Collectors.toList());
-        Achievement quizMachineAchievement = new Achievement("I Am The Greatest");
-        if (allQuizResultsOfThisQuiz.size()> 0 && quizResult.equals(allQuizResultsOfThisQuiz.get(0)) && !user.getAchievements().contains(quizMachineAchievement)) {
-            userAchievementDao.insert(new UserAchievement(user.getId(), quizMachineAchievement));
-            user.getAchievements().add(quizMachineAchievement);
-        }
+            List<QuizResult> allQuizResultsOfThisQuiz = quizResultDao.findAll().stream().
+                    filter(result -> result.getQuizId() == quizResult.getQuizId()).
+                    sorted(Comparator.comparingInt(QuizResult::getScore).reversed().
+                            thenComparing(QuizResult::getTimeSpent)).
+                    collect(Collectors.toList());
+            Achievement quizMachineAchievement = new Achievement("I Am The Greatest");
+            if (allQuizResultsOfThisQuiz.size()> 0 && quizResult.equals(allQuizResultsOfThisQuiz.get(0)) && !user.getAchievements().contains(quizMachineAchievement)) {
+                userAchievementDao.insert(new UserAchievement(user.getId(), quizMachineAchievement));
+                user.getAchievements().add(quizMachineAchievement);
+            }
+        }).start();
     }
 
     public void delete(Quiz quiz) {
@@ -192,8 +204,10 @@ public class DaoManager {
     }
 
     public void insert(TextMessage mes) {
-        textMessageDao.insert(mes);
-        setMessages(mes);
+        new Thread(()->{
+            textMessageDao.insert(mes);
+            setMessages(mes);
+        }).start();
     }
 
     private void setMessages(TextMessage mes) {

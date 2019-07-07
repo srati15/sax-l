@@ -39,21 +39,17 @@ public class QuizCreationServlet extends HttpServlet {
         String quizName = request.getParameter("quizname");
         String quizImageURL = request.getParameter("quizImageUrl");
         Quiz quiz = new Quiz(quizName, user.getId(), Timestamp.valueOf(LocalDateTime.now()), randomized, singlePage, autoCorrection, practiceMode, quizImageURL);
-        manager.insert(quiz);
         JSONArray questionsArray = new JSONArray(request.getParameter("questions"));
         Map<Question, Answer> questionAnswerMap = new HashMap<>();
         QuestionAnswerJsonDispatcher dispatcher = new QuestionAnswerJsonDispatcher();
         for (int i = 0; i < questionsArray.length(); i++) {
             JSONObject questionJson = questionsArray.getJSONObject(i);
-            Question question = dispatcher.dispatchQuestion(questionJson, quiz.getId());
+            Question question = dispatcher.dispatchQuestion(questionJson);
             questionAnswerMap.put(question, new Answer(questionJson.getString("answer")));
         }
-        questionDao.insertAll(questionAnswerMap.keySet());
-        for (Question question: questionAnswerMap.keySet()) {
-            questionAnswerMap.get(question).setQuestionId(question.getId());
-        }
-        answerDao.insertAll(questionAnswerMap.values());
         quiz.setQuestionAnswerMap(questionAnswerMap);
+        manager.insert(quiz);
+
 
         request.getRequestDispatcher("quiz").forward(request, response);
     }
