@@ -23,8 +23,7 @@ public class LoginServlet extends HttpServlet {
         DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
         UserDao userRepository = manager.getDao(DaoType.User);
         String userName = request.getParameter("username");
-        Cracker cracker = new Cracker();
-        String passwordHash = cracker.code(request.getParameter("password"));
+        String passwordHash = Cracker.code(request.getParameter("password"));
         User user = userRepository.findByUserName(userName);
         if (user == null) {
             request.setAttribute("error", "Wrong login credentials");

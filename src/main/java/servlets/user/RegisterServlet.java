@@ -20,9 +20,8 @@ public class RegisterServlet extends HttpServlet {
 
         UserDao userRepository = ((DaoManager) request.getServletContext().getAttribute("manager")).getDao(DaoType.User);
         String userName = request.getParameter("username");
-        Cracker cracker = new Cracker();
-        String passwordHash =cracker.code(request.getParameter("password"));
-        String confirmPasswordHash = cracker.code(request.getParameter("confirmpassword"));
+        String passwordHash =Cracker.code(request.getParameter("password"));
+        String confirmPasswordHash = Cracker.code(request.getParameter("confirmpassword"));
         String firstName = request.getParameter("firstname");
         String lastName = request.getParameter("lastname");
         String mail = request.getParameter("mail");

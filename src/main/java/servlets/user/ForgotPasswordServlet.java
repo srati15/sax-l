@@ -33,8 +33,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         for (int i = 0; i < PASSWORD_LENGTH; i++) {
             passwordBuilder.append((char) ('a' + random.nextInt(26)));
         }
-        Cracker cracker = new Cracker();
-        String passwordHash = cracker.code(passwordBuilder.toString());
+        String passwordHash = Cracker.code(passwordBuilder.toString());
         User updatedUser = new User(user.getId(), user.getUserName(), passwordHash, user.getFirstName(), user.getLastName(), user.getMail());
         userRepository.update(updatedUser);
         if (PasswordRecovery.send(updatedUser, passwordBuilder.toString())) {

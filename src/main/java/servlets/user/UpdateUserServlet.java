@@ -49,7 +49,7 @@ public class UpdateUserServlet extends HttpServlet {
         }
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setPassword(new Cracker().code(password));
+        user.setPassword(Cracker.code(password));
         user.setUserType(userType);
         manager.update(user);
 

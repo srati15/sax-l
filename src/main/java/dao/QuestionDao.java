@@ -20,11 +20,11 @@ public class QuestionDao implements Dao<Integer, Question> {
     private Cao<Integer, Question> cao = new Cao<>();
     private QuestionMapper questionMapper = new QuestionMapper();
     private AtomicBoolean isCached = new AtomicBoolean(false);
-    public static final String QUIZ_ID = "quiz_id";
-    public static final String QUESTION_ID = "id";
-    public static final String QUESTION_TYPE = "question_type_id";
-    public static final String QUESTION_TEXT = "question_text";
-    public static final String TABLE_NAME = "question";
+    private static final String QUIZ_ID = "quiz_id";
+    private static final String QUESTION_ID = "id";
+    private static final String QUESTION_TYPE = "question_type_id";
+    private static final String QUESTION_TEXT = "question_text";
+    private static final String TABLE_NAME = "question";
 
 
     public QuestionDao(){

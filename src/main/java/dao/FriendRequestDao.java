@@ -17,16 +17,13 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
     private DBRowMapper<FriendRequest> mapper = new FriendRequestMapper();
     private Cao<Integer, FriendRequest> cao = new Cao<>();
     private AtomicBoolean isCached = new AtomicBoolean(false);
-    public static final String SENDER_ID = "sender_id";
-    public static final String RECEIVER_ID = "receiver_id";
-    public static final String REQUEST_STATUS = "request_status";
-    public static final String DATE_SENT = "date_sent";
-    public static final String REQUEST_ID = "id";
-    public static final String TABLE_NAME = "friend_requests";
+    private static final String SENDER_ID = "sender_id";
+    private static final String RECEIVER_ID = "receiver_id";
+    private static final String REQUEST_STATUS = "request_status";
+    private static final String DATE_SENT = "date_sent";
+    private static final String REQUEST_ID = "id";
+    private static final String TABLE_NAME = "friend_requests";
 
-
-    public FriendRequestDao(){
-    }
     @Override
     public FriendRequest findById(Integer id) {
         if (!isCached.get()) cache();

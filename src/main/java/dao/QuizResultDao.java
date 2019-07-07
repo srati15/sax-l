@@ -16,12 +16,12 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
     private DBRowMapper<QuizResult> mapper = new QuizResultMapper();
     private Cao<Integer, QuizResult> cao = new Cao<>();
     private AtomicBoolean isCached = new AtomicBoolean(false);
-    public static final String RESULT_ID = "result_id";
-    public static final String USER_ID = "user_id";
-    public static final String QUIZ_ID = "quiz_id";
-    public static final String SCORE = "score";
-    public static final String TIME_SPENT = "time_spent";
-    public static final String TABLE_NAME = "results";
+    private static final String RESULT_ID = "result_id";
+    private static final String USER_ID = "user_id";
+    private static final String QUIZ_ID = "quiz_id";
+    private static final String SCORE = "score";
+    private static final String TIME_SPENT = "time_spent";
+    private static final String TABLE_NAME = "results";
 
     public QuizResultDao(){
     }

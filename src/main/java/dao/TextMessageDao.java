@@ -20,12 +20,12 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
     private DBRowMapper<TextMessage> mapper = new TextMessageMapper();
     private Cao<Integer, TextMessage> cao = new Cao<>();
     private AtomicBoolean isCached = new AtomicBoolean(false);
-    public static final String TEXT_MESSAGE_ID= "id";
-    public static final String SENDER_ID = "sender_id";
-    public static final String RECEIVER_ID = "receiver_id";
-    public static final String DATE_SENT = "date_sent";
-    public static final String MESSAGE_SENT = "message_sent";
-    public static final String TABLE_NAME = "text_message";
+    private static final String TEXT_MESSAGE_ID= "id";
+    private static final String SENDER_ID = "sender_id";
+    private static final String RECEIVER_ID = "receiver_id";
+    private static final String DATE_SENT = "date_sent";
+    private static final String MESSAGE_SENT = "message_sent";
+    private static final String TABLE_NAME = "text_message";
 
     public TextMessageDao() {
 

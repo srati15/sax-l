@@ -16,15 +16,11 @@ public class AnswerDao implements Dao<Integer, Answer> {
     private Cao<Integer, Answer> cao = new Cao<>();
     private AnswerMapper answerMapper = new AnswerMapper();
     private AtomicBoolean isCached = new AtomicBoolean(false);
-    public static final String ANSWER_ID = "id";
-    public static final String QUESTION_ID = "question_id";
-    public static final String ANSWER_TEXT = "answer_string";
-    public static final String TABLE_NAME = "answers";
+    private static final String ANSWER_ID = "id";
+    private static final String QUESTION_ID = "question_id";
+    private static final String ANSWER_TEXT = "answer_string";
+    private static final String TABLE_NAME = "answers";
 
-
-    public AnswerDao(){
-
-    }
 
     @Override
     public Answer findById(Integer id) {

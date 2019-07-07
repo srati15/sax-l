@@ -17,14 +17,14 @@ public class UserDao implements Dao<Integer, User> {
     private DBRowMapper<User> mapper = new UserMapper();
     private Cao<Integer, User> cao = new Cao<>();
     private AtomicBoolean isCached = new AtomicBoolean(false);
-    public static final String USER_ID = "id";
-    public static final String USER_NAME = "user_name";
-    public static final String USER_PASSWORD = "pass";
-    public static final String FIRST_NAME = "first_name";
-    public static final String LAST_NAME = "last_name";
-    public static final String USER_MAIL = "mail";
-    public static final String USER_TYPE = "user_type";
-    public static final String TABLE_NAME = "users";
+    private static final String USER_ID = "id";
+    private static final String USER_NAME = "user_name";
+    private static final String USER_PASSWORD = "pass";
+    private static final String FIRST_NAME = "first_name";
+    private static final String LAST_NAME = "last_name";
+    private static final String USER_MAIL = "mail";
+    private static final String USER_TYPE = "user_type";
+    private static final String TABLE_NAME = "users";
 
     @Override
     public User findById(Integer id) {

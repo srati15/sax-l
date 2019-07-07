@@ -14,13 +14,13 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
-    public static String ID = "id";
-    public static String SENDER_ID = "sender_id";
-    public static String RECEIVER_ID = "receiver_id";
-    public static String QUIZ_ID = "quiz_id";
-    public static  String STATUS = "status";
-    public static String TIME_SENT = "time-sent";
-    public static String TABLE_NAME = "quiz_challenges";
+    private static String ID = "id";
+    private static String SENDER_ID = "sender_id";
+    private static String RECEIVER_ID = "receiver_id";
+    private static String QUIZ_ID = "quiz_id";
+    private static  String STATUS = "status";
+    private static String TIME_SENT = "time-sent";
+    private static String TABLE_NAME = "quiz_challenges";
 
 
     private Cao<Integer,QuizChallenge>cao = new Cao<>();

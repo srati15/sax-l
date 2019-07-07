@@ -19,17 +19,17 @@ public class QuizDao implements Dao<Integer, Quiz>{
     private DBRowMapper<Quiz> mapper = new QuizMapper();
     private Cao<Integer, Quiz> cao = new Cao<>();
     private AtomicBoolean isCached = new AtomicBoolean(false);
-    public static final String QUIZ_ID = "id";
-    public static final String QUIZ_NAME = "quiz_name";
-    public static final String QUIZ_AUTHOR = "quiz_author_id";
-    public static final String DATE_CREATED = "date_created";
-    public static final String QUIZ_IMAGE = "quiz_image_url";
-    public static final String IS_RANDOMIZED = "randomized";
-    public static final String IS_PRACTICE = "is_allowed_practice_mode";
-    public static final String IS_CORRECTION = "is_allowed_correction";
-    public static final String IS_SINGLEPAGE = "is_single_page";
-    public static final String TIMES_DONE = "times_done";
-    public static final String TABLE_NAME = "quiz";
+    private static final String QUIZ_ID = "id";
+    private static final String QUIZ_NAME = "quiz_name";
+    private static final String QUIZ_AUTHOR = "quiz_author_id";
+    private static final String DATE_CREATED = "date_created";
+    private static final String QUIZ_IMAGE = "quiz_image_url";
+    private static final String IS_RANDOMIZED = "randomized";
+    private static final String IS_PRACTICE = "is_allowed_practice_mode";
+    private static final String IS_CORRECTION = "is_allowed_correction";
+    private static final String IS_SINGLEPAGE = "is_single_page";
+    private static final String TIMES_DONE = "times_done";
+    private static final String TABLE_NAME = "quiz";
 
     public QuizDao() {
 
