@@ -14,11 +14,11 @@
 
                     <div class="collapse navbar-collapse justify-content-end" id="mosh-navbar">
                         <ul class="navbar-nav animated" id="nav">
-                            <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/">Home</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/" id="home-ref">Home</a></li>
                             <%if (user != null) {%>
-                            <li class="nav-item"><a class="nav-link" href="profile">Profile</a></li>
-                            <li class="nav-item"><a class="nav-link" href="users-list">Users</a></li>
-                            <li class="nav-item"><a class="nav-link" href="quiz">Quizzes</a></li>
+                            <li class="nav-item"><a class="nav-link" href="profile" id="profile-ref">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="users-list" id="users-list-ref">Users</a></li>
+                            <li class="nav-item"><a class="nav-link" href="quiz" id="quiz-ref">Quizzes</a></li>
                             <%}%>
                             <li class="nav-item"><a class="nav-link" href="#">Page</a></li>
                             <%if (user != null && user.getUserType() == UserType.Admin) {%>
