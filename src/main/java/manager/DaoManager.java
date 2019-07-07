@@ -49,11 +49,8 @@ public class DaoManager {
         Collection<QuizResult> quizResults = quizResultDao.findAll();
         Map<Integer, List<QuizResult>> userQuizResultMap = new HashMap<>();
         quizResults.forEach(quizResult -> {
-            if (userQuizResultMap.containsKey(quizResult.getUserId())) {
-                userQuizResultMap.get(quizResult.getUserId()).add(quizResult);
-            }else {
-                userQuizResultMap.put(quizResult.getUserId(), new ArrayList<>(Arrays.asList(quizResult)));
-            }
+            userQuizResultMap.putIfAbsent(quizResult.getUserId(), new ArrayList<>());
+            userQuizResultMap.get(quizResult.getUserId()).add(quizResult);
         });
         userQuizResultMap.keySet().forEach(userId->userDao.findById(userId).setQuizResults(userQuizResultMap.get(userId)));
     }
@@ -62,11 +59,8 @@ public class DaoManager {
         Collection<UserAchievement> achievements = userAchievementDao.findAll();
         Map<Integer, List<Achievement>> userAchievementMap = new HashMap<>();
         achievements.forEach(userAchievement -> {
-            if (userAchievementMap.containsKey(userAchievement.getUserId())) {
-                userAchievementMap.get(userAchievement.getUserId()).add(userAchievement.getAchievement());
-            }else {
-                userAchievementMap.put(userAchievement.getUserId(), new ArrayList<>(Arrays.asList(userAchievement.getAchievement())));
-            }
+            userAchievementMap.putIfAbsent(userAchievement.getUserId(), new ArrayList<>());
+            userAchievementMap.get(userAchievement.getUserId()).add(userAchievement.getAchievement());
         });
         userAchievementMap.keySet().forEach(userId->userDao.findById(userId).setAchievements(userAchievementMap.get(userId)));
     }
@@ -164,6 +158,7 @@ public class DaoManager {
             userAchievementDao.insert(new UserAchievement(user.getId(), possibleAchievement));
             user.getAchievements().add(possibleAchievement);
         }
+
         List<QuizResult> allQuizResultsOfThisQuiz = quizResultDao.findAll().stream().
                 filter(result -> result.getQuizId() == quizResult.getQuizId()).
                 sorted(Comparator.comparingInt(QuizResult::getScore).reversed().
@@ -204,16 +199,12 @@ public class DaoManager {
     private void setMessages(TextMessage mes) {
         User sender = userDao.findById(mes.getSenderId());
         User receiver = userDao.findById(mes.getReceiverId());
-        if (sender.getTextMessages().containsKey(receiver)){
-            sender.getTextMessages().get(receiver).add(mes);
-        }else{
-            sender.getTextMessages().put(receiver, new ArrayList<>(Arrays.asList(mes)));
-        }
-        if (receiver.getTextMessages().containsKey(sender)){
-            receiver.getTextMessages().get(sender).add(mes);
-        }else{
-            receiver.getTextMessages().put(sender, new ArrayList<>(Arrays.asList(mes)));
-        }
+
+        sender.getTextMessages().putIfAbsent(receiver, new ArrayList<>());
+        sender.getTextMessages().get(receiver).add(mes);
+
+        receiver.getTextMessages().putIfAbsent(sender, new ArrayList<>());
+        receiver.getTextMessages().get(sender).add(mes);
     }
 
     public void update(FriendRequest request) {
