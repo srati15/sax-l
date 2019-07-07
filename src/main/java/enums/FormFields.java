@@ -1,5 +1,7 @@
 package enums;
 
+import java.util.Objects;
+
 public enum FormFields {
     username("username"),
     password("password"),
@@ -12,7 +14,7 @@ public enum FormFields {
     hyperlink("hyperlink"),
     activeOrNot("activeOrNot");
 
-    private String value;
+    private final String value;
     FormFields(String value) {
         this.value = value;
     }
@@ -22,7 +24,7 @@ public enum FormFields {
     }
     public FormFields getByValue(String value) {
         for (FormFields inputType: FormFields.values()){
-            if (inputType.value == value) return inputType;
+            if (Objects.equals(inputType.value, value)) return inputType;
         }
         return null;
     }

@@ -7,8 +7,8 @@ import java.sql.Timestamp;
 
 public class QuizChallenge extends Message {
     private final RequestStatus requestStatus;
-    private MessageType messageType = MessageType.Challenge;
-    private int quizId;
+    private final MessageType messageType = MessageType.Challenge;
+    private final int quizId;
     public QuizChallenge(int senderId, int receiverId, Timestamp timestamp, int quizID, RequestStatus requestStatus) {
         super(senderId, receiverId, timestamp);
         quizId = quizID;

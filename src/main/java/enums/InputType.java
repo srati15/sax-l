@@ -1,11 +1,13 @@
 package enums;
 
+import java.util.Objects;
+
 public enum InputType {
     text("text"),
     password("password"),
     email("email"),
     select("select");
-    private String value;
+    private final String value;
     InputType(String value) {
         this.value = value;
     }
@@ -15,7 +17,7 @@ public enum InputType {
     }
     public InputType getByValue(String value) {
         for (InputType inputType: InputType.values()){
-            if (inputType.value == value) return inputType;
+            if (Objects.equals(inputType.value, value)) return inputType;
         }
         return null;
     }

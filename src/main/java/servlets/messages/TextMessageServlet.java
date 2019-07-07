@@ -29,7 +29,7 @@ public class TextMessageServlet extends HttpServlet {
         request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
     }
 }

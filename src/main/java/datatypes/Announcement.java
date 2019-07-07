@@ -1,10 +1,10 @@
 package datatypes;
 
 public class Announcement extends Domain<Integer>{
-    private int userId;
-    private String announcementText;
-    private String hyperLink;
-    private boolean active;
+    private final int userId;
+    private final String announcementText;
+    private final String hyperLink;
+    private final boolean active;
 
     public Announcement(int userId, String announcementText, String hyperLink, Boolean active) {
         this.userId = userId;

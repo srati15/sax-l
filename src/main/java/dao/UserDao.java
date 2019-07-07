@@ -4,6 +4,8 @@ import database.CreateConnection;
 import datatypes.User;
 import enums.DaoType;
 import enums.UserType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -14,9 +16,11 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class UserDao implements Dao<Integer, User> {
-    private DBRowMapper<User> mapper = new UserMapper();
-    private Cao<Integer, User> cao = new Cao<>();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private static final Logger logger = LogManager.getLogger(UserDao.class);
+
+    private final DBRowMapper<User> mapper = new UserMapper();
+    private final Cao<Integer, User> cao = new Cao<>();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
     private static final String USER_ID = "id";
     private static final String USER_NAME = "user_name";
     private static final String USER_PASSWORD = "pass";

@@ -57,7 +57,7 @@ public class UpdateUserServlet extends HttpServlet {
         else request.getRequestDispatcher("profile").forward(request, response);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
     }
 }

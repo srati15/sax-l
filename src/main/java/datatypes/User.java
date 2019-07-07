@@ -11,7 +11,7 @@ import java.util.Map;
 public class User extends Person {
     private String password;
     private UserType userType;
-    private String mail;
+    private final String mail;
     private List<Person> friends;
     private List<Quiz> quizzes = new ArrayList<>();
     private List<Person> pendingFriendRequests = new ArrayList<>();

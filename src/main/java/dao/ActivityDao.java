@@ -24,9 +24,9 @@ public class ActivityDao implements Dao<Integer, Activity> {
     private static final String DATE_TIME = "date_happened";
     private static final String TABLE_NAME = "activity";
 
-    private DBRowMapper<Activity> mapper = new ActivityMapper();
-    private Cao<Integer, Activity> cao = new Cao<>();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private final DBRowMapper<Activity> mapper = new ActivityMapper();
+    private final Cao<Integer, Activity> cao = new Cao<>();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
 
 
     @Override

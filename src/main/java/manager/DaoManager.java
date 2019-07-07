@@ -15,18 +15,18 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DaoManager {
-    private Map<DaoType, Dao> map;
-    private AnnouncementDao announcementDao = new AnnouncementDao();
-    private AnswerDao answerDao = new AnswerDao();
-    private QuestionDao questionDao = new QuestionDao();
-    private FriendRequestDao friendRequestDao = new FriendRequestDao();
-    private TextMessageDao textMessageDao = new TextMessageDao();
-    private QuizDao quizDao = new QuizDao();
-    private UserDao userDao = new UserDao();
-    private QuizResultDao quizResultDao = new QuizResultDao();
-    private UserAchievementDao userAchievementDao = new UserAchievementDao();
-    private QuizChallengeDao quizChallengeDao = new QuizChallengeDao();
-    private ActivityDao activityDao = new ActivityDao();
+    private final Map<DaoType, Dao> map;
+    private final AnnouncementDao announcementDao = new AnnouncementDao();
+    private final AnswerDao answerDao = new AnswerDao();
+    private final QuestionDao questionDao = new QuestionDao();
+    private final FriendRequestDao friendRequestDao = new FriendRequestDao();
+    private final TextMessageDao textMessageDao = new TextMessageDao();
+    private final QuizDao quizDao = new QuizDao();
+    private final UserDao userDao = new UserDao();
+    private final QuizResultDao quizResultDao = new QuizResultDao();
+    private final UserAchievementDao userAchievementDao = new UserAchievementDao();
+    private final QuizChallengeDao quizChallengeDao = new QuizChallengeDao();
+    private final ActivityDao activityDao = new ActivityDao();
 
     public DaoManager() {
         map = new HashMap<>();
@@ -160,7 +160,7 @@ public class DaoManager {
         // TODO: 7/5/19 delete all user fields from db
     }
 
-    public void insert(UserAchievement userAchievement) {
+    private void insert(UserAchievement userAchievement) {
         new Thread(() -> {
             userAchievementDao.insert(userAchievement);
             userDao.findById(userAchievement.getUserId()).getAchievements().add(userAchievement.getAchievement());

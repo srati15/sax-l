@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class TemplateReader {
-    private String text;
+    private final String text;
     public TemplateReader(){
         InputStream stream=getClass().getClassLoader().getResourceAsStream("recovery.html");
         Scanner s = new Scanner(stream).useDelimiter("\\A");

@@ -4,6 +4,8 @@ import database.CreateConnection;
 import datatypes.messages.QuizChallenge;
 import enums.DaoType;
 import enums.RequestStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -14,18 +16,20 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
-    private static String ID = "id";
-    private static String SENDER_ID = "sender_id";
-    private static String RECEIVER_ID = "receiver_id";
-    private static String QUIZ_ID = "quiz_id";
-    private static  String STATUS = "status";
-    private static String TIME_SENT = "time-sent";
-    private static String TABLE_NAME = "quiz_challenges";
+    private static final Logger logger = LogManager.getLogger(QuizChallengeDao.class);
+
+    private static final String ID = "id";
+    private static final String SENDER_ID = "sender_id";
+    private static final String RECEIVER_ID = "receiver_id";
+    private static final String QUIZ_ID = "quiz_id";
+    private static final String STATUS = "status";
+    private static final String TIME_SENT = "time-sent";
+    private static final String TABLE_NAME = "quiz_challenges";
 
 
-    private Cao<Integer,QuizChallenge>cao = new Cao<>();
-    private DBRowMapper<QuizChallenge> mapper = new QuizChallengeMapper();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private final Cao<Integer,QuizChallenge>cao = new Cao<>();
+    private final DBRowMapper<QuizChallenge> mapper = new QuizChallengeMapper();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
 
     public QuizChallengeDao(){
 
@@ -40,8 +44,8 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
     @Override
     public void insert(QuizChallenge entity) {
         Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
+        PreparedStatement statement;
+        ResultSet rs;
         try {
             String query = getInsertQuery(TABLE_NAME, SENDER_ID, RECEIVER_ID, QUIZ_ID, STATUS, TIME_SENT);
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);

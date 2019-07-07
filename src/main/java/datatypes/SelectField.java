@@ -3,9 +3,9 @@ package datatypes;
 import java.util.List;
 
 public class SelectField {
-    private String displayName;
-    private String name;
-    private List<String> selectStrings;
+    private final String displayName;
+    private final String name;
+    private final List<String> selectStrings;
 
     public SelectField(String displayName, String name, List<String> selectStrings) {
         this.displayName = displayName;

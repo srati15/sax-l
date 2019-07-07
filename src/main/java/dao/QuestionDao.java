@@ -4,6 +4,8 @@ import database.CreateConnection;
 import datatypes.question.*;
 import enums.DaoType;
 import enums.QuestionType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -17,9 +19,11 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class QuestionDao implements Dao<Integer, Question> {
-    private Cao<Integer, Question> cao = new Cao<>();
-    private QuestionMapper questionMapper = new QuestionMapper();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private static final Logger logger = LogManager.getLogger(QuestionDao.class);
+
+    private final Cao<Integer, Question> cao = new Cao<>();
+    private final QuestionMapper questionMapper = new QuestionMapper();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
     private static final String QUIZ_ID = "quiz_id";
     private static final String QUESTION_ID = "id";
     private static final String QUESTION_TYPE = "question_type_id";
@@ -135,7 +139,7 @@ public class QuestionDao implements Dao<Integer, Question> {
             rollback(connection);
             e.printStackTrace();
         }finally {
-            executeFinalBlock(connection, statement, rs);
+            executeFinalBlock(connection, statement, null);
         }
     }
 

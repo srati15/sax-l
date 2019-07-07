@@ -3,6 +3,8 @@ package dao;
 import database.CreateConnection;
 import datatypes.Quiz;
 import enums.DaoType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -15,10 +17,11 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class QuizDao implements Dao<Integer, Quiz>{
+    private static final Logger logger = LogManager.getLogger(QuizDao.class);
 
-    private DBRowMapper<Quiz> mapper = new QuizMapper();
-    private Cao<Integer, Quiz> cao = new Cao<>();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private final DBRowMapper<Quiz> mapper = new QuizMapper();
+    private final Cao<Integer, Quiz> cao = new Cao<>();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
     private static final String QUIZ_ID = "id";
     private static final String QUIZ_NAME = "quiz_name";
     private static final String QUIZ_AUTHOR = "quiz_author_id";
@@ -54,7 +57,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                System.out.println("Quiz inserted sucessfully");
+                System.out.println("Quiz inserted sucsessfully");
                 rs = statement.getGeneratedKeys();
                 if (rs.next()){
                     entity.setId(rs.getInt(1));

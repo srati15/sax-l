@@ -10,8 +10,8 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
 
 public class PasswordRecovery {
-    private static Properties properties = new MailInfo().getProperties();
-    private static String htmlTemplate = new TemplateReader().getText();
+    private static final Properties properties = new MailInfo().getProperties();
+    private static final String htmlTemplate = new TemplateReader().getText();
     public static boolean send(User user, String password) {
         Session session = Session.getInstance(properties,
                 new Authenticator() {
@@ -24,7 +24,7 @@ public class PasswordRecovery {
             message.setFrom(new InternetAddress(properties.getProperty("mail.smtp.from")));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getMail()));
             message.setSubject("Password Recovery | Sax-l");
-            String copy = new StringBuilder(htmlTemplate).toString();
+            String copy = htmlTemplate;
             copy = copy.replaceAll("%USERNAME%", user.getUserName());
             copy = copy.replaceAll("%FIRSTNAME%", user.getFirstName());
             copy = copy.replaceAll("%LASTNAME%", user.getLastName());

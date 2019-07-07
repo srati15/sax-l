@@ -4,6 +4,8 @@ import database.CreateConnection;
 import datatypes.messages.FriendRequest;
 import enums.DaoType;
 import enums.RequestStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -14,9 +16,11 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class FriendRequestDao implements Dao<Integer, FriendRequest> {
-    private DBRowMapper<FriendRequest> mapper = new FriendRequestMapper();
-    private Cao<Integer, FriendRequest> cao = new Cao<>();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private static final Logger logger = LogManager.getLogger(FriendRequestDao.class);
+
+    private final DBRowMapper<FriendRequest> mapper = new FriendRequestMapper();
+    private final Cao<Integer, FriendRequest> cao = new Cao<>();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
     private static final String SENDER_ID = "sender_id";
     private static final String RECEIVER_ID = "receiver_id";
     private static final String REQUEST_STATUS = "request_status";
@@ -141,6 +145,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 cao.add(request);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -157,8 +162,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 int requestStatus = rs.getInt(REQUEST_STATUS);
                 RequestStatus status = RequestStatus.getByValue(requestStatus);
                 Timestamp sendDate = rs.getTimestamp(DATE_SENT);
-                FriendRequest friendRequest = new FriendRequest(requestId, senderId, receiverId, status, sendDate);
-                return friendRequest;
+                return new FriendRequest(requestId, senderId, receiverId, status, sendDate);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

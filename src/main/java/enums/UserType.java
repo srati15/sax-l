@@ -3,7 +3,7 @@ package enums;
 public enum UserType {
     Admin(1),
     User(2);
-    private int value;
+    private final int value;
     UserType(int value) {
         this.value = value;
     }

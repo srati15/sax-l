@@ -4,6 +4,8 @@ import database.CreateConnection;
 import datatypes.Achievement;
 import datatypes.UserAchievement;
 import enums.DaoType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -15,15 +17,17 @@ import static dao.helpers.QueryGenerator.getInsertQuery;
 import static dao.helpers.QueryGenerator.getSelectQuery;
 
 public class UserAchievementDao implements Dao<Integer, UserAchievement> {
+    private static final Logger logger = LogManager.getLogger(UserAchievementDao.class);
+
     private static final String USER_ACHIEVEMENT_ID = "id";
     private static final String USER_ID = "user_id";
     private static final String ACHIEVEMENT_ID = "achievement_id";
     private static final String TABLE_NAME = "user_achievements";
 
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
 
-    private Cao<Integer, UserAchievement> cao = new Cao<>();
-    private AchievementDao achievementDao = new AchievementDao();
+    private final Cao<Integer, UserAchievement> cao = new Cao<>();
+    private final AchievementDao achievementDao = new AchievementDao();
     @Override
     public UserAchievement findById(Integer id) {
         if (!isCached.get()) cache();
@@ -109,9 +113,9 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
     }
 
     private class AchievementDao implements Dao<Integer, Achievement> {
-        private AtomicBoolean isCached = new AtomicBoolean(false);
-        private DBRowMapper<Achievement> mapper = new AchievementMapper();
-        private Cao<Integer, Achievement> cao = new Cao<>();
+        private final AtomicBoolean isCached = new AtomicBoolean(false);
+        private final DBRowMapper<Achievement> mapper = new AchievementMapper();
+        private final Cao<Integer, Achievement> cao = new Cao<>();
         @Override
         public Achievement findById(Integer id) {
             if (!isCached.get()) cache();

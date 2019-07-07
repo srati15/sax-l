@@ -1,7 +1,7 @@
 package datatypes;
 
 public class Person extends Domain<Integer>{
-    private String userName;
+    private final String userName;
     private String firstName;
     private String lastName;
 

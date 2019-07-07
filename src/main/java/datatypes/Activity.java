@@ -3,9 +3,9 @@ package datatypes;
 import java.time.LocalDateTime;
 
 public class Activity extends Domain<Integer> {
-    private int userId;
-    private String activityName;
-    private LocalDateTime dateTime;
+    private final int userId;
+    private final String activityName;
+    private final LocalDateTime dateTime;
 
     public Activity(int userId, String activityName, LocalDateTime dateTime) {
         this.userId = userId;

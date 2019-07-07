@@ -3,6 +3,8 @@ package dao;
 import database.CreateConnection;
 import datatypes.answer.Answer;
 import enums.DaoType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -13,9 +15,11 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class AnswerDao implements Dao<Integer, Answer> {
-    private Cao<Integer, Answer> cao = new Cao<>();
-    private AnswerMapper answerMapper = new AnswerMapper();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private static final Logger logger = LogManager.getLogger(AnswerDao.class);
+
+    private final Cao<Integer, Answer> cao = new Cao<>();
+    private final AnswerMapper answerMapper = new AnswerMapper();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
     private static final String ANSWER_ID = "id";
     private static final String QUESTION_ID = "question_id";
     private static final String ANSWER_TEXT = "answer_string";
@@ -69,6 +73,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
                 cao.add(answer);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

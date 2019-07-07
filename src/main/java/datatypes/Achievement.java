@@ -3,7 +3,7 @@ package datatypes;
 import java.util.Objects;
 
 public class Achievement extends Domain<Integer>{
-    private String achievementName;
+    private final String achievementName;
 
     public Achievement(String achievementName) {
         this.achievementName = achievementName;

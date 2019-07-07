@@ -4,6 +4,8 @@ import database.CreateConnection;
 import datatypes.messages.Message;
 import datatypes.messages.TextMessage;
 import enums.DaoType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -17,9 +19,11 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class TextMessageDao implements Dao<Integer, TextMessage> {
-    private DBRowMapper<TextMessage> mapper = new TextMessageMapper();
-    private Cao<Integer, TextMessage> cao = new Cao<>();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private static final Logger logger = LogManager.getLogger(TextMessageDao.class);
+
+    private final DBRowMapper<TextMessage> mapper = new TextMessageMapper();
+    private final Cao<Integer, TextMessage> cao = new Cao<>();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
     private static final String TEXT_MESSAGE_ID= "id";
     private static final String SENDER_ID = "sender_id";
     private static final String RECEIVER_ID = "receiver_id";
@@ -148,8 +152,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 int receiverId = rs.getInt(RECEIVER_ID);
                 Timestamp sendDate = rs.getTimestamp(DATE_SENT);
                 String messageSent = rs.getString(MESSAGE_SENT);
-                TextMessage tMessage = new TextMessage(textMessageId, senderId, receiverId, sendDate, messageSent);
-                return tMessage;
+                return new TextMessage(textMessageId, senderId, receiverId, sendDate, messageSent);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

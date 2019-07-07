@@ -3,6 +3,8 @@ package dao;
 import database.CreateConnection;
 import datatypes.QuizResult;
 import enums.DaoType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -13,9 +15,11 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class QuizResultDao implements Dao<Integer, QuizResult> {
-    private DBRowMapper<QuizResult> mapper = new QuizResultMapper();
-    private Cao<Integer, QuizResult> cao = new Cao<>();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private static final Logger logger = LogManager.getLogger(QuizResultDao.class);
+
+    private final DBRowMapper<QuizResult> mapper = new QuizResultMapper();
+    private final Cao<Integer, QuizResult> cao = new Cao<>();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
     private static final String RESULT_ID = "result_id";
     private static final String USER_ID = "user_id";
     private static final String QUIZ_ID = "quiz_id";

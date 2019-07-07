@@ -10,10 +10,10 @@ public class QuestionAnswerJsonDispatcher {
     private interface Command{
         Question dispatch(JSONObject questionJson);
     }
-    private Command questionResponse = questionJson -> new QuestionResponse(questionJson.getString("question"));
-    private Command pictureResponse = questionJson -> new PictureResponseQuestion(questionJson.getString("question"));
-    private Command fillBlank = questionJson -> new FillBlankQuestion(questionJson.getString("question"));
-    private Command multipleChoice = questionJson -> new MultipleChoiceQuestion(questionJson.getString("question"));
+    private final Command questionResponse = questionJson -> new QuestionResponse(questionJson.getString("question"));
+    private final Command pictureResponse = questionJson -> new PictureResponseQuestion(questionJson.getString("question"));
+    private final Command fillBlank = questionJson -> new FillBlankQuestion(questionJson.getString("question"));
+    private final Command multipleChoice = questionJson -> new MultipleChoiceQuestion(questionJson.getString("question"));
     private Map<String, Command> commandMap;
     public QuestionAnswerJsonDispatcher(){
         initCommandMap();
@@ -29,7 +29,6 @@ public class QuestionAnswerJsonDispatcher {
 
     public Question dispatchQuestion(JSONObject questionJson) {
         String type = questionJson.getString("type");
-        Question question = commandMap.get(type).dispatch(questionJson);
-        return question;
+        return commandMap.get(type).dispatch(questionJson);
     }
 }

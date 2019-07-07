@@ -24,9 +24,9 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
     private static final String STATUS = "active";
     private static final String TABLE_NAME = "announcements";
 
-    private DBRowMapper<Announcement> mapper = new AnnouncementMapper();
-    private Cao<Integer, Announcement> cao = new Cao<>();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private final DBRowMapper<Announcement> mapper = new AnnouncementMapper();
+    private final Cao<Integer, Announcement> cao = new Cao<>();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
 
     public AnnouncementDao() {
     }
