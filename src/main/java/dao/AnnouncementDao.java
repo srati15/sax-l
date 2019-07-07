@@ -17,11 +17,12 @@ import static dao.helpers.QueryGenerator.*;
 public class AnnouncementDao implements Dao<Integer, Announcement> {
     private static final Logger logger = LogManager.getLogger(AnnouncementDao.class);
 
-    public static final String ANNOUNCEMENT_ID = "id";
-    public static final String ANNOUNCEMENT_TEXT = "announcement_text";
-    public static final String HYPERLINK = "hyperlink";
-    public static final String STATUS = "active";
-    public static final String TABLE_NAME = "announcements";
+    private static final String ANNOUNCEMENT_ID = "id";
+    private static final String USER_ID = "user_id";
+    private static final String ANNOUNCEMENT_TEXT = "announcement_text";
+    private static final String HYPERLINK = "hyperlink";
+    private static final String STATUS = "active";
+    private static final String TABLE_NAME = "announcements";
 
     private DBRowMapper<Announcement> mapper = new AnnouncementMapper();
     private Cao<Integer, Announcement> cao = new Cao<>();
@@ -43,11 +44,12 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
         PreparedStatement statement = null;
         ResultSet rs = null;
         try {
-            String query = getInsertQuery(TABLE_NAME, ANNOUNCEMENT_TEXT, HYPERLINK, STATUS);
+            String query = getInsertQuery(TABLE_NAME, ANNOUNCEMENT_TEXT, HYPERLINK, STATUS, USER_ID);
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, entity.getAnnouncementText());
             statement.setString(2, entity.getHyperLink());
             statement.setBoolean(3, entity.isActive());
+            statement.setInt(4, entity.getUserId());
             logger.info("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
@@ -103,12 +105,13 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
-            String query = getUpdateQuery(TABLE_NAME, ANNOUNCEMENT_ID, ANNOUNCEMENT_TEXT, HYPERLINK, STATUS);
+            String query = getUpdateQuery(TABLE_NAME, ANNOUNCEMENT_ID, ANNOUNCEMENT_TEXT, HYPERLINK, STATUS, USER_ID);
             statement = connection.prepareStatement(query);
             statement.setString(1, entity.getAnnouncementText());
             statement.setString(2, entity.getHyperLink());
             statement.setBoolean(3, entity.isActive());
             statement.setInt(4, entity.getId());
+            statement.setInt(5, entity.getUserId());
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
@@ -160,7 +163,8 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
                 String txt = rs.getString(ANNOUNCEMENT_TEXT);
                 String hyperLink = rs.getString(HYPERLINK);
                 boolean isActive = rs.getBoolean(STATUS);
-                return new Announcement(id, txt, hyperLink, isActive);
+                int userId = rs.getInt(USER_ID);
+                return new Announcement(id, userId, txt, hyperLink, isActive);
             } catch (SQLException e) {
                 logger.error(e);
             }
