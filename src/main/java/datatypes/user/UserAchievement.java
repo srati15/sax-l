@@ -1,4 +1,7 @@
-package datatypes;
+package datatypes.user;
+
+import datatypes.Domain;
+import datatypes.user.Achievement;
 
 public class UserAchievement extends Domain<Integer> {
     private final int userId;

@@ -1,10 +1,10 @@
-package datatypes.question;
+package datatypes.quiz.question;
 
 import enums.QuestionType;
 
-public class QuestionResponse extends Question {
-    private final QuestionType questionType = QuestionType.QuestionResponse;
-    public QuestionResponse(String question) {
+public class FillBlankQuestion extends Question {
+    private final QuestionType questionType = QuestionType.FillInTheBlank;
+    public FillBlankQuestion(String question) {
         super(question);
     }
 
@@ -15,7 +15,7 @@ public class QuestionResponse extends Question {
 
     @Override
     public String toString() {
-        return "QuestionResponse{" +
+        return "FillBlankQuestion{" +
                 "questionType=" + questionType +
                 ", id=" + id +
                 "} " + super.toString();

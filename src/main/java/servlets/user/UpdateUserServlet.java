@@ -1,8 +1,6 @@
 package servlets.user;
 
-import dao.UserDao;
-import datatypes.User;
-import enums.DaoType;
+import datatypes.user.User;
 import enums.UserType;
 import manager.DaoManager;
 import org.apache.logging.log4j.LogManager;
@@ -22,24 +20,23 @@ public class UpdateUserServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-        UserDao userDao = manager.getDao(DaoType.User);
         User user = (User) request.getSession().getAttribute("user");
-        String userName = request.getParameter("username");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmpassword");
         String firstName = request.getParameter("firstname");
         String lastName = request.getParameter("lastname");
-        String mail = request.getParameter("email");
         int id = Integer.parseInt(request.getParameter("hiddenId"));
         UserType userType = UserType.User;
-        if (request.getParameter("usertype") != null && request.getParameter("usertype").equals("admin") ) userType = UserType.Admin;
+        if (request.getParameter("usertype") != null && request.getParameter("usertype").equals("admin"))
+            userType = UserType.Admin;
         if (user.getId() == id && userType == UserType.User && user.getUserType() == UserType.Admin) {
             request.setAttribute("error", "You can't downgrade yourself to user");
             request.getRequestDispatcher("users-list").forward(request, response);
             return;
         }
-        if ((password == null || confirmPassword == null )) {
-            if (user.getUserType()== UserType.Admin) request.getRequestDispatcher("users-list").forward(request, response);
+        if ((password == null || confirmPassword == null)) {
+            if (user.getUserType() == UserType.Admin)
+                request.getRequestDispatcher("users-list").forward(request, response);
             else request.getRequestDispatcher("profile").forward(request, response);
             return;
         }
@@ -47,7 +44,8 @@ public class UpdateUserServlet extends HttpServlet {
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Passwords don't match");
             logger.error("Passwords don't match");
-            if (user.getUserType()== UserType.Admin) request.getRequestDispatcher("users-list").forward(request, response);
+            if (user.getUserType() == UserType.Admin)
+                request.getRequestDispatcher("users-list").forward(request, response);
             else request.getRequestDispatcher("profile").forward(request, response);
             return;
         }
@@ -57,7 +55,7 @@ public class UpdateUserServlet extends HttpServlet {
         user.setUserType(userType);
         manager.update(user);
 
-        if (user.getUserType()== UserType.Admin) request.getRequestDispatcher("users-list").forward(request, response);
+        if (user.getUserType() == UserType.Admin) request.getRequestDispatcher("users-list").forward(request, response);
         else request.getRequestDispatcher("profile").forward(request, response);
     }
 

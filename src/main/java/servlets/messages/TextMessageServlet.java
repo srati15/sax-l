@@ -1,7 +1,7 @@
 package servlets.messages;
 
 import dao.TextMessageDao;
-import datatypes.User;
+import datatypes.user.User;
 import datatypes.messages.TextMessage;
 import enums.DaoType;
 import manager.DaoManager;

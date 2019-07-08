@@ -1,7 +1,7 @@
 package dao;
 
 import database.CreateConnection;
-import datatypes.answer.Answer;
+import datatypes.quiz.answer.Answer;
 import enums.DaoType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

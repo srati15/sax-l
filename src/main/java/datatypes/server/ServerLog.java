@@ -1,4 +1,4 @@
-package datatypes;
+package datatypes.server;
 
 import enums.Level;
 

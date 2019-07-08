@@ -1,6 +1,8 @@
-package datatypes;
+package datatypes.announcement;
 
-public class Announcement extends Domain<Integer>{
+import datatypes.Domain;
+
+public class Announcement extends Domain<Integer> {
     private final int userId;
     private final String announcementText;
     private final String hyperLink;

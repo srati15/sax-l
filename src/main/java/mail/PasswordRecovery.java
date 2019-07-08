@@ -1,6 +1,6 @@
 package mail;
 
-import datatypes.User;
+import datatypes.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -1,6 +1,5 @@
 package dao.helpers;
 
-import dao.QuestionDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,7 +37,7 @@ public class FinalBlockExecutor {
     public static void rollback(Connection connection) {
         if (connection != null) {
             try {
-                System.out.print("Transaction is being rolled back");
+                logger.error("Transaction is being rolled back");
                 connection.rollback();
             } catch(SQLException excep) {
                 excep.printStackTrace();

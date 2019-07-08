@@ -1,11 +1,10 @@
 package servlets.user;
 
 import dao.UserDao;
-import datatypes.User;
+import datatypes.user.User;
 import enums.DaoType;
 import enums.FormFields;
 import enums.UserType;
-import mail.PasswordRecovery;
 import manager.DaoManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

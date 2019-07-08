@@ -1,6 +1,6 @@
 package serializers;
 
-import datatypes.question.*;
+import datatypes.quiz.question.*;
 import org.json.JSONObject;
 
 import java.util.HashMap;

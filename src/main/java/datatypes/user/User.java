@@ -1,6 +1,8 @@
-package datatypes;
+package datatypes.user;
 
+import datatypes.quiz.QuizResult;
 import datatypes.messages.TextMessage;
+import datatypes.quiz.Quiz;
 import enums.UserType;
 
 import java.util.ArrayList;

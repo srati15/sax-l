@@ -2,7 +2,7 @@
 <%@ page import="dao.AnnouncementDao" %>
 <%@ page import="dao.QuizDao" %>
 <%@ page import="dao.UserDao" %>
-<%@ page import="datatypes.Quiz" %>
+<%@ page import="datatypes.quiz.Quiz" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>

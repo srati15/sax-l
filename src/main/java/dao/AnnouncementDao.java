@@ -1,7 +1,7 @@
 package dao;
 
 import database.CreateConnection;
-import datatypes.Announcement;
+import datatypes.announcement.Announcement;
 import enums.DaoType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,7 +1,7 @@
 package servlets.user;
 
 import dao.UserDao;
-import datatypes.User;
+import datatypes.user.User;
 import enums.DaoType;
 import mail.PasswordRecovery;
 import manager.DaoManager;

@@ -1,8 +1,8 @@
 package dao;
 
 import database.CreateConnection;
-import datatypes.Achievement;
-import datatypes.UserAchievement;
+import datatypes.user.Achievement;
+import datatypes.user.UserAchievement;
 import enums.DaoType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -2,11 +2,18 @@ package manager;
 
 
 import dao.*;
-import datatypes.*;
-import datatypes.answer.Answer;
+import datatypes.announcement.Announcement;
+import datatypes.quiz.QuizResult;
+import datatypes.quiz.answer.Answer;
 import datatypes.messages.FriendRequest;
 import datatypes.messages.TextMessage;
-import datatypes.question.Question;
+import datatypes.quiz.question.Question;
+import datatypes.quiz.Quiz;
+import datatypes.server.Activity;
+import datatypes.user.Achievement;
+import datatypes.user.Person;
+import datatypes.user.User;
+import datatypes.user.UserAchievement;
 import enums.DaoType;
 import enums.RequestStatus;
 
@@ -265,11 +272,11 @@ public class DaoManager {
 
     public void insert(Announcement announcement) {
         announcementDao.insert(announcement);
-        activityDao.insert(new Activity(announcement.getUserId(), "created announcement", LocalDateTime.now()));
+        activityDao.insert(new Activity(announcement.getUserId(), "created announcement "+announcement, LocalDateTime.now()));
     }
 
     public void update(Announcement announcement) {
         announcementDao.update(announcement);
-        activityDao.insert(new Activity(announcement.getUserId(), "updated announcement", LocalDateTime.now()));
+        activityDao.insert(new Activity(announcement.getUserId(), "updated announcement "+announcement, LocalDateTime.now()));
     }
 }

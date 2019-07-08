@@ -1,8 +1,10 @@
-package datatypes;
+package datatypes.user;
+
+import datatypes.Domain;
 
 import java.util.Objects;
 
-public class Achievement extends Domain<Integer>{
+public class Achievement extends Domain<Integer> {
     private final String achievementName;
 
     public Achievement(String achievementName) {

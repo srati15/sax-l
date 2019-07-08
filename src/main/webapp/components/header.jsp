@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="datatypes.User" %>
+<%@ page import="datatypes.user.User" %>
 <%@ page import="enums.UserType" %>
 <div class="container-fluid h-100">
     <div class="row h-100">

@@ -1,7 +1,7 @@
 package servlets.announcement;
 
-import datatypes.Announcement;
-import datatypes.User;
+import datatypes.announcement.Announcement;
+import datatypes.user.User;
 import enums.FormFields;
 import manager.DaoManager;
 

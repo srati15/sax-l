@@ -1,4 +1,6 @@
-package datatypes;
+package datatypes.server;
+
+import datatypes.Domain;
 
 import java.time.LocalDateTime;
 

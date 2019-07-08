@@ -1,8 +1,8 @@
 package servlets.user;
 
 import dao.ActivityDao;
-import datatypes.Activity;
-import datatypes.User;
+import datatypes.server.Activity;
+import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
 

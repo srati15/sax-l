@@ -1,6 +1,6 @@
 package security;
 
-import datatypes.User;
+import datatypes.user.User;
 import enums.UserType;
 
 import javax.servlet.*;

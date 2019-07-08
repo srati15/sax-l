@@ -1,9 +1,9 @@
-package datatypes;
+package datatypes.quiz;
 
-import datatypes.answer.Answer;
-import datatypes.question.Question;
+import datatypes.Domain;
+import datatypes.quiz.answer.Answer;
+import datatypes.quiz.question.Question;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;

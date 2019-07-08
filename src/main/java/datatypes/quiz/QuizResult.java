@@ -1,6 +1,8 @@
-package datatypes;
+package datatypes.quiz;
 
-public class QuizResult extends Domain<Integer>{
+import datatypes.Domain;
+
+public class QuizResult extends Domain<Integer> {
     private final int quizId;
     private final int userId;
     private final int score;

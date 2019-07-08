@@ -1,6 +1,8 @@
-package datatypes;
+package datatypes.user;
 
-public class Person extends Domain<Integer>{
+import datatypes.Domain;
+
+public class Person extends Domain<Integer> {
     private final String userName;
     private String firstName;
     private String lastName;

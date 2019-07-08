@@ -2,8 +2,8 @@
 <%@ attribute name="actionServlet" required="true" %>
 <%@ attribute name="hiddenParameterName" required="true" %>
 <%@ attribute name="hiddenParameterValue" required="true" type="java.lang.Integer" %>
-<%@ attribute name="formFields" required="true" type="java.util.List<datatypes.EditFormField>" %>
-<%@ attribute name="selectFields" required="false" type="datatypes.SelectField" %>
+<%@ attribute name="formFields" required="true" type="java.util.List<datatypes.formfields.EditFormField>" %>
+<%@ attribute name="selectFields" required="false" type="datatypes.formfields.SelectField" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <c:set var="target" value="edit${entityName}Modal${hiddenParameterValue}"/>

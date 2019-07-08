@@ -1,6 +1,4 @@
-
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700,900');
-
 @import 'css/bootstrap.min.css';
 @import 'css/owl.carousel.min.css';
 @import 'css/font-awesome.min.css';
@@ -19,22 +17,14 @@ html {
     font-family: 'Roboto', sans-serif;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1,h2,h3,h4,h5, h6 {
     font-family: 'Roboto', sans-serif;
     font-weight: 700;
     color: #404551;
     line-height: 1.2;
 }
 
-a,
-a:hover,
-a:focus,
-a:active {
+a,a:hover, a:focus, a:active {
     font-weight: 700;
     text-decoration: none;
     -webkit-transition-duration: 500ms;
@@ -391,6 +381,7 @@ img {
     -webkit-transition-duration: 500ms;
     transition-duration: 500ms;
 }
+
 .welcome_area {
     position: relative;
     z-index: 2;
@@ -400,7 +391,75 @@ img {
     background-position: center center;
 }
 
+/* --------------------------
+:: 3.0 Welcome Area CSS
+-------------------------- */
 
+.welcome_area {
+    position: relative;
+    z-index: 2;
+    height: 1200px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+
+.hero-slides {
+    position: relative;
+    z-index: 2;
+}
+
+.single-hero-slide {
+    height: 1200px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-slide-content h2 {
+    font-size: 60px;
+    color: #fff;
+    line-height: 1.8;
+}
+
+.hero-slide-content h4 {
+    color: #fff;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+.hero-slide-content .slide-img {
+    color: #fff;
+    margin-top: 100px;
+    font-weight: 400;
+}
+
+.hero-slides .owl-prev,
+.hero-slides .owl-next {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    line-height: 60px;
+    text-align: center;
+    top: 50%;
+    margin-top: -30px;
+    left: 50px;
+    border-radius: 50%;
+    color: #a2baff;
+    -webkit-transition-duration: 500ms;
+    transition-duration: 500ms;
+}
+
+.hero-slides .owl-next {
+    left: auto;
+    right: 50px;
+}
+
+.hero-slides .owl-prev:hover,
+.hero-slides .owl-next:hover {
+    background-color: #4a7aec;
+}
 /* -------------------------
 :: 4.0 Service Area
 ------------------------- */
@@ -476,7 +535,7 @@ img {
 
 .single-footer-widget ul > li > a {
     color: rgba(226, 219, 243, 0.30);
-    margin-bottom: 10px!important;
+    margin-bottom: 10px !important;
     display: block;
     font-weight: 500;
 }
