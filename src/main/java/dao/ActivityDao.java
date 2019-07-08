@@ -19,7 +19,7 @@ import static dao.helpers.QueryGenerator.*;
 
 public class ActivityDao implements Dao<Integer, Activity> {
     private static final Logger logger = LogManager.getLogger(ActivityDao.class);
-    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
+    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
     private static final String ACTIVITY_ID = "id";
     private static final String USER_ID = "user_id";
     private static final String ACTIVITY_NAME = "activity_name";

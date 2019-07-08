@@ -89,9 +89,9 @@ public class UserDao implements Dao<Integer, User> {
             logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             if (result == 1) {
+                logger.info("User deleted sucessfully, {}", findById(id));
                 cao.delete(id);
-                logger.info("User deleted sucessfully");
-            } else logger.error("Error deleting User");
+            } else logger.error("Error deleting User, {}", findById(id));
         } catch (SQLException e) {
             logger.error(e);
         } finally {

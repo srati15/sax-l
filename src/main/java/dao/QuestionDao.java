@@ -11,6 +11,9 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -20,6 +23,7 @@ import static dao.helpers.QueryGenerator.*;
 
 public class QuestionDao implements Dao<Integer, Question> {
     private static final Logger logger = LogManager.getLogger(QuestionDao.class);
+    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
 
     private final Cao<Integer, Question> cao = new Cao<>();
     private final QuestionMapper questionMapper = new QuestionMapper();
@@ -30,46 +34,26 @@ public class QuestionDao implements Dao<Integer, Question> {
     private static final String QUESTION_TEXT = "question_text";
     private static final String TABLE_NAME = "question";
 
-
-    public QuestionDao(){
-    }
     @Override
     public Question findById(Integer id) {
         if (!isCached.get()) cache();
         return cao.findById(id);
     }
-
+    @Deprecated
     @Override
     public void insert(Question entity) {
-        //use insertAll instead
+        throw new UnsupportedOperationException();
     }
 
     public void insertAll(Set<Question> questions) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        String query = getInsertQuery(TABLE_NAME, QUESTION_TEXT, QUESTION_TYPE, QUIZ_ID);
+        CountDownLatch latch = new CountDownLatch(questions.size());
+        questions.forEach(question -> executor.execute(new InsertTask(question, latch)));
         try {
-            statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            logger.debug("Executing statement: {}", statement);
-            for (Question question : questions) {
-                statement.setString(1, question.getQuestion());
-                statement.setInt(2, question.getQuestionType().getValue());
-                statement.setInt(3, question.getQuizId());
-                statement.addBatch();
-            }
-            statement.executeBatch();
-            connection.commit();
-            rs = statement.getGeneratedKeys();
-            for (Question question : questions) {
-                rs.next();
-                question.setId(rs.getInt(1));
-            }
-        } catch (SQLException e) {
+            latch.await();
+            logger.info("All questions inserted successfully!");
+        } catch (InterruptedException e) {
+            logger.error("Error inserting questions");
             logger.error(e);
-            rollback(connection);
-        }finally {
-            executeFinalBlock(connection, statement, rs);
         }
     }
 
@@ -79,16 +63,16 @@ public class QuestionDao implements Dao<Integer, Question> {
         return cao.findAll();
     }
 
+    @Deprecated
     @Override
     public void deleteById(Integer integer) {
-        // TODO: 6/16/19
-
+        throw new UnsupportedOperationException();
     }
 
+    @Deprecated
     @Override
     public void update(Question entity) {
-        // TODO: 6/16/19
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -125,29 +109,13 @@ public class QuestionDao implements Dao<Integer, Question> {
     }
 
     public void deleteAll(Set<Question> keySet) {
-        Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        String query = getDeleteQuery(TABLE_NAME, QUESTION_ID );
+        CountDownLatch latch = new CountDownLatch(keySet.size());
+        keySet.forEach(question -> executor.execute(new DeleteTask(question, latch)));
         try {
-            statement = connection.prepareStatement(query);
-            logger.debug("Executing statement: {}", statement);
-            for (Question question : keySet) {
-                statement.setInt(1, question.getId());
-                statement.addBatch();
-            }
-            int[] res = statement.executeBatch();
-            if (res.length == keySet.size()) {
-                logger.info("Questions deleted successfully");
-            }else {
-                logger.error("Error deleting questions");
-            }
-            connection.commit();
-        } catch (SQLException e) {
-            rollback(connection);
+            latch.await();
+        } catch (InterruptedException e) {
+            logger.error("Error deleting questions");
             logger.error(e);
-        }finally {
-            executeFinalBlock(connection, statement, null);
         }
     }
 
@@ -163,11 +131,11 @@ public class QuestionDao implements Dao<Integer, Question> {
                 Question question;
                 if (questionType == QuestionType.PictureResponse) {
                     question = new PictureResponseQuestion(questionText);
-                }else if (questionType == QuestionType.FillInTheBlank) {
+                } else if (questionType == QuestionType.FillInTheBlank) {
                     question = new FillBlankQuestion(questionText);
-                }else if (questionType == QuestionType.QuestionResponse) {
+                } else if (questionType == QuestionType.QuestionResponse) {
                     question = new QuestionResponse(questionText);
-                }else question = new MultipleChoiceQuestion(questionText);
+                } else question = new MultipleChoiceQuestion(questionText);
                 question.setQuizId(quizId);
                 question.setId(questionId);
                 return question;
@@ -178,4 +146,79 @@ public class QuestionDao implements Dao<Integer, Question> {
         }
     }
 
+    private class DeleteTask implements Runnable {
+        private final CountDownLatch latch;
+        private final Question question;
+
+        DeleteTask(Question entity, CountDownLatch latch) {
+            this.question = entity;
+            this.latch = latch;
+        }
+
+        @Override
+        public void run() {
+            Connection connection = CreateConnection.getConnection();
+            PreparedStatement statement = null;
+            ResultSet rs = null;
+            String query = getDeleteQuery(TABLE_NAME, QUESTION_ID);
+            try {
+                statement = connection.prepareStatement(query);
+                statement.setInt(1, question.getId());
+                logger.debug("Executing statement: {}", statement);
+                int result = statement.executeUpdate();
+                if (result == 1) {
+                    logger.info("Question deleted successfully, {}", question);
+                    latch.countDown();
+                } else {
+                    logger.error("Error deleting question, {}", question);
+                }
+                connection.commit();
+            } catch (SQLException e) {
+                rollback(connection);
+                logger.error(e);
+            } finally {
+                executeFinalBlock(connection, statement, null);
+            }
+        }
+    }
+
+    private class InsertTask implements Runnable {
+        private final Question question;
+        private final CountDownLatch latch;
+
+        public InsertTask(Question question, CountDownLatch latch) {
+            this.question = question;
+            this.latch = latch;
+        }
+
+        @Override
+        public void run() {
+            Connection connection = CreateConnection.getConnection();
+            PreparedStatement statement = null;
+            ResultSet rs = null;
+            String query = getInsertQuery(TABLE_NAME, QUESTION_TEXT, QUESTION_TYPE, QUIZ_ID);
+            try {
+                statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                statement.setString(1, question.getQuestion());
+                statement.setInt(2, question.getQuestionType().getValue());
+                statement.setInt(3, question.getQuizId());
+                logger.debug("Executing statement: {}", statement);
+                int result = statement.executeUpdate();
+                connection.commit();
+                if (result == 1) {
+                    rs = statement.getGeneratedKeys();
+                    rs.next();
+                    question.setId(rs.getInt(1));
+                    latch.countDown();
+                }else {
+                    logger.error("Error inserting question, {}", question);
+                }
+            } catch (SQLException e) {
+                logger.error(e);
+                rollback(connection);
+            } finally {
+                executeFinalBlock(connection, statement, rs);
+            }
+        }
+    }
 }

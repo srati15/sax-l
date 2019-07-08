@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="datatypes.user.User" %>
 <%@ page import="enums.UserType" %>
 <div class="container-fluid h-100">
     <div class="row h-100">
@@ -12,7 +11,7 @@
 
                     <div class="collapse navbar-collapse justify-content-end" id="mosh-navbar">
                         <ul class="navbar-nav animated" id="nav">
-                            <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/" id="home-ref">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/" id="home-ref">Home</a></li>
                             <c:if test="${sessionScope.user !=null}">
                                 <li class="nav-item"><a class="nav-link" href="profile" id="profile-ref">Profile</a></li>
                                 <li class="nav-item"><a class="nav-link" href="users-list" id="users-list-ref">Users</a></li>

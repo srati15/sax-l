@@ -88,8 +88,8 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
+                logger.info("Announcement Deleted Successfully, {}", findById(id));
                 cao.delete(id);
-                logger.info("Announcement Deleted Successfully");
             } else
                 logger.error("Error Deleting Announcement");
         } catch (SQLException e) {

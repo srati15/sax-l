@@ -91,11 +91,11 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             int result = statement.executeUpdate();
             connection.commit();
             if(result == 1){
-                logger.info("message Deleted Successfully");
+                logger.info("message Deleted Successfully, {}", findById(id));
                 cao.delete(id);
             }
             else
-                logger.error("Error Deleting message");
+                logger.error("Error Deleting message, {}", findById(id));
         } catch (SQLException e) {
             logger.error(e);
             rollback(connection);

@@ -13,9 +13,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 @WebListener()
 public class ContextListener implements ServletContextListener {
@@ -26,13 +24,15 @@ public class ContextListener implements ServletContextListener {
         manager = new DaoManager();
         sce.getServletContext().setAttribute("manager", manager);
         sce.getServletContext().setAttribute("onlineUsers", onlineUsers);
+        logger.info("Server is running...");
     }
 
     public void contextDestroyed(ServletContextEvent sce) {
-        logger.info("Server is shutting down");
+        logger.info("Server is shutting down...");
         ActivityDao activityDao = manager.getDao(DaoType.Activity);
         onlineUsers.values().forEach(user -> activityDao.insert(new Activity(user.getId(), "logged out", LocalDateTime.now())) );
         sce.getServletContext().removeAttribute("manager");
         sce.getServletContext().removeAttribute("onlineUsers");
+        logger.info("Server has shut down !!");
     }
 }

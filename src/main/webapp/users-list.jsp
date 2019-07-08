@@ -129,9 +129,9 @@
                             <td><a href="user-profile?userid=${currentUser.id}">${currentUser.userName}</a></td>
                         </c:when>
                     </c:choose>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
+                    <td>${currentUser.quizResults.size()}</td>
+                    <td>${currentUser.quizzes.size()}</td>
+                    <td>${currentUser.achievements.size()}</td>
                     <c:choose>
                         <c:when test="${pageUser!=null && pageUser.userType==UserType.Admin}">
                             <td>
