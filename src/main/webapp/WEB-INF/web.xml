@@ -6,11 +6,15 @@
          id="WebApp_ID" version="2.5">
 
     <display-name>Archetype Created Web Application</display-name>
-
+    <welcome-file-list>
+        <welcome-file>/index.jsp</welcome-file>
+    </welcome-file-list>
     <servlet>
         <servlet-name>Login</servlet-name>
         <jsp-file>/login.jsp</jsp-file>
     </servlet>
+
+
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/login</url-pattern>
@@ -96,4 +100,23 @@
         <servlet-name>QuizResult</servlet-name>
         <url-pattern>/quiz-result</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Activities</servlet-name>
+        <jsp-file>/activities.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Activities</servlet-name>
+        <url-pattern>/activities</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>top-quizzes</servlet-name>
+        <jsp-file>/top-quizzes.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>top-quizzes</servlet-name>
+        <url-pattern>/top-quizzes</url-pattern>
+    </servlet-mapping>
+
 </web-app>

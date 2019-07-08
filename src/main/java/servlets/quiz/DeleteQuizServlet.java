@@ -1,7 +1,7 @@
 package servlets.quiz;
 
 import dao.QuizDao;
-import datatypes.Quiz;
+import datatypes.quiz.Quiz;
 import enums.DaoType;
 import manager.DaoManager;
 

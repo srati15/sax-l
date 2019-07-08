@@ -28,7 +28,7 @@ public class MyDBInfoMock extends MyDBInfo {
             this.password = dbProperties.getProperty("MYSQL_PASSWORD");
             this.databaseUrl = "jdbc:mysql://" + dbServer + ":" + port+"/"+databaseName;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

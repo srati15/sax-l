@@ -80,7 +80,7 @@
             <div class="col-12 col-sm-6 col-md-4">
                 <div class="single-feature-area d-flex mb-100">
                     <div class="feature-icon mr-30">
-                        <img src="img/core-img/edit.png" alt="">
+                        <img src="img/core-img/user.png" alt="">
                     </div>
                     <div class="feature-content">
                         <h4>Users</h4>
@@ -92,11 +92,35 @@
             <div class="col-12 col-sm-6 col-md-4">
                 <div class="single-feature-area d-flex mb-100">
                     <div class="feature-icon mr-30">
-                        <img src="img/core-img/video-camera.png" alt="">
+                        <img src="img/core-img/quiz.png" alt="">
                     </div>
                     <div class="feature-content">
                         <h4>Quizzes</h4>
                         <p><a href="quiz">Manage Quizzes</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="single-feature-area d-flex mb-100">
+                    <div class="feature-icon mr-30">
+                        <img src="img/core-img/activities.png" alt="">
+                    </div>
+                    <div class="feature-content">
+                        <h4>Activity logs</h4>
+                        <p><a href="activities">Manage activities</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="single-feature-area d-flex mb-100">
+                    <div class="feature-icon mr-30">
+                        <img src="img/core-img/server.png" alt="">
+                    </div>
+                    <div class="feature-content">
+                        <h4>Server logs</h4>
+                        <p><a href="server-logs">Manage Server logs</a></p>
                     </div>
                 </div>
             </div>

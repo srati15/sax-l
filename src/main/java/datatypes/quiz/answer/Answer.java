@@ -1,4 +1,4 @@
-package datatypes.answer;
+package datatypes.quiz.answer;
 
 import datatypes.Domain;
 

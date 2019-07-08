@@ -1,8 +1,10 @@
 package dao;
 
 import database.CreateConnection;
-import datatypes.answer.Answer;
+import datatypes.quiz.answer.Answer;
 import enums.DaoType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -13,18 +15,16 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class AnswerDao implements Dao<Integer, Answer> {
-    private Cao<Integer, Answer> cao = new Cao<>();
-    private AnswerMapper answerMapper = new AnswerMapper();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
-    public static final String ANSWER_ID = "id";
-    public static final String QUESTION_ID = "question_id";
-    public static final String ANSWER_TEXT = "answer_string";
-    public static final String TABLE_NAME = "answers";
+    private static final Logger logger = LogManager.getLogger(AnswerDao.class);
 
+    private final Cao<Integer, Answer> cao = new Cao<>();
+    private final AnswerMapper answerMapper = new AnswerMapper();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
+    private static final String ANSWER_ID = "id";
+    private static final String QUESTION_ID = "question_id";
+    private static final String ANSWER_TEXT = "answer_string";
+    private static final String TABLE_NAME = "answers";
 
-    public AnswerDao(){
-
-    }
 
     @Override
     public Answer findById(Integer id) {
@@ -73,8 +73,9 @@ public class AnswerDao implements Dao<Integer, Answer> {
                 cao.add(answer);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -87,6 +88,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
         String query = getInsertQuery(TABLE_NAME, QUESTION_ID, ANSWER_TEXT);
         try {
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            logger.debug("Executing statement: {}", statement);
             for (Answer answer : values) {
                 statement.setInt(1, answer.getQuestionId());
                 statement.setString(2, answer.getAnswer());
@@ -100,12 +102,12 @@ public class AnswerDao implements Dao<Integer, Answer> {
                     answer.setId(rs.getInt(1));
                     cao.add(answer);
                 }else {
-                    System.out.println("error in some insertions");
+                    logger.error("error in some answer insertions");
                 }
             }
         } catch (SQLException e) {
             rollback(connection);
-            e.printStackTrace();
+            logger.error(e);
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -122,15 +124,21 @@ public class AnswerDao implements Dao<Integer, Answer> {
         String query = getDeleteQuery(TABLE_NAME,ANSWER_ID );
         try {
             statement = connection.prepareStatement(query);
+            logger.debug("Executing statement: {}", statement);
             for (Answer answer : values) {
                 statement.setInt(1, answer.getId());
                 statement.addBatch();
             }
-            statement.executeBatch();
+            int[] res = statement.executeBatch();
+            if (res.length == values.size()) {
+                logger.info("Answers are deleted successfully");
+            }else {
+                logger.error("Error deleting answers");
+            }
             connection.commit();
         } catch (SQLException e) {
             rollback(connection);
-            e.printStackTrace();
+            logger.error(e);
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -148,7 +156,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
                 answer.setQuestionId(questionId);
                 return answer;
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
             return null;
         }

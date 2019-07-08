@@ -1,13 +1,15 @@
 package database;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
+import dao.helpers.FinalBlockExecutor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Properties;
 
 public class MyDBInfo {
-    private String dbServer;
-    private int port;
+    private static final Logger logger = LogManager.getLogger(MyDBInfo.class);
+
     private String userName;
     private String databaseUrl;
     private String password;
@@ -21,14 +23,14 @@ public class MyDBInfo {
         Properties dbProperties = new Properties();
         try {
             dbProperties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
-            this.dbServer = dbProperties.getProperty("MYSQL_DATABASE_SERVER");
-            this.port = Integer.parseInt(dbProperties.getProperty("DATABASE_PORT"));
+            String dbServer = dbProperties.getProperty("MYSQL_DATABASE_SERVER");
+            int port = Integer.parseInt(dbProperties.getProperty("DATABASE_PORT"));
             this.databaseName = dbProperties.getProperty("MYSQL_DATABASE_NAME");
             this.userName = dbProperties.getProperty("MYSQL_USERNAME");
             this.password = dbProperties.getProperty("MYSQL_PASSWORD");
-            this.databaseUrl = "jdbc:mysql://" + dbServer + ":" + port+"/"+databaseName;
+            this.databaseUrl = "jdbc:mysql://" + dbServer + ":" + port +"/"+databaseName;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

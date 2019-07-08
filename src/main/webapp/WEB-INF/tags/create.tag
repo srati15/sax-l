@@ -1,7 +1,7 @@
 <%@ attribute name="entityName" required="true" %>
 <%@ attribute name="actionServlet" required="true" type="java.lang.String" %>
-<%@ attribute name="formFields" required="true" type="java.util.List<datatypes.FormField>" %>
-<%@ attribute name="selectFields" required="false" type="datatypes.SelectField" %>
+<%@ attribute name="formFields" required="true" type="java.util.List<datatypes.formfields.FormField>" %>
+<%@ attribute name="selectFields" required="false" type="datatypes.formfields.SelectField" %>
 <%@ attribute name="formId" required="true" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 

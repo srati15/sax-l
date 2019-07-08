@@ -1,17 +1,16 @@
-package datatypes;
+package datatypes.user;
 
+import datatypes.quiz.QuizResult;
 import datatypes.messages.TextMessage;
+import datatypes.quiz.Quiz;
 import enums.UserType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class User extends Person {
     private String password;
     private UserType userType;
-    private String mail;
+    private final String mail;
     private List<Person> friends;
     private List<Quiz> quizzes = new ArrayList<>();
     private List<Person> pendingFriendRequests = new ArrayList<>();
@@ -112,5 +111,30 @@ public class User extends Person {
                 ", friendRequests=" + pendingFriendRequests +
                 ", id=" + id +
                 "} " + super.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return password.equals(user.password) &&
+                userType == user.userType &&
+                mail.equals(user.mail) &&
+                friends.equals(user.friends) &&
+                quizzes.equals(user.quizzes) &&
+                pendingFriendRequests.equals(user.pendingFriendRequests) &&
+                quizResults.equals(user.quizResults) &&
+                textMessages.equals(user.textMessages) &&
+                achievements.equals(user.achievements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(password, userType, mail, friends, quizzes, pendingFriendRequests, quizResults, textMessages, achievements);
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

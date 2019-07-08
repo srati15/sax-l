@@ -2,11 +2,10 @@ package servlets.quiz;
 
 import dao.AnswerDao;
 import dao.QuestionDao;
-import dao.QuizDao;
-import datatypes.Quiz;
-import datatypes.User;
-import datatypes.answer.Answer;
-import datatypes.question.Question;
+import datatypes.quiz.Quiz;
+import datatypes.user.User;
+import datatypes.quiz.answer.Answer;
+import datatypes.quiz.question.Question;
 import enums.DaoType;
 import manager.DaoManager;
 import org.json.JSONArray;
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +27,6 @@ public class QuizCreationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-        QuizDao quizDao= manager.getDao(DaoType.Quiz);
         QuestionDao questionDao= manager.getDao(DaoType.Question);
         AnswerDao answerDao = manager.getDao(DaoType.Answer);
         User user = (User) request.getSession().getAttribute("user");
@@ -40,21 +37,18 @@ public class QuizCreationServlet extends HttpServlet {
         boolean randomized = request.getParameter("randomized").equals("yes");
         String quizName = request.getParameter("quizname");
         String quizImageURL = request.getParameter("quizImageUrl");
-        Quiz quiz = new Quiz(quizName, user.getId(), Timestamp.valueOf(LocalDateTime.now()), randomized, singlePage, autoCorrection, practiceMode, quizImageURL);
-        manager.insert(quiz);
+        Quiz quiz = new Quiz(quizName, user.getId(), (LocalDateTime.now()), randomized, singlePage, autoCorrection, practiceMode, quizImageURL);
         JSONArray questionsArray = new JSONArray(request.getParameter("questions"));
         Map<Question, Answer> questionAnswerMap = new HashMap<>();
+        QuestionAnswerJsonDispatcher dispatcher = new QuestionAnswerJsonDispatcher();
         for (int i = 0; i < questionsArray.length(); i++) {
             JSONObject questionJson = questionsArray.getJSONObject(i);
-            Question question = QuestionAnswerJsonDispatcher.dispatchQuestion(questionJson, quiz.getId());
+            Question question = dispatcher.dispatchQuestion(questionJson);
             questionAnswerMap.put(question, new Answer(questionJson.getString("answer")));
         }
-        questionDao.insertAll(questionAnswerMap.keySet());
-        for (Question question: questionAnswerMap.keySet()) {
-            questionAnswerMap.get(question).setQuestionId(question.getId());
-        }
-        answerDao.insertAll(questionAnswerMap.values());
         quiz.setQuestionAnswerMap(questionAnswerMap);
+        manager.insert(quiz);
+
 
         request.getRequestDispatcher("quiz").forward(request, response);
     }

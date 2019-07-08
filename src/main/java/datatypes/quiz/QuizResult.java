@@ -1,10 +1,12 @@
-package datatypes;
+package datatypes.quiz;
 
-public class QuizResult extends Domain<Integer>{
-    private int quizId;
-    private int userId;
-    private int score;
-    private int timeSpent;
+import datatypes.Domain;
+
+public class QuizResult extends Domain<Integer> {
+    private final int quizId;
+    private final int userId;
+    private final int score;
+    private final int timeSpent;
 
     public QuizResult(int quizId, int userId, int score, int timeSpent) {
         this.quizId = quizId;

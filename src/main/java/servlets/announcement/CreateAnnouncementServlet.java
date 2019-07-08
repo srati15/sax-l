@@ -1,8 +1,7 @@
 package servlets.announcement;
 
-import dao.AnnouncementDao;
-import datatypes.Announcement;
-import enums.DaoType;
+import datatypes.announcement.Announcement;
+import datatypes.user.User;
 import enums.FormFields;
 import manager.DaoManager;
 
@@ -17,16 +16,16 @@ import java.io.IOException;
 public class CreateAnnouncementServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-        AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
+        User user = (User) request.getSession().getAttribute("user");
         String announcementText = request.getParameter("announcementText");
         String hyperlink = request.getParameter("hyperlink");
         boolean active = request.getParameter(FormFields.activeOrNot.getValue()).equals("Active");
-        Announcement announcement = new Announcement(announcementText, hyperlink, active);
-        announcementDao.insert(announcement);
+        Announcement announcement = new Announcement(user.getId(), announcementText, hyperlink, active);
+        manager.insert(announcement);
         request.getRequestDispatcher("announcements").forward(request, response);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
     }
 }

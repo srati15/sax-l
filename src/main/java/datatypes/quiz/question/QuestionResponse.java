@@ -1,11 +1,10 @@
-package datatypes.question;
+package datatypes.quiz.question;
 
 import enums.QuestionType;
 
-public class PictureResponseQuestion extends Question {
-    private final QuestionType questionType = QuestionType.PictureResponse;
-
-    public PictureResponseQuestion(String question) {
+public class QuestionResponse extends Question {
+    private final QuestionType questionType = QuestionType.QuestionResponse;
+    public QuestionResponse(String question) {
         super(question);
     }
 
@@ -16,7 +15,7 @@ public class PictureResponseQuestion extends Question {
 
     @Override
     public String toString() {
-        return "PictureResponseQuestion{" +
+        return "QuestionResponse{" +
                 "questionType=" + questionType +
                 ", id=" + id +
                 "} " + super.toString();

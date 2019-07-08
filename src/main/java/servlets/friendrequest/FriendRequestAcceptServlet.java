@@ -1,7 +1,7 @@
 package servlets.friendrequest;
 
 import dao.FriendRequestDao;
-import datatypes.User;
+import datatypes.user.User;
 import datatypes.messages.FriendRequest;
 import enums.DaoType;
 import enums.RequestStatus;

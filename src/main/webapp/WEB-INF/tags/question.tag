@@ -2,8 +2,8 @@
 <%@ tag import="java.util.Arrays" %>
 <%@ tag import="java.util.Collections" %>
 <%@ tag import="java.util.List" %>
-<%@ attribute name="question" required="true" type="datatypes.question.Question" %>
-<%@ attribute name="answer" required="true" type="datatypes.answer.Answer" %>
+<%@ attribute name="question" required="true" type="datatypes.quiz.question.Question" %>
+<%@ attribute name="answer" required="true" type="datatypes.quiz.answer.Answer" %>
 <%@ attribute name="questionNumber" required="true" type="java.lang.Integer" %>
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>

@@ -1,10 +1,11 @@
 package servlets.user;
 
 import dao.UserDao;
-import datatypes.User;
+import datatypes.user.User;
 import enums.DaoType;
 import mail.PasswordRecovery;
 import manager.DaoManager;
+import security.Cracker;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,9 +33,10 @@ public class ForgotPasswordServlet extends HttpServlet {
         for (int i = 0; i < PASSWORD_LENGTH; i++) {
             passwordBuilder.append((char) ('a' + random.nextInt(26)));
         }
-        User updatedUser = new User(user.getId(), user.getUserName(), passwordBuilder.toString(), user.getFirstName(), user.getLastName(), user.getMail());
+        String passwordHash = Cracker.code(passwordBuilder.toString());
+        User updatedUser = new User(user.getId(), user.getUserName(), passwordHash, user.getFirstName(), user.getLastName(), user.getMail());
         userRepository.update(updatedUser);
-        if (PasswordRecovery.send(updatedUser)) {
+        if (PasswordRecovery.send(updatedUser, passwordBuilder.toString())) {
             request.setAttribute("info", "Password recovery mail sent to " + updatedUser.getMail());
             request.getRequestDispatcher("login").forward(request, response);
         } else {

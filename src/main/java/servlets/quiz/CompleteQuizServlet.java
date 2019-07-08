@@ -2,10 +2,10 @@ package servlets.quiz;
 
 import dao.QuizDao;
 import dao.QuizResultDao;
-import datatypes.Quiz;
-import datatypes.QuizResult;
-import datatypes.User;
-import datatypes.question.Question;
+import datatypes.quiz.Quiz;
+import datatypes.quiz.QuizResult;
+import datatypes.user.User;
+import datatypes.quiz.question.Question;
 import enums.DaoType;
 import manager.DaoManager;
 

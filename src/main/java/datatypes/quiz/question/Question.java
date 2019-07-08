@@ -1,4 +1,4 @@
-package datatypes.question;
+package datatypes.quiz.question;
 
 import datatypes.Domain;
 import enums.QuestionType;

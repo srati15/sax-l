@@ -10,8 +10,9 @@ public enum DaoType {
     Question(7),
     QuizResult(8),
     UserAchievement(9),
-    QuizChallenge(10);
-    private int value;
+    QuizChallenge(10),
+    Activity(11);
+    private final int value;
     DaoType(int value) {
         this.value = value;
     }

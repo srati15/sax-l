@@ -4,6 +4,8 @@ import database.CreateConnection;
 import datatypes.messages.QuizChallenge;
 import enums.DaoType;
 import enums.RequestStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -14,18 +16,20 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
-    public static String ID = "id";
-    public static String SENDER_ID = "sender_id";
-    public static String RECEIVER_ID = "receiver_id";
-    public static String QUIZ_ID = "quiz_id";
-    public static  String STATUS = "status";
-    public static String TIME_SENT = "time-sent";
-    public static String TABLE_NAME = "quiz_challenges";
+    private static final Logger logger = LogManager.getLogger(QuizChallengeDao.class);
+
+    private static final String ID = "id";
+    private static final String SENDER_ID = "sender_id";
+    private static final String RECEIVER_ID = "receiver_id";
+    private static final String QUIZ_ID = "quiz_id";
+    private static final String STATUS = "status";
+    private static final String TIME_SENT = "time-sent";
+    private static final String TABLE_NAME = "quiz_challenges";
 
 
-    private Cao<Integer,QuizChallenge>cao = new Cao<>();
-    private DBRowMapper<QuizChallenge> mapper = new QuizChallengeMapper();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
+    private final Cao<Integer,QuizChallenge>cao = new Cao<>();
+    private final DBRowMapper<QuizChallenge> mapper = new QuizChallengeMapper();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
 
     public QuizChallengeDao(){
 
@@ -40,8 +44,8 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
     @Override
     public void insert(QuizChallenge entity) {
         Connection connection = CreateConnection.getConnection();
-        PreparedStatement statement = null;
-        ResultSet rs = null;
+        PreparedStatement statement;
+        ResultSet rs;
         try {
             String query = getInsertQuery(TABLE_NAME, SENDER_ID, RECEIVER_ID, QUIZ_ID, STATUS, TIME_SENT);
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -49,20 +53,21 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
             statement.setInt(2, entity.getReceiverId());
             statement.setInt(3,entity.getQuizId());
             statement.setInt(4, entity.getRequestStatus().getValue());
-            statement.setTimestamp(5, entity.getTimestamp());
+            statement.setTimestamp(5, Timestamp.valueOf(entity.getTimestamp()));
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1){
-                System.out.println("quizChallenge inserted successfully");
+                logger.info("quizChallenge inserted successfully, {}", entity);
                 rs = statement.getGeneratedKeys();
                 rs.next();
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
             }
             else
-                System.out.println("Error inserting quizChallenge");
+                logger.error("Error inserting quizChallenge, {}", entity);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -80,16 +85,17 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
             String query = getDeleteQuery(TABLE_NAME, ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1, integer);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                System.out.println("quizChallenge Deleted Successfully");
+                logger.info("quizChallenge Deleted Successfully, {}", findById(integer));
                 cao.delete(integer);
             } else
-                System.out.println("Error Deleting quizChallenge");
+                logger.error("Error Deleting quizChallenge, {}", findById(integer));
         } catch (SQLException e) {
             rollback(connection);
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement);
         }
@@ -104,15 +110,16 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, entity.getRequestStatus().getValue());
             statement.setInt(2, entity.getId());
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                System.out.println("quizChallenge accepted Successfully");
+                logger.info("quizChallenge accepted Successfully, {}", entity);
                 cao.add(entity);
             } else
-                System.out.println("Error accepting quizChallenge");
+                logger.error("Error accepting quizChallenge, {}", entity);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement);
@@ -143,8 +150,9 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
                 cao.add(request);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -163,9 +171,9 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
                 Timestamp dateSent = rs.getTimestamp(TIME_SENT);
 
 
-                return new QuizChallenge(quizChallengeId, senderId, receiverId, quizId, currStatus, dateSent );
+                return new QuizChallenge(quizChallengeId, senderId, receiverId, quizId, currStatus, dateSent.toLocalDateTime() );
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
 
             return null;

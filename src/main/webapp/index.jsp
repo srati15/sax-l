@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="dao.AnnouncementDao" %>
-<%@ page import="datatypes.User" %>
+<%@ page import="datatypes.user.User" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
 <!DOCTYPE html>
@@ -15,6 +15,7 @@
 
     <!-- Title -->
     <title>Sax-L - Quiz Website | Home</title>
+
 
     <!-- Favicon -->
     <link rel="icon" href="img/core-img/favicon.ico">
@@ -31,10 +32,6 @@
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
-    User user = (User) request.getSession().getAttribute("user");
-    if (user != null) {
-        System.out.println(user.getTextMessages().values());
-    }
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -68,11 +65,12 @@
 </div>
 
 <!-- ***** Top quizzes Area Start ***** -->
-<% if (request.getSession().getAttribute("user") != null) { %>
-<jsp:include page="components/top-quizzes.jsp"/>
-<jsp:include page="components/recent-quizzes.jsp"/>
-<jsp:include page="components/quiz-activities.jsp"/>
-<% } %>
+<c:if test="${sessionScope.user !=null}">
+    <jsp:include page="components/top-quizzes.jsp"/>
+    <jsp:include page="components/recent-quizzes.jsp"/>
+    <jsp:include page="components/quiz-activities.jsp"/>
+</c:if>
+
 <!-- ***** Footer Area Start ***** -->
 <footer class="footer-area clearfix">
     <jsp:include page="components/footer.jsp"/>

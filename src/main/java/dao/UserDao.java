@@ -1,9 +1,11 @@
 package dao;
 
 import database.CreateConnection;
-import datatypes.User;
+import datatypes.user.User;
 import enums.DaoType;
 import enums.UserType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -14,17 +16,19 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class UserDao implements Dao<Integer, User> {
-    private DBRowMapper<User> mapper = new UserMapper();
-    private Cao<Integer, User> cao = new Cao<>();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
-    public static final String USER_ID = "id";
-    public static final String USER_NAME = "user_name";
-    public static final String USER_PASSWORD = "pass";
-    public static final String FIRST_NAME = "first_name";
-    public static final String LAST_NAME = "last_name";
-    public static final String USER_MAIL = "mail";
-    public static final String USER_TYPE = "user_type";
-    public static final String TABLE_NAME = "users";
+    private static final Logger logger = LogManager.getLogger(UserDao.class);
+
+    private final DBRowMapper<User> mapper = new UserMapper();
+    private final Cao<Integer, User> cao = new Cao<>();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
+    private static final String USER_ID = "id";
+    private static final String USER_NAME = "user_name";
+    private static final String USER_PASSWORD = "pass";
+    private static final String FIRST_NAME = "first_name";
+    private static final String LAST_NAME = "last_name";
+    private static final String USER_MAIL = "mail";
+    private static final String USER_TYPE = "user_type";
+    private static final String TABLE_NAME = "users";
 
     @Override
     public User findById(Integer id) {
@@ -51,16 +55,17 @@ public class UserDao implements Dao<Integer, User> {
             statement.setString(4, entity.getLastName());
             statement.setInt(5, entity.getUserType().getValue());
             statement.setString(6, entity.getMail());
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
-            if (result == 1) System.out.println("User inserted sucessfully");
-            else System.out.println("Error inserting User");
+            if (result == 1) logger.info("User inserted sucessfully");
+            else logger.error("Error inserting User");
             rs = statement.getGeneratedKeys();
             rs.next();
             entity.setId(rs.getInt(1));
             cao.add(entity);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement, rs);
@@ -81,13 +86,14 @@ public class UserDao implements Dao<Integer, User> {
             String query = getDeleteQuery(TABLE_NAME, USER_ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             if (result == 1) {
                 cao.delete(id);
-                System.out.println("User deleted sucessfully");
-            } else System.out.println("Error deleting User");
+                logger.info("User deleted sucessfully");
+            } else logger.error("Error deleting User");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement);
         }
@@ -105,13 +111,14 @@ public class UserDao implements Dao<Integer, User> {
             statement.setInt(4, user.getUserType().getValue());
             statement.setInt(5, user.getId());
             int result = statement.executeUpdate();
+            logger.debug("Executing statement: {}", statement);
             connection.commit();
             if (result == 1) {
-                System.out.println("User updated sucessfully");
+                logger.info("User updated sucessfully, {}", user);
                 cao.add(user);
-            } else System.out.println("Error updating user");
+            } else logger.error("Error updating user, {}", user);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement);
@@ -136,8 +143,9 @@ public class UserDao implements Dao<Integer, User> {
                 cao.add(user);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement);
         }
@@ -159,7 +167,7 @@ public class UserDao implements Dao<Integer, User> {
                 user.setId(userId);
                 return user;
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
             return null;
         }

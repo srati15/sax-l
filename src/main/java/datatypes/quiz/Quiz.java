@@ -1,9 +1,10 @@
-package datatypes;
+package datatypes.quiz;
 
-import datatypes.answer.Answer;
-import datatypes.question.Question;
+import datatypes.Domain;
+import datatypes.quiz.answer.Answer;
+import datatypes.quiz.question.Question;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -12,7 +13,7 @@ public class Quiz extends Domain<Integer> {
     private String quizName;
     private int authorId;
     private int timesDone;
-    private Timestamp dateCreated;
+    private LocalDateTime dateCreated;
     private boolean randomized;
     private boolean onePage;
     private boolean allowedImmediateCorrection;
@@ -25,7 +26,7 @@ public class Quiz extends Domain<Integer> {
     public Quiz(){
 
     }
-    public Quiz(int id, String quizName, int authorId, int timesDone, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL) {
+    public Quiz(int id, String quizName, int authorId, int timesDone, LocalDateTime dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL) {
         this.id = id;
         this.quizName = quizName;
         this.authorId = authorId;
@@ -38,7 +39,7 @@ public class Quiz extends Domain<Integer> {
         this.quizImageURL = quizImageURL;
     }
 
-    public Quiz(String quizName, int authorId, Timestamp dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL) {
+    public Quiz(String quizName, int authorId, LocalDateTime dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL) {
         this.quizName = quizName;
         this.authorId = authorId;
         this.dateCreated = dateCreated;
@@ -65,7 +66,7 @@ public class Quiz extends Domain<Integer> {
         return allowedPracticemode;
     }
 
-    public Timestamp getDateCreated() {
+    public LocalDateTime getDateCreated() {
         return dateCreated;
     }
 

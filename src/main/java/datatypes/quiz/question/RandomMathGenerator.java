@@ -1,7 +1,7 @@
-package datatypes.question;
+package datatypes.quiz.question;
 
-import datatypes.Quiz;
-import datatypes.answer.Answer;
+import datatypes.quiz.Quiz;
+import datatypes.quiz.answer.Answer;
 
 import java.util.*;
 

@@ -4,15 +4,17 @@ import enums.MessageType;
 import enums.RequestStatus;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 public class FriendRequest extends Message{
     private RequestStatus status;
     private final MessageType messageType = MessageType.FriendRequest;
 
-    public FriendRequest(int senderId, int recieverId, RequestStatus status, Timestamp sendDate) {
+    public FriendRequest(int senderId, int recieverId, RequestStatus status, LocalDateTime sendDate) {
         super(senderId, recieverId, sendDate);
         this.status = status;
     }
-    public FriendRequest(int id, int senderId, int recieverId, RequestStatus status, Timestamp sendDate) {
+    public FriendRequest(int id, int senderId, int recieverId, RequestStatus status, LocalDateTime sendDate) {
         this(senderId, recieverId, status, sendDate);
         this.id = id;
     }

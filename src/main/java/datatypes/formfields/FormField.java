@@ -1,14 +1,14 @@
-package datatypes;
+package datatypes.formfields;
 
 import enums.InputType;
 
 
 public class FormField {
-    private String name;
-    private InputType inputType;
-    private boolean required;
-    private Integer minLength;
-    private String displayName;
+    private final String name;
+    private final InputType inputType;
+    private final boolean required;
+    private final Integer minLength;
+    private final String displayName;
     public FormField(String displayName, String name, InputType inputType, boolean required, Integer minLength) {
         this.displayName = displayName;
         this.name = name;

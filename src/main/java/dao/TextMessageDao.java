@@ -4,6 +4,8 @@ import database.CreateConnection;
 import datatypes.messages.Message;
 import datatypes.messages.TextMessage;
 import enums.DaoType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -17,15 +19,17 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class TextMessageDao implements Dao<Integer, TextMessage> {
-    private DBRowMapper<TextMessage> mapper = new TextMessageMapper();
-    private Cao<Integer, TextMessage> cao = new Cao<>();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
-    public static final String TEXT_MESSAGE_ID= "id";
-    public static final String SENDER_ID = "sender_id";
-    public static final String RECEIVER_ID = "receiver_id";
-    public static final String DATE_SENT = "date_sent";
-    public static final String MESSAGE_SENT = "message_sent";
-    public static final String TABLE_NAME = "text_message";
+    private static final Logger logger = LogManager.getLogger(TextMessageDao.class);
+
+    private final DBRowMapper<TextMessage> mapper = new TextMessageMapper();
+    private final Cao<Integer, TextMessage> cao = new Cao<>();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
+    private static final String TEXT_MESSAGE_ID= "id";
+    private static final String SENDER_ID = "sender_id";
+    private static final String RECEIVER_ID = "receiver_id";
+    private static final String DATE_SENT = "date_sent";
+    private static final String MESSAGE_SENT = "message_sent";
+    private static final String TABLE_NAME = "text_message";
 
     public TextMessageDao() {
 
@@ -46,8 +50,9 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, entity.getSenderId());
             statement.setInt(2, entity.getReceiverId());
-            statement.setTimestamp(3, entity.getTimestamp());
+            statement.setTimestamp(3, Timestamp.valueOf(entity.getTimestamp()));
             statement.setString(4, entity.getTextMessage());
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
@@ -55,12 +60,12 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 rs.next();
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
-                System.out.println("Text Message inserted successfully");
+                logger.info("Text Message inserted successfully, {}", entity);
             }
-            else System.out.println("Error inserting Text Message");
+            else logger.error("Error inserting Text Message, {}", entity);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         }finally {
             executeFinalBlock(connection, statement, rs);
@@ -82,16 +87,17 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             String query = getDeleteQuery(TABLE_NAME, TEXT_MESSAGE_ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if(result == 1){
-                System.out.println("message Deleted Successfully");
+                logger.info("message Deleted Successfully");
                 cao.delete(id);
             }
             else
-                System.out.println("Error Deleting message");
+                logger.error("Error Deleting message");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement);
@@ -122,8 +128,9 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 cao.add(message);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -148,10 +155,9 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 int receiverId = rs.getInt(RECEIVER_ID);
                 Timestamp sendDate = rs.getTimestamp(DATE_SENT);
                 String messageSent = rs.getString(MESSAGE_SENT);
-                TextMessage tMessage = new TextMessage(textMessageId, senderId, receiverId, sendDate, messageSent);
-                return tMessage;
+                return new TextMessage(textMessageId, senderId, receiverId, sendDate.toLocalDateTime(), messageSent);
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
             return null;
         }

@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="dao.UserDao" %>
-<%@ page import="datatypes.Achievement" %>
-<%@ page import="datatypes.User" %>
+<%@ page import="datatypes.user.Achievement" %>
+<%@ page import="datatypes.user.User" %>
 <%@ page import="datatypes.messages.Message" %>
 <%@ page import="datatypes.messages.TextMessage" %>
 <%@ page import="enums.DaoType" %>

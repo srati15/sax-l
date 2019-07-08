@@ -1,7 +1,9 @@
-package datatypes;
+package datatypes.user;
 
-public class Person extends Domain<Integer>{
-    private String userName;
+import datatypes.Domain;
+
+public class Person extends Domain<Integer> {
+    private final String userName;
     private String firstName;
     private String lastName;
 
@@ -21,6 +23,14 @@ public class Person extends Domain<Integer>{
 
     public String getLastName() {
         return lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @Override

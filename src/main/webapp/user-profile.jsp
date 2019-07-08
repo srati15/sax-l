@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="dao.FriendRequestDao" %>
 <%@ page import="dao.UserDao" %>
-<%@ page import="datatypes.User" %>
+<%@ page import="datatypes.user.User" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="enums.RequestStatus" %>
 <%@ page import="manager.DaoManager" %>
@@ -135,8 +135,12 @@
             <%}
             }%>
         </div>
-        <textarea placeholder="Type message.." name="msg" required></textarea>
-        <input type="text" hidden name="receiverId" value="<%=id%>"/>
+        <label>
+            <textarea placeholder="Type message.." name="msg" required></textarea>
+        </label>
+        <label>
+            <input type="text" hidden name="receiverId" value="<%=id%>"/>
+        </label>
         <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-paper-plane"></i> Send</button>
         <button type="button" class="btn btn-warning btn-sm" onclick="closeForm()">Close</button>
     </form>

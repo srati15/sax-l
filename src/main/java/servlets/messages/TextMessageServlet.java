@@ -1,7 +1,7 @@
 package servlets.messages;
 
 import dao.TextMessageDao;
-import datatypes.User;
+import datatypes.user.User;
 import datatypes.messages.TextMessage;
 import enums.DaoType;
 import manager.DaoManager;
@@ -24,12 +24,12 @@ public class TextMessageServlet extends HttpServlet {
         TextMessageDao textMessageDao = manager.getDao(DaoType.TextMessage);
         Timestamp dateSent = Timestamp.valueOf(LocalDateTime.now());
         String message = request.getParameter("msg");
-        TextMessage mes = new TextMessage(user.getId(), receiverId, dateSent, message);
+        TextMessage mes = new TextMessage(user.getId(), receiverId, dateSent.toLocalDateTime(), message);
         manager.insert(mes);
         request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
     }
 }

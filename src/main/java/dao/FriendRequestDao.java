@@ -4,6 +4,8 @@ import database.CreateConnection;
 import datatypes.messages.FriendRequest;
 import enums.DaoType;
 import enums.RequestStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
@@ -14,19 +16,18 @@ import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
 public class FriendRequestDao implements Dao<Integer, FriendRequest> {
-    private DBRowMapper<FriendRequest> mapper = new FriendRequestMapper();
-    private Cao<Integer, FriendRequest> cao = new Cao<>();
-    private AtomicBoolean isCached = new AtomicBoolean(false);
-    public static final String SENDER_ID = "sender_id";
-    public static final String RECEIVER_ID = "receiver_id";
-    public static final String REQUEST_STATUS = "request_status";
-    public static final String DATE_SENT = "date_sent";
-    public static final String REQUEST_ID = "id";
-    public static final String TABLE_NAME = "friend_requests";
+    private static final Logger logger = LogManager.getLogger(FriendRequestDao.class);
 
+    private final DBRowMapper<FriendRequest> mapper = new FriendRequestMapper();
+    private final Cao<Integer, FriendRequest> cao = new Cao<>();
+    private final AtomicBoolean isCached = new AtomicBoolean(false);
+    private static final String SENDER_ID = "sender_id";
+    private static final String RECEIVER_ID = "receiver_id";
+    private static final String REQUEST_STATUS = "request_status";
+    private static final String DATE_SENT = "date_sent";
+    private static final String REQUEST_ID = "id";
+    private static final String TABLE_NAME = "friend_requests";
 
-    public FriendRequestDao(){
-    }
     @Override
     public FriendRequest findById(Integer id) {
         if (!isCached.get()) cache();
@@ -44,7 +45,8 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             statement.setInt(1, entity.getSenderId());
             statement.setInt(2, entity.getReceiverId());
             statement.setInt(3, entity.getStatus().getValue());
-            statement.setTimestamp(4, entity.getTimestamp());
+            statement.setTimestamp(4, Timestamp.valueOf(entity.getTimestamp()));
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
@@ -53,11 +55,11 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 int id = rs.getInt(1);
                 entity.setId(id);
                 cao.add(entity);
-                System.out.println("Request Added Successfully");
+                logger.info("Request Added Successfully");
             } else
-                System.out.println("Error Adding Request");
+                logger.error("Error Adding Request");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement, rs);
@@ -76,20 +78,20 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
-            FriendRequest request = findById(id);
             String query = getDeleteQuery(TABLE_NAME, REQUEST_ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                System.out.println("Request Deleted Successfully");
+                logger.info("Request Deleted Successfully");
                 cao.delete(id);
             } else
-                System.out.println("Error Deleting Request");
+                logger.error("Error Deleting Request");
         } catch (SQLException e) {
             rollback(connection);
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement);
         }
@@ -104,15 +106,16 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, entity.getStatus().getValue());
             statement.setInt(2, entity.getId());
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                System.out.println("Request accepted Successfully");
+                logger.info("Request accepted Successfully, {}", entity);
                 cao.add(entity);
             } else
-                System.out.println("Error accepting Request");
+                logger.error("Error accepting Request, {}",entity);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement);
@@ -144,8 +147,9 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 cao.add(request);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -160,10 +164,9 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 int requestStatus = rs.getInt(REQUEST_STATUS);
                 RequestStatus status = RequestStatus.getByValue(requestStatus);
                 Timestamp sendDate = rs.getTimestamp(DATE_SENT);
-                FriendRequest friendRequest = new FriendRequest(requestId, senderId, receiverId, status, sendDate);
-                return friendRequest;
+                return new FriendRequest(requestId, senderId, receiverId, status, sendDate.toLocalDateTime());
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
             return null;
         }

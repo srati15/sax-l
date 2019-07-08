@@ -4,17 +4,18 @@ import enums.MessageType;
 import enums.RequestStatus;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class QuizChallenge extends Message {
     private final RequestStatus requestStatus;
-    private MessageType messageType = MessageType.Challenge;
-    private int quizId;
-    public QuizChallenge(int senderId, int receiverId, Timestamp timestamp, int quizID, RequestStatus requestStatus) {
+    private final MessageType messageType = MessageType.Challenge;
+    private final int quizId;
+    public QuizChallenge(int senderId, int receiverId, LocalDateTime timestamp, int quizID, RequestStatus requestStatus) {
         super(senderId, receiverId, timestamp);
         quizId = quizID;
         this.requestStatus = requestStatus;
     }
-    public QuizChallenge(int id, int senderId, int receiverId,int quizID, RequestStatus requestStatus,  Timestamp timestamp) {
+    public QuizChallenge(int id, int senderId, int receiverId,int quizID, RequestStatus requestStatus,  LocalDateTime timestamp) {
         super(senderId, receiverId, timestamp);
         quizId = quizID;
         this.requestStatus = requestStatus;
