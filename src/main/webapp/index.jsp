@@ -32,10 +32,6 @@
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
-    User user = (User) request.getSession().getAttribute("user");
-    if (user != null) {
-        System.out.println(user.getTextMessages().values());
-    }
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -69,11 +65,12 @@
 </div>
 
 <!-- ***** Top quizzes Area Start ***** -->
-<% if (request.getSession().getAttribute("user") != null) { %>
-<jsp:include page="components/top-quizzes.jsp"/>
-<jsp:include page="components/recent-quizzes.jsp"/>
-<jsp:include page="components/quiz-activities.jsp"/>
-<% } %>
+<c:if test="${sessionScope.user !=null}">
+    <jsp:include page="components/top-quizzes.jsp"/>
+    <jsp:include page="components/recent-quizzes.jsp"/>
+    <jsp:include page="components/quiz-activities.jsp"/>
+</c:if>
+
 <!-- ***** Footer Area Start ***** -->
 <footer class="footer-area clearfix">
     <jsp:include page="components/footer.jsp"/>

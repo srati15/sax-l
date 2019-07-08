@@ -45,7 +45,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             statement.setInt(1, entity.getSenderId());
             statement.setInt(2, entity.getReceiverId());
             statement.setInt(3, entity.getStatus().getValue());
-            statement.setTimestamp(4, entity.getTimestamp());
+            statement.setTimestamp(4, Timestamp.valueOf(entity.getTimestamp()));
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
@@ -162,7 +162,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 int requestStatus = rs.getInt(REQUEST_STATUS);
                 RequestStatus status = RequestStatus.getByValue(requestStatus);
                 Timestamp sendDate = rs.getTimestamp(DATE_SENT);
-                return new FriendRequest(requestId, senderId, receiverId, status, sendDate);
+                return new FriendRequest(requestId, senderId, receiverId, status, sendDate.toLocalDateTime());
             } catch (SQLException e) {
                 e.printStackTrace();
             }

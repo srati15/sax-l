@@ -50,7 +50,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, entity.getSenderId());
             statement.setInt(2, entity.getReceiverId());
-            statement.setTimestamp(3, entity.getTimestamp());
+            statement.setTimestamp(3, Timestamp.valueOf(entity.getTimestamp()));
             statement.setString(4, entity.getTextMessage());
             int result = statement.executeUpdate();
             connection.commit();
@@ -152,7 +152,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 int receiverId = rs.getInt(RECEIVER_ID);
                 Timestamp sendDate = rs.getTimestamp(DATE_SENT);
                 String messageSent = rs.getString(MESSAGE_SENT);
-                return new TextMessage(textMessageId, senderId, receiverId, sendDate, messageSent);
+                return new TextMessage(textMessageId, senderId, receiverId, sendDate.toLocalDateTime(), messageSent);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

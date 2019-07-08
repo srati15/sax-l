@@ -4,19 +4,20 @@ import datatypes.Domain;
 import enums.MessageType;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public abstract class Message extends Domain<Integer> {
-    private Timestamp timestamp;
+    private LocalDateTime timestamp;
     private int senderId;
     private int receiverId;
     public Message(){}
-    public Message(int senderId, int receiverId, Timestamp timestamp) {
+    public Message(int senderId, int receiverId, LocalDateTime timestamp) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.timestamp = timestamp;
     }
 
-    public Timestamp getTimestamp() {
+    public LocalDateTime getTimestamp() {
         return timestamp;
     }
 

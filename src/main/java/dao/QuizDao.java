@@ -132,7 +132,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
     private void setParameters(Quiz entity, PreparedStatement statement) throws SQLException {
         statement.setInt(1, entity.getAuthorId());
         statement.setString(2, entity.getQuizName());
-        statement.setTimestamp(3, entity.getDateCreated());
+        statement.setTimestamp(3, Timestamp.valueOf(entity.getDateCreated()));
         statement.setBoolean(4, entity.isRandomized());
         statement.setBoolean(5, entity.isAllowedImmediateCorrection());
         statement.setBoolean(6, entity.isAllowedPracticemode());
@@ -184,7 +184,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
                 boolean isCorrection = rs.getBoolean(IS_CORRECTION);
                 boolean isSinglePage = rs.getBoolean(IS_SINGLEPAGE);
                 int timesDone = rs.getInt(TIMES_DONE);
-                return new Quiz(quizId, quizName, authorId, timesDone, dateCreated, isRandomized, isSinglePage, isCorrection, isPractice, quizImage);
+                return new Quiz(quizId, quizName, authorId, timesDone, dateCreated.toLocalDateTime(), isRandomized, isSinglePage, isCorrection, isPractice, quizImage);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

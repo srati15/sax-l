@@ -53,7 +53,7 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
             statement.setInt(2, entity.getReceiverId());
             statement.setInt(3,entity.getQuizId());
             statement.setInt(4, entity.getRequestStatus().getValue());
-            statement.setTimestamp(5, entity.getTimestamp());
+            statement.setTimestamp(5, Timestamp.valueOf(entity.getTimestamp()));
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1){
@@ -167,7 +167,7 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
                 Timestamp dateSent = rs.getTimestamp(TIME_SENT);
 
 
-                return new QuizChallenge(quizChallengeId, senderId, receiverId, quizId, currStatus, dateSent );
+                return new QuizChallenge(quizChallengeId, senderId, receiverId, quizId, currStatus, dateSent.toLocalDateTime() );
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -31,7 +31,7 @@
                 </div>
                 <div class="card-body">
                     <h6 class="card-subtitle mb-2 text-dark">Date
-                        created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDateTime().toLocalDate())%>
+                        created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDate())%>
                     </h6>
                     <h6 class="card-subtitle mb-2 text-dark">Times done: <%=quiz.getTimesDone()%>
                     </h6>

@@ -3,14 +3,16 @@ package datatypes.messages;
 import enums.MessageType;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 public class TextMessage extends Message {
     private final String textMesage;
     private final MessageType messageType = MessageType.TextMessage;
-    public TextMessage(int senderId, int receiverId, Timestamp timestamp, String textMessage) {
+    public TextMessage(int senderId, int receiverId, LocalDateTime timestamp, String textMessage) {
         super(senderId, receiverId, timestamp);
         this.textMesage = textMessage;
     }
-    public TextMessage(int id, int senderId, int receiverId, Timestamp timestamp, String textMessage) {
+    public TextMessage(int id, int senderId, int receiverId, LocalDateTime timestamp, String textMessage) {
         super(senderId, receiverId, timestamp);
         this.textMesage = textMessage;
         this.id = id;
