@@ -1,8 +1,10 @@
 package servlets.user;
 
 import dao.ActivityDao;
+import dao.QuizDao;
 import dao.UserDao;
 import datatypes.Activity;
+import datatypes.Quiz;
 import datatypes.User;
 import enums.DaoType;
 import manager.DaoManager;
@@ -16,6 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -41,6 +47,13 @@ public class LoginServlet extends HttpServlet {
         ActivityDao activityDao = manager.getDao(DaoType.Activity);
         activityDao.insert(new Activity(user.getId(), "logged in", LocalDateTime.now()));
         RequestDispatcher dispatcher = request.getRequestDispatcher("");
+
+        QuizDao quizDao = manager.getDao(DaoType.Quiz);
+        List<Quiz> quizzes = new ArrayList<>(quizDao.findAll());
+        quizzes.sort(Comparator.comparingInt(Quiz::getTimesDone).reversed());
+        quizzes = quizzes.stream().limit(5).collect(Collectors.toList());
+        request.getSession().setAttribute("topQuizzes", quizzes);
+
         dispatcher.forward(request, response);
     }
 }

@@ -98,7 +98,17 @@
                         User user = userDao.findById(activity.getUserId());
                     %>
                     <td>${i+1}</td>
-                    <td><a href="user-profile?userId=<%=user.getId()%>"><%=user.getUserName()%></a>
+                    <td>
+                        <c:choose>
+                            <c:when test="${sessionScope.user.id != activity.userId}">
+                                <a href="user-profile?userid=${activity.userId}"><%=user.getUserName()%>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="profile"><%=user.getUserName()%>
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
                     </td>
                     <td>
                             ${activity.activityName}
@@ -113,9 +123,9 @@
             <tfoot>
             <tr>
                 <th>#</th>
-                <th>Text</th>
-                <th>Active</th>
+                <th>User</th>
                 <th>Action</th>
+                <th>Date</th>
             </tr>
             </tfoot>
         </table>
