@@ -13,7 +13,7 @@
     quizzes.sort(Comparator.comparing(Quiz::getDateCreated).reversed());
     if (quizzes.size() > 0) {
 %>
-<section class="saxl-team-area section_padding_100">
+<section class="mosh-team-area section_padding_100">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-md-10">
@@ -24,7 +24,7 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <div class="saxl-team-slides owl-carousel">
+                <div class="mosh-team-slides owl-carousel">
                     <%
                         int num = 0;
                         for (Quiz quiz : quizzes) {
@@ -45,7 +45,7 @@
                             <span>Date created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDate())%></span>
                             <span>Done <%=quiz.getTimesDone()%> times</span>
                         </div>
-                        <a href="start-quiz?quizId=<%=quiz.getId()%>" class="btn saxl-btn saxl-btn-2">Start</a>
+                        <a href="start-quiz?quizId=<%=quiz.getId()%>" class="btn mosh-btn mosh-btn-2">Start</a>
                         <!-- Social Info -->
                     </div>
                     <!-- Single Team Slide -->

@@ -23,7 +23,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="com.saxl" level="debug" additivity="true">
+        <Logger name="com.mosh" level="debug" additivity="true">
             <appender-ref ref="rollingFile" />
         </Logger>
         <Root level="debug" additivity="false">

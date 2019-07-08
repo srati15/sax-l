@@ -44,7 +44,7 @@
 
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
-    <div class="saxl-preloader"></div>
+    <div class="mosh-preloader"></div>
 </div>
 
 <!-- ***** Header Area Start ***** -->
@@ -52,7 +52,7 @@
     <jsp:include page="components/header.jsp"/>
 </header>
 <!-- ***** Header Area End ***** -->
-<div class="saxl-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
+<div class="mosh-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
     <div class="container h-100">
         <div class="row h-100 align-items-center">
             <div class="col-12">
@@ -72,7 +72,7 @@
 
 <!-- ***** Welcome Area Start ***** -->
 
-<section class="saxl-aboutUs-area">
+<section class="mosh-aboutUs-area">
     <div class="container" id="createContainer">
         <!----quizzes table --->
         <table id="myTable" class="table table-striped table-bordered table-sm">
@@ -141,7 +141,7 @@
 <!-- ***** Welcome Area End ***** -->
 
 <!-- ***** Clients Area Start ***** -->
-<section class="saxl-clients-area section_padding_100 clearfix">
+<section class="mosh-clients-area section_padding_100 clearfix">
     <div class="container">
         <h2 id="questionNum">Question N1</h2>
         <div class="progress" id="progressBar">

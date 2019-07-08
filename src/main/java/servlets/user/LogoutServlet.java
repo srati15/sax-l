@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @WebServlet("/LogoutServlet")
 public class LogoutServlet extends HttpServlet {
@@ -22,6 +23,8 @@ public class LogoutServlet extends HttpServlet {
         DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
         ActivityDao activityDao = manager.getDao(DaoType.Activity);
         activityDao.insert(new Activity(user.getId(), "logged out", LocalDateTime.now()));
+        Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");
+        userMap.remove(user.getId());
         request.getRequestDispatcher("").forward(request, response);
     }
 }

@@ -20,9 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @WebServlet("/LoginServlet")
@@ -48,6 +46,8 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         request.getSession().setAttribute("user", user);
+        Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");
+        userMap.put(user.getId(), user);
         ActivityDao activityDao = manager.getDao(DaoType.Activity);
         activityDao.insert(new Activity(user.getId(), "logged in", LocalDateTime.now()));
         RequestDispatcher dispatcher = request.getRequestDispatcher("");

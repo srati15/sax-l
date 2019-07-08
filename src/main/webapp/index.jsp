@@ -35,7 +35,7 @@
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
-    <div class="saxl-preloader"></div>
+    <div class="mosh-preloader"></div>
 </div>
 
 <!-- ***** Header Area Start ***** -->
@@ -46,7 +46,7 @@
 
 <!-- ***** Welcome Area Start ***** -->
 
-<div class="saxl-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
+<div class="mosh-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
     <div class="container h-100">
         <div class="row h-100 align-items-center">
             <div class="col-12">

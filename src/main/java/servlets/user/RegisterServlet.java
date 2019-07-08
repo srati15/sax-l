@@ -1,6 +1,8 @@
 package servlets.user;
 
+import dao.ActivityDao;
 import dao.UserDao;
+import datatypes.server.Activity;
 import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
@@ -14,6 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
@@ -44,6 +48,11 @@ public class RegisterServlet extends HttpServlet {
         User user = new User(userName, passwordHash, firstName, lastName, mail);
         DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
         manager.insert(user);
+
+        request.getSession().setAttribute("user", user);
+        Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");
+        userMap.put(user.getId(), user);
+
         request.getSession().setAttribute("user", userRepository.findByUserName(userName));
         request.getRequestDispatcher("").forward(request, response);
     }

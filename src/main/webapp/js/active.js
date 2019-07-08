@@ -15,7 +15,7 @@
     }
 
     if ($.fn.owlCarousel) {
-        $(".saxl-service-slides").owlCarousel({
+        $(".mosh-service-slides").owlCarousel({
             items: 3,
             loop: true,
             autoplay: true,
@@ -41,7 +41,7 @@
     }
 
     if ($.fn.owlCarousel) {
-        $(".saxl-workflow-slides").owlCarousel({
+        $(".mosh-workflow-slides").owlCarousel({
             items: 3,
             loop: true,
             autoplay: true,
@@ -65,7 +65,7 @@
     }
 
     if ($.fn.owlCarousel) {
-        $(".saxl-team-slides").owlCarousel({
+        $(".mosh-team-slides").owlCarousel({
             items: 3,
             loop: true,
             autoplay: true,
@@ -145,7 +145,7 @@
     }
 
     if ($.fn.imagesLoaded) {
-        $('.saxl-portfolio').imagesLoaded(function () {
+        $('.mosh-portfolio').imagesLoaded(function () {
             // filter items on button click
             $('.portfolio-menu').on('click', 'p', function () {
                 var filterValue = $(this).attr('data-filter');
@@ -154,7 +154,7 @@
                 });
             });
             // init Isotope
-            var $grid = $('.saxl-portfolio').isotope({
+            var $grid = $('.mosh-portfolio').isotope({
                 itemSelector: '.single_gallery_item',
                 percentPosition: true,
                 masonry: {
