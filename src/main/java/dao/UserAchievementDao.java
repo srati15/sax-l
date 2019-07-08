@@ -45,16 +45,17 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, entity.getUserId());
             statement.setInt(2, achievement.getId());
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
-            if (result == 1) System.out.println("User Achievement inserted sucessfully");
-            else System.out.println("Error inserting User Achievement");
+            if (result == 1) logger.info("User Achievement inserted sucessfully, {}", entity);
+            else logger.error("Error inserting User Achievement, {}", entity);
             rs = statement.getGeneratedKeys();
             rs.next();
             entity.setId(rs.getInt(1));
             cao.add(entity);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement, rs);
@@ -105,8 +106,9 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
                 cao.add(userAchievement);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -163,8 +165,9 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
                     cao.add(achievement);
                 }
                 isCached.set(true);
+                logger.info("{} is Cached", this.getClass().getSimpleName());
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             } finally {
                 executeFinalBlock(connection, statement, rs);
             }
@@ -188,7 +191,7 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
                 achievement.setId(id);
                 return achievement;
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
             return null;
         }

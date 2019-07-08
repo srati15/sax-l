@@ -1,6 +1,8 @@
 package mail;
 
 import datatypes.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -10,6 +12,8 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
 
 public class PasswordRecovery {
+    private static final Logger logger = LogManager.getLogger(PasswordRecovery.class);
+
     private static final Properties properties = new MailInfo().getProperties();
     private static final String htmlTemplate = new TemplateReader().getText();
     public static boolean send(User user, String password) {
@@ -39,10 +43,10 @@ public class PasswordRecovery {
 
             Transport.send(message);
 
-            System.out.println("Password Recovery mail sent");
+            logger.info("Password Recovery mail sent");
             return true;
         } catch (MessagingException e) {
-            System.out.println("Invalid mail");
+            logger.error("Invalid mail");
         }
         return false;
     }

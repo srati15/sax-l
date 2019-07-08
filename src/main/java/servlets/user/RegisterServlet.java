@@ -4,6 +4,8 @@ import dao.UserDao;
 import datatypes.User;
 import enums.DaoType;
 import manager.DaoManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import security.Cracker;
 
 import javax.servlet.ServletException;
@@ -15,6 +17,7 @@ import java.io.IOException;
 
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(RegisterServlet.class);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
@@ -27,13 +30,13 @@ public class RegisterServlet extends HttpServlet {
         String mail = request.getParameter("mail");
         if (!passwordHash.equals(confirmPasswordHash)) {
             request.setAttribute("error", "Passwords don't match");
-            System.out.println("Passwords don't match");
+            logger.error("Passwords don't match");
             request.getRequestDispatcher("register").forward(request, response);
             return;
         }
         if (userRepository.findByUserName(userName) != null) {
             request.setAttribute("error", "Username is already taken");
-            System.out.println("Username is already taken");
+            logger.error("Username is already taken, {}", userName);
             request.getRequestDispatcher("register").forward(request, response);
             return;
         }

@@ -75,7 +75,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
             isCached.set(true);
             logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -88,6 +88,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
         String query = getInsertQuery(TABLE_NAME, QUESTION_ID, ANSWER_TEXT);
         try {
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            logger.debug("Executing statement: {}", statement);
             for (Answer answer : values) {
                 statement.setInt(1, answer.getQuestionId());
                 statement.setString(2, answer.getAnswer());
@@ -101,12 +102,12 @@ public class AnswerDao implements Dao<Integer, Answer> {
                     answer.setId(rs.getInt(1));
                     cao.add(answer);
                 }else {
-                    System.out.println("error in some insertions");
+                    logger.error("error in some answer insertions");
                 }
             }
         } catch (SQLException e) {
             rollback(connection);
-            e.printStackTrace();
+            logger.error(e);
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -123,15 +124,21 @@ public class AnswerDao implements Dao<Integer, Answer> {
         String query = getDeleteQuery(TABLE_NAME,ANSWER_ID );
         try {
             statement = connection.prepareStatement(query);
+            logger.debug("Executing statement: {}", statement);
             for (Answer answer : values) {
                 statement.setInt(1, answer.getId());
                 statement.addBatch();
             }
-            statement.executeBatch();
+            int[] res = statement.executeBatch();
+            if (res.length == values.size()) {
+                logger.info("Answers are deleted successfully");
+            }else {
+                logger.error("Error deleting answers");
+            }
             connection.commit();
         } catch (SQLException e) {
             rollback(connection);
-            e.printStackTrace();
+            logger.error(e);
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -149,7 +156,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
                 answer.setQuestionId(questionId);
                 return answer;
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
             return null;
         }

@@ -54,19 +54,20 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
             statement.setInt(3,entity.getQuizId());
             statement.setInt(4, entity.getRequestStatus().getValue());
             statement.setTimestamp(5, Timestamp.valueOf(entity.getTimestamp()));
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1){
-                System.out.println("quizChallenge inserted successfully");
+                logger.info("quizChallenge inserted successfully, {}", entity);
                 rs = statement.getGeneratedKeys();
                 rs.next();
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
             }
             else
-                System.out.println("Error inserting quizChallenge");
+                logger.error("Error inserting quizChallenge, {}", entity);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -84,16 +85,17 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
             String query = getDeleteQuery(TABLE_NAME, ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1, integer);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                System.out.println("quizChallenge Deleted Successfully");
+                logger.info("quizChallenge Deleted Successfully, {}", findById(integer));
                 cao.delete(integer);
             } else
-                System.out.println("Error Deleting quizChallenge");
+                logger.error("Error Deleting quizChallenge, {}", findById(integer));
         } catch (SQLException e) {
             rollback(connection);
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement);
         }
@@ -108,15 +110,16 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
             statement = connection.prepareStatement(query);
             statement.setInt(1, entity.getRequestStatus().getValue());
             statement.setInt(2, entity.getId());
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                System.out.println("quizChallenge accepted Successfully");
+                logger.info("quizChallenge accepted Successfully, {}", entity);
                 cao.add(entity);
             } else
-                System.out.println("Error accepting quizChallenge");
+                logger.error("Error accepting quizChallenge, {}", entity);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement);
@@ -147,8 +150,9 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
                 cao.add(request);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -169,7 +173,7 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
 
                 return new QuizChallenge(quizChallengeId, senderId, receiverId, quizId, currStatus, dateSent.toLocalDateTime() );
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
 
             return null;

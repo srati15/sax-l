@@ -53,20 +53,21 @@ public class QuizDao implements Dao<Integer, Quiz>{
             String query = getInsertQuery(TABLE_NAME, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, TIMES_DONE, QUIZ_IMAGE);
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             setParameters(entity, statement);
+            logger.debug("Executing statement: {}", statement);
 
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                System.out.println("Quiz inserted sucsessfully");
+                logger.info("Quiz inserted sucsessfully, {}", entity);
                 rs = statement.getGeneratedKeys();
                 if (rs.next()){
                     entity.setId(rs.getInt(1));
                     cao.add(entity);
                 }
             }
-            else System.out.println("Error inserting Quiz");
+            else logger.error("Error inserting Quiz, {}", entity);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         }finally {
             executeFinalBlock(connection, statement, rs);
@@ -89,15 +90,16 @@ public class QuizDao implements Dao<Integer, Quiz>{
             String query = getDeleteQuery(TABLE_NAME, QUIZ_ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1,id);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                System.out.println("Quiz deleted sucessfully");
+                logger.info("Quiz deleted sucessfully, {}", quiz);
                 cao.delete(id);
             }
-            else System.out.println("Error inserting Quiz");
+            else logger.info("Error deleting Quiz");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -113,16 +115,17 @@ public class QuizDao implements Dao<Integer, Quiz>{
             statement = connection.prepareStatement(query);
             setParameters(entity, statement);
             statement.setInt(10, entity.getId());
+            logger.debug("Executing statement: {}", statement);
 
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                System.out.println("Quiz updated sucessfully");
+                logger.info("Quiz updated sucessfully, {}",entity);
                 cao.add(entity);
             }
-            else System.out.println("Error inserting Quiz");
+            else logger.error("Error inserting Quiz, {}", entity);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         }finally {
             executeFinalBlock(connection, statement, rs);
@@ -158,8 +161,9 @@ public class QuizDao implements Dao<Integer, Quiz>{
                 cao.add(mapper.mapRow(resultSet));
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -186,7 +190,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
                 int timesDone = rs.getInt(TIMES_DONE);
                 return new Quiz(quizId, quizName, authorId, timesDone, dateCreated.toLocalDateTime(), isRandomized, isSinglePage, isCorrection, isPractice, quizImage);
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
 
             return null;

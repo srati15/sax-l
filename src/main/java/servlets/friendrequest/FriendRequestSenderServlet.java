@@ -29,4 +29,5 @@ public class FriendRequestSenderServlet extends HttpServlet {
         manager.insert(friendRequest);
         request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
     }
+
 }

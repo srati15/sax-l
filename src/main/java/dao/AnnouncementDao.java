@@ -50,7 +50,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             statement.setString(2, entity.getHyperLink());
             statement.setBoolean(3, entity.isActive());
             statement.setInt(4, entity.getUserId());
-            logger.info("Executing statement: {}", statement);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
@@ -84,14 +84,14 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             String query = getDeleteQuery(TABLE_NAME, ANNOUNCEMENT_ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
-            logger.info("Executing statement: {}", statement);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
                 cao.delete(id);
-                System.out.println("Announcement Deleted Successfully");
+                logger.info("Announcement Deleted Successfully");
             } else
-                System.out.println("Error Deleting Announcement");
+                logger.error("Error Deleting Announcement");
         } catch (SQLException e) {
             rollback(connection);
             logger.error(e);
@@ -112,12 +112,13 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             statement.setBoolean(3, entity.isActive());
             statement.setInt(4, entity.getId());
             statement.setInt(5, entity.getUserId());
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
                 cao.add(entity);
-                System.out.println("Announcement updated sucessfully");
-            } else System.out.println("Error updating announcement");
+                logger.info("Announcement updated sucessfully, {}", entity);
+            } else logger.error("Error updating announcement {}", entity);
         } catch (SQLException e) {
             rollback(connection);
             logger.error(e);

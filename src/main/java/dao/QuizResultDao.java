@@ -48,20 +48,21 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
             statement.setInt(2, entity.getQuizId());
             statement.setInt(3, entity.getScore());
             statement.setInt(4, entity.getTimeSpent());
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1){
-                System.out.println("Result inserted successfully");
+                logger.info("Result inserted successfully, {}",entity);
                 rs = statement.getGeneratedKeys();
                 rs.next();
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
             }
             else
-                System.out.println("Error inserting result");
+                logger.error("Error inserting result, {}", entity);
         } catch (SQLException e) {
             rollback(connection);
-            e.printStackTrace();
+            logger.error(e);
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -82,17 +83,18 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
             String query = getDeleteQuery(TABLE_NAME, RESULT_ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1, integer);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if(result == 1) {
+                logger.info("Result Deleted Successfully, {}", findById(integer));
                 cao.delete(integer);
-                System.out.println("Result Deleted Successfully");
             }
             else
-                System.out.println("Error Deleting Result");
+                logger.error("Error Deleting Result, {}", findById(integer));
         } catch (SQLException e) {
             rollback(connection);
-            e.printStackTrace();
+            logger.error(e);
         }finally {
             executeFinalBlock(connection,statement);
         }
@@ -110,17 +112,18 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
             statement.setInt(3, entity.getQuizId());
             statement.setInt(4, entity.getScore());
             statement.setInt(5, entity.getTimeSpent());
+            logger.debug("Executing statement: {}", statement);
 
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
                 cao.add(entity);
-                System.out.println("Result updated sucessfully");
+                logger.info("Result updated sucessfully, {}", entity);
             }
-            else System.out.println("Error updating result");
+            else logger.error("Error updating result, {}", entity);
         } catch (SQLException e) {
             rollback(connection);
-            e.printStackTrace();
+            logger.error(e);
         }finally {
             executeFinalBlock(connection, statement);
         }
@@ -140,14 +143,16 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
         try {
             String query = getSelectQuery(TABLE_NAME);
             statement = connection.prepareStatement(query);
+
             rs = statement.executeQuery();
             while (rs.next()) {
                 QuizResult quizResult = mapper.mapRow(rs);
                 cao.add(quizResult);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -167,7 +172,7 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
                 return quizResult;
 
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
 
             return null;

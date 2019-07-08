@@ -55,16 +55,17 @@ public class UserDao implements Dao<Integer, User> {
             statement.setString(4, entity.getLastName());
             statement.setInt(5, entity.getUserType().getValue());
             statement.setString(6, entity.getMail());
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
-            if (result == 1) System.out.println("User inserted sucessfully");
-            else System.out.println("Error inserting User");
+            if (result == 1) logger.info("User inserted sucessfully");
+            else logger.error("Error inserting User");
             rs = statement.getGeneratedKeys();
             rs.next();
             entity.setId(rs.getInt(1));
             cao.add(entity);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement, rs);
@@ -85,13 +86,14 @@ public class UserDao implements Dao<Integer, User> {
             String query = getDeleteQuery(TABLE_NAME, USER_ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             if (result == 1) {
                 cao.delete(id);
-                System.out.println("User deleted sucessfully");
-            } else System.out.println("Error deleting User");
+                logger.info("User deleted sucessfully");
+            } else logger.error("Error deleting User");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement);
         }
@@ -109,13 +111,14 @@ public class UserDao implements Dao<Integer, User> {
             statement.setInt(4, user.getUserType().getValue());
             statement.setInt(5, user.getId());
             int result = statement.executeUpdate();
+            logger.debug("Executing statement: {}", statement);
             connection.commit();
             if (result == 1) {
-                System.out.println("User updated sucessfully");
+                logger.info("User updated sucessfully, {}", user);
                 cao.add(user);
-            } else System.out.println("Error updating user");
+            } else logger.error("Error updating user, {}", user);
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement);
@@ -140,8 +143,9 @@ public class UserDao implements Dao<Integer, User> {
                 cao.add(user);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement);
         }
@@ -163,7 +167,7 @@ public class UserDao implements Dao<Integer, User> {
                 user.setId(userId);
                 return user;
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
             return null;
         }

@@ -5,6 +5,8 @@ import datatypes.User;
 import enums.DaoType;
 import enums.UserType;
 import manager.DaoManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import security.Cracker;
 
 import javax.servlet.ServletException;
@@ -16,6 +18,8 @@ import java.io.IOException;
 
 @WebServlet("/UpdateUserServlet")
 public class UpdateUserServlet extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(UpdateUserServlet.class);
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
         UserDao userDao = manager.getDao(DaoType.User);
@@ -42,7 +46,7 @@ public class UpdateUserServlet extends HttpServlet {
 
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Passwords don't match");
-            System.out.println("Passwords don't match");
+            logger.error("Passwords don't match");
             if (user.getUserType()== UserType.Admin) request.getRequestDispatcher("users-list").forward(request, response);
             else request.getRequestDispatcher("profile").forward(request, response);
             return;

@@ -52,6 +52,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             statement.setInt(2, entity.getReceiverId());
             statement.setTimestamp(3, Timestamp.valueOf(entity.getTimestamp()));
             statement.setString(4, entity.getTextMessage());
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
@@ -59,12 +60,12 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 rs.next();
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
-                System.out.println("Text Message inserted successfully");
+                logger.info("Text Message inserted successfully, {}", entity);
             }
-            else System.out.println("Error inserting Text Message");
+            else logger.error("Error inserting Text Message, {}", entity);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         }finally {
             executeFinalBlock(connection, statement, rs);
@@ -86,16 +87,17 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             String query = getDeleteQuery(TABLE_NAME, TEXT_MESSAGE_ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if(result == 1){
-                System.out.println("message Deleted Successfully");
+                logger.info("message Deleted Successfully");
                 cao.delete(id);
             }
             else
-                System.out.println("Error Deleting message");
+                logger.error("Error Deleting message");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement);
@@ -126,8 +128,9 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 cao.add(message);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -154,7 +157,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 String messageSent = rs.getString(MESSAGE_SENT);
                 return new TextMessage(textMessageId, senderId, receiverId, sendDate.toLocalDateTime(), messageSent);
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
             return null;
         }

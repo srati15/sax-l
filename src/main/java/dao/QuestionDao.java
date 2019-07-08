@@ -51,6 +51,7 @@ public class QuestionDao implements Dao<Integer, Question> {
         String query = getInsertQuery(TABLE_NAME, QUESTION_TEXT, QUESTION_TYPE, QUIZ_ID);
         try {
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            logger.debug("Executing statement: {}", statement);
             for (Question question : questions) {
                 statement.setString(1, question.getQuestion());
                 statement.setInt(2, question.getQuestionType().getValue());
@@ -65,7 +66,7 @@ public class QuestionDao implements Dao<Integer, Question> {
                 question.setId(rs.getInt(1));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
             rollback(connection);
         }finally {
             executeFinalBlock(connection, statement, rs);
@@ -109,8 +110,9 @@ public class QuestionDao implements Dao<Integer, Question> {
                 cao.add(question);
             }
             isCached.set(true);
+            logger.info("{} is Cached", this.getClass().getSimpleName());
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
@@ -129,15 +131,21 @@ public class QuestionDao implements Dao<Integer, Question> {
         String query = getDeleteQuery(TABLE_NAME, QUESTION_ID );
         try {
             statement = connection.prepareStatement(query);
+            logger.debug("Executing statement: {}", statement);
             for (Question question : keySet) {
                 statement.setInt(1, question.getId());
                 statement.addBatch();
             }
-            statement.executeBatch();
+            int[] res = statement.executeBatch();
+            if (res.length == keySet.size()) {
+                logger.info("Questions deleted successfully");
+            }else {
+                logger.error("Error deleting questions");
+            }
             connection.commit();
         } catch (SQLException e) {
             rollback(connection);
-            e.printStackTrace();
+            logger.error(e);
         }finally {
             executeFinalBlock(connection, statement, null);
         }
@@ -164,7 +172,7 @@ public class QuestionDao implements Dao<Integer, Question> {
                 question.setId(questionId);
                 return question;
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
             return null;
         }

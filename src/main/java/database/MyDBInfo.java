@@ -1,9 +1,15 @@
 package database;
 
+import dao.helpers.FinalBlockExecutor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.util.Properties;
 
 public class MyDBInfo {
+    private static final Logger logger = LogManager.getLogger(MyDBInfo.class);
+
     private String userName;
     private String databaseUrl;
     private String password;
@@ -24,7 +30,7 @@ public class MyDBInfo {
             this.password = dbProperties.getProperty("MYSQL_PASSWORD");
             this.databaseUrl = "jdbc:mysql://" + dbServer + ":" + port +"/"+databaseName;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 

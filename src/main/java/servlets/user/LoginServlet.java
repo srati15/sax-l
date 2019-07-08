@@ -8,6 +8,8 @@ import datatypes.Quiz;
 import datatypes.User;
 import enums.DaoType;
 import manager.DaoManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import security.Cracker;
 
 import javax.servlet.RequestDispatcher;
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(LoginServlet.class);
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
         UserDao userRepository = manager.getDao(DaoType.User);
@@ -33,13 +37,13 @@ public class LoginServlet extends HttpServlet {
         User user = userRepository.findByUserName(userName);
         if (user == null) {
             request.setAttribute("error", "Wrong login credentials");
-            System.out.println("Wrong username");
+            logger.error("User with username {} deosn't exist", userName);
             request.getRequestDispatcher("login").forward(request, response);
             return;
         }
         if (!user.getPassword().equals(passwordHash)) {
             request.setAttribute("error", "Wrong login credentials");
-            System.out.println("Wrong login credentials");
+            logger.error("Wrong login credentials");
             request.getRequestDispatcher("login").forward(request, response);
             return;
         }

@@ -1,11 +1,16 @@
 package security;
 
 
+import dao.helpers.FinalBlockExecutor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Cracker {
+    private static final Logger logger = LogManager.getLogger(Cracker.class);
 
     // Array of chars used to produce strings
     public static final char[] CHARS = "abcdefghijklmnopqrstuvwxyz0123456789.,-!".toCharArray();
@@ -28,7 +33,7 @@ public class Cracker {
             byte[] bytes = word.getBytes(StandardCharsets.UTF_8);
             return (hexToString(md.digest(bytes)));
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
 

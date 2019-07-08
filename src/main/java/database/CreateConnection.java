@@ -1,11 +1,16 @@
 package database;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
+import dao.helpers.FinalBlockExecutor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class CreateConnection {
+    private static final Logger logger = LogManager.getLogger(CreateConnection.class);
+
     private static MysqlDataSource dataSource;
     private static MyDBInfo myDBInfo = new MyDBInfo();
 
@@ -29,7 +34,7 @@ public class CreateConnection {
             connection.setAutoCommit(false);
             return connection;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }

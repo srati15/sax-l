@@ -48,7 +48,7 @@ public class ActivityDao implements Dao<Integer, Activity> {
                 statement.setInt(1, entity.getUserId());
                 statement.setString(2, entity.getActivityName());
                 statement.setTimestamp(3, Timestamp.valueOf(entity.getDateTime()));
-                logger.info("Executing statement: {}", statement);
+                logger.debug("Executing statement: {}", statement);
                 int result = statement.executeUpdate();
                 connection.commit();
                 if (result == 1) {
@@ -84,7 +84,7 @@ public class ActivityDao implements Dao<Integer, Activity> {
             String query = getDeleteQuery(TABLE_NAME, ACTIVITY_ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
-            logger.info("Executing statement: {}", statement);
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
@@ -111,6 +111,7 @@ public class ActivityDao implements Dao<Integer, Activity> {
             statement.setString(2, entity.getActivityName());
             statement.setTimestamp(3, Timestamp.valueOf(entity.getDateTime()));
             statement.setInt(4, entity.getId());
+            logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
