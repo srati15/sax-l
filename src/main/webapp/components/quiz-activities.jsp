@@ -19,34 +19,49 @@
     if (quizMap.size() > 0) {
 %>
 <section class="mosh-clients-area section_padding_100 clearfix">
-    <div class="container border border-info rounded">
-        <h1 class="text-center">Last Quiz Activities</h1>
-        <div class="card-deck col-auto">
-            <%
-                for (Quiz quiz : quizMap.keySet()) {
-            %>
-            <div class="card border-dark mb-3 col-md-15 col-sm-3" style="width: 18rem; float: left;">
-                <img class="card-img-top" src="<%=quiz.getQuizImageURL()%>" alt="<%=quiz.getQuizName()%>">
-                <div class="card-header">
-                    <h5 class="card-title"><%=quiz.getQuizName()%>
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-dark">Date
-                        created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDate())%>
-                    </h6>
-                    <h6 class="card-subtitle mb-2 text-dark">Times done: <%=quiz.getTimesDone()%>
-                    </h6>
-                </div>
-                <div class="card-footer bg-transparent border-success">
-                    <p class="text-info">Results</p>
-                    <%for (QuizResult result : quizMap.get(quiz)) {%>
-                    <p class="text-dark">Score: <%=result.getScore()%>. Time: <%=result.getTimeSpent()/60%> Minutes <%=result.getTimeSpent()%60%> Seconds </p>
-                    <% }%>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10">
+                <div class="section-heading text-center">
+                    <h2>My Quiz Activities</h2>
                 </div>
             </div>
-            <%}%>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="mosh-team-slides owl-carousel">
+                    <%
+                        for (Quiz quiz : quizMap.keySet()) {
+                    %>
+
+                    <!-- Single Team Slide -->
+                    <div class="single-team-slide text-center border border-warning rounded-top">
+                        <!-- Thumbnail -->
+                        <div class="team-thumbnail">
+                            <img src="<%=quiz.getQuizImageURL()%>" alt="">
+                        </div>
+                        <!-- Meta Info -->
+                        <div class="team-meta-info">
+                            <h4><%=quiz.getQuizName()%>
+                            </h4>
+                            <span>Date created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDate())%></span>
+                            <span>Results</span>
+                            <%for (QuizResult result : quizMap.get(quiz)) {%>
+                            <span>Score: <b><%=result.getScore()%></b></span>
+                            <span>Time: <b><%=result.getTimeSpent()/60%></b> Minutes <b><%=result.getTimeSpent()%60%></b> Seconds </span>
+                            <%}%>
+                        </div>
+                        <a href="start-quiz?quizId=<%=quiz.getId()%>" class="btn mosh-btn mosh-btn-2">Start</a>
+                        <!-- Social Info -->
+                    </div>
+                    <!-- Single Team Slide -->
+
+                    <%}%>
+                </div>
+            </div>
         </div>
     </div>
 </section>
+
 <%}%>
