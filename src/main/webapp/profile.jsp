@@ -9,6 +9,10 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Comparator" %>
 <%@ page import="java.util.List" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -170,6 +174,13 @@
                             <td>0</td>
                             <td>0</td>
                             <td>
+                                <!--  ************ challenge modal **********-->
+                                <h:challenge
+                                        receiverId="${friend.id}"
+                                        receiverName="${friend.userName}"
+                                        actionServlet="ChallengeSenderServlet">
+                                </h:challenge>
+
                                 <form action="FriendRequestDeleteServlet" method="post">
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <i class="fa fa-trash"></i> Unfriend

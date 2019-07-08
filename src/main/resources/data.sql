@@ -112,6 +112,15 @@ create table users
         unique (user_name)
 );
 
+create table quiz_challenges
+(
+    id int auto_increment primary key ,
+    sender_id int not null,
+    receiver_id int not null,
+    quiz_id int not null,
+    status tinyint(1) default 0,
+    time_sent datetime default CURRENT_TIMESTAMP null
+);
+
 create index user_id_index
     on users (id);
-
