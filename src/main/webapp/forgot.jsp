@@ -27,7 +27,7 @@
 <body>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
-    <div class="mosh-preloader"></div>
+    <div class="saxl-preloader"></div>
 </div>
 <!-- ***** Header Area Start ***** -->
 <header class="header_area clearfix">
@@ -35,7 +35,7 @@
 </header>
 <!-- ***** Header Area End ***** -->
 <!-- ***** Breadcumb Area Start ***** -->
-<div class="mosh-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
+<div class="saxl-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
     <div class="container h-100">
         <div class="row h-100 align-items-center">
             <div class="col-12">
@@ -55,7 +55,7 @@
 <!-- ***** Breadcumb Area End ***** -->
 <!-- ***** Login Area Start ***** -->
 
-<section class="mosh-aboutUs-area">
+<section class="saxl-aboutUs-area">
     <div class="login">
         <form action="ForgotPasswordServlet" method="post" id="loginSection">
             <input type="text" placeholder="Username" minlength="4" required name="username">

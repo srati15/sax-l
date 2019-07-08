@@ -47,7 +47,7 @@
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
-    <div class="mosh-preloader"></div>
+    <div class="saxl-preloader"></div>
 </div>
 
 <!-- ***** Header Area Start ***** -->
@@ -57,7 +57,7 @@
 <!-- ***** Header Area End ***** -->
 
 <!-- ***** Breadcumb Area Start ***** -->
-<div class="mosh-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
+<div class="saxl-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
     <div class="container h-100">
         <div class="row h-100 align-items-center">
             <div class="col-12">
@@ -76,7 +76,7 @@
     </div>
 </div>
 <!-- ***** Breadcumb Area End ***** -->
-<section class="mosh-aboutUs-area">
+<section class="saxl-aboutUs-area">
     <div class="container">
         <ul class="nav nav-tabs nav-fill">
             <li class="nav-item">

@@ -18,7 +18,7 @@
     });
     if (quizMap.size() > 0) {
 %>
-<section class="mosh-clients-area section_padding_100 clearfix">
+<section class="saxl-clients-area section_padding_100 clearfix">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-md-10">
@@ -30,7 +30,7 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="mosh-team-slides owl-carousel">
+                <div class="saxl-team-slides owl-carousel">
                     <%
                         for (Quiz quiz : quizMap.keySet()) {
                     %>
@@ -52,7 +52,7 @@
                             <span>Time: <b><%=result.getTimeSpent()/60%></b> Minutes <b><%=result.getTimeSpent()%60%></b> Seconds </span>
                             <%}%>
                         </div>
-                        <a href="start-quiz?quizId=<%=quiz.getId()%>" class="btn mosh-btn mosh-btn-2">Start</a>
+                        <a href="start-quiz?quizId=<%=quiz.getId()%>" class="btn saxl-btn saxl-btn-2">Start</a>
                         <!-- Social Info -->
                     </div>
                     <!-- Single Team Slide -->

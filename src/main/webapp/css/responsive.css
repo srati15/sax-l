@@ -32,7 +32,7 @@
     .navbar-toggler-icon {
         background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
     }
-    #mosh-navbar {
+    #saxl-navbar {
         padding: 30px;
         border-radius: 5px;
         background-color: #211b31;
@@ -72,7 +72,7 @@
                 flex: 0 0 50%;
         max-width: 50%;
     }
-    .mosh-more-services-area {
+    .saxl-more-services-area {
         -ms-flex-wrap: wrap;
             flex-wrap: wrap;
     }
@@ -104,7 +104,7 @@
     .navbar-toggler-icon {
         background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
     }
-    #mosh-navbar {
+    #saxl-navbar {
         padding: 30px;
         border-radius: 5px;
         background-color: #211b31;
@@ -163,7 +163,7 @@
                 flex: 0 0 100%;
         max-width: 100%;
     }
-    .mosh-more-services-area {
+    .saxl-more-services-area {
         -ms-flex-wrap: wrap;
             flex-wrap: wrap;
     }
@@ -177,10 +177,10 @@
     .cta-content .section-heading h2 {
         font-size: 24px;
     }
-    .mosh-service-slides .owl-prev {
+    .saxl-service-slides .owl-prev {
         left: -15px;
     }
-    .mosh-service-slides .owl-next {
+    .saxl-service-slides .owl-next {
         left: auto;
         right: -15px;
     }
@@ -192,10 +192,10 @@
     .bradcumbContent h2 {
         font-size: 40px;
     }
-    .mosh-about-us-thumb {
+    .saxl-about-us-thumb {
         margin-top: 100px;
     }
-    .mosh-features-thumb {
+    .saxl-features-thumb {
         margin-bottom: 100px;
     }
     .few-words-contents,
@@ -206,10 +206,10 @@
         max-width: 100%;
         height: 770px;
     }
-    .mosh-team-slides .owl-prev {
+    .saxl-team-slides .owl-prev {
         left: -10px;
     }
-    .mosh-team-slides .owl-next {
+    .saxl-team-slides .owl-next {
         left: auto;
         right: -10px;
     }
@@ -240,7 +240,7 @@
     .testimonials-slides:before {
         text-align: left;
     }
-    .mosh-blog-sidebar,
+    .saxl-blog-sidebar,
     .contact-information {
         margin-top: 100px;
     }

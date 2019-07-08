@@ -10,7 +10,7 @@
                     <!-- Logo -->
                     <a class="navbar-brand" href="${pageContext.request.contextPath}/"><img src="../img/core-img/logo.png" alt="logo"></a>
 
-                    <div class="collapse navbar-collapse justify-content-end" id="mosh-navbar">
+                    <div class="collapse navbar-collapse justify-content-end" id="saxl-navbar">
                         <ul class="navbar-nav animated" id="nav">
                             <li class="nav-item active"><a class="nav-link" href="${pageContext.request.contextPath}/" id="home-ref">Home</a></li>
                             <c:if test="${sessionScope.user !=null}">

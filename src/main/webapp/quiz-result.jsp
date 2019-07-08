@@ -29,7 +29,7 @@
 
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
-    <div class="mosh-preloader"></div>
+    <div class="saxl-preloader"></div>
 </div>
 
 <!-- ***** Header Area Start ***** -->
@@ -37,7 +37,7 @@
     <jsp:include page="components/header.jsp"/>
 </header>
 <!-- ***** Header Area End ***** -->
-<div class="mosh-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
+<div class="saxl-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
     <div class="container h-100">
         <div class="row h-100 align-items-center">
             <div class="col-12">
@@ -56,7 +56,7 @@
 </div>
 <!-- ***** Welcome Area Start ***** -->
 
-<section class="mosh-aboutUs-area">
+<section class="saxl-aboutUs-area">
     <div class="container" >
         <h2>Result: ${requestScope.score} / ${requestScope.results.size()} Time: ${requestScope.timespent} </h2>
         <table id="myTable" class="table table-striped table-bordered table-sm " style="width: auto">

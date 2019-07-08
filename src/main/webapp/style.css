@@ -193,10 +193,10 @@ img {
     z-index: 999999;
 }
 
-.mosh-preloader {
+.saxl-preloader {
     overflow: hidden;
-    -webkit-animation: 3000ms linear 0s normal none infinite running mosh-preloader;
-    animation: 3000ms linear 0s normal none infinite running mosh-preloader;
+    -webkit-animation: 3000ms linear 0s normal none infinite running saxl-preloader;
+    animation: 3000ms linear 0s normal none infinite running saxl-preloader;
     background-color: transparent;
     border-color: #f1f2f3 #f1f2f3 #4a7aec;
     border-radius: 50%;
@@ -210,7 +210,7 @@ img {
     z-index: 9;
 }
 
-@-webkit-keyframes mosh-preloader {
+@-webkit-keyframes saxl-preloader {
     0% {
         -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
@@ -221,7 +221,7 @@ img {
     }
 }
 
-@keyframes mosh-preloader {
+@keyframes saxl-preloader {
     0% {
         -webkit-transform: rotate(0deg);
         transform: rotate(0deg);
@@ -246,7 +246,7 @@ img {
     box-shadow: 2px 10px 8px rgba(0, 0, 0, 0.15);
 }
 
-.mosh-table {
+.saxl-table {
     display: table;
     height: 100%;
     left: 0;
@@ -256,7 +256,7 @@ img {
     z-index: 2;
 }
 
-.mosh-table-cell {
+.saxl-table-cell {
     display: table-cell;
     vertical-align: middle;
 }
@@ -464,7 +464,7 @@ img {
 :: 4.0 Service Area
 ------------------------- */
 
-.mosh-service-slides {
+.saxl-service-slides {
     position: relative;
     z-index: 1;
 }
@@ -478,7 +478,7 @@ img {
     color: #bec0cc;
 }
 
-.mosh-service-slides .center .single-service-area h2,
+.saxl-service-slides .center .single-service-area h2,
 .single-service-area:hover h2 {
     color: #4a7aec;
 }
@@ -487,8 +487,8 @@ img {
     margin-bottom: 20px;
 }
 
-.mosh-service-slides .owl-prev,
-.mosh-service-slides .owl-next {
+.saxl-service-slides .owl-prev,
+.saxl-service-slides .owl-next {
     position: absolute;
     width: 50px;
     height: 50px;
@@ -504,7 +504,7 @@ img {
     transition-duration: 500ms;
 }
 
-.mosh-service-slides .owl-next {
+.saxl-service-slides .owl-next {
     left: auto;
     right: -25px;
 }
@@ -604,7 +604,7 @@ img {
 :: 13.0 Breadcumb CSS
 -------------------- */
 
-.mosh-breadcumb-area {
+.saxl-breadcumb-area {
     height: 500px;
     width: 100%;
     position: relative;
@@ -640,7 +640,7 @@ img {
     overflow-x: hidden;
 }
 
-.mosh-about-us-content .section-heading {
+.saxl-about-us-content .section-heading {
     margin-bottom: 50px;
 }
 
@@ -772,13 +772,13 @@ img {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"
 }
 
-.mosh-team-slides {
+.saxl-team-slides {
     position: relative;
     z-index: 2;
 }
 
-.mosh-team-slides .owl-prev,
-.mosh-team-slides .owl-next {
+.saxl-team-slides .owl-prev,
+.saxl-team-slides .owl-next {
     position: absolute;
     width: 60px;
     height: 60px;
@@ -794,12 +794,12 @@ img {
     transition-duration: 500ms;
 }
 
-.mosh-team-slides .owl-next {
+.saxl-team-slides .owl-next {
     left: auto;
     right: -25px;
 }
 
-.mosh-subscribe-newsletter-area {
+.saxl-subscribe-newsletter-area {
     background-attachment: fixed;
 }
 
@@ -855,7 +855,7 @@ img {
     background-color: rgb(16, 54, 145);
 }
 
-.mosh-btn {
+.saxl-btn {
     background-color: #4a7aec;
     min-width: 150px;
     height: 54px;
@@ -870,33 +870,33 @@ img {
     transition-duration: 500ms;
 }
 
-.mosh-btn:hover {
+.saxl-btn:hover {
     background-color: #1a3c8d;
     color: #fff;
 }
 
-.mosh-btn.mosh-btn-2 {
+.saxl-btn.saxl-btn-2 {
     border: 2px solid #4a7aec;
     color: #404551;
     background-color: #fff;
 }
 
-.mosh-btn.mosh-btn-2:hover,
-.mosh-btn.mosh-btn-2:focus {
+.saxl-btn.saxl-btn-2:hover,
+.saxl-btn.saxl-btn-2:focus {
     border: 2px solid #4a7aec;
     color: #fff;
     background-color: #4a7aec;
 }
 
-.mosh-btn.mosh-btn-3 {
+.saxl-btn.saxl-btn-3 {
     border: none;
     color: #404551;
     background-color: #fff;
     box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
 }
 
-.mosh-btn.mosh-btn-3:hover,
-.mosh-btn.mosh-btn-3:focus {
+.saxl-btn.saxl-btn-3:hover,
+.saxl-btn.saxl-btn-3:focus {
     color: #fff;
     background-color: #4a7aec;
 }
