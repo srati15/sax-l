@@ -1,11 +1,15 @@
 package dao.dbconnector;
 
 import database.MyDBInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Properties;
 
 public class MyDBInfoMock extends MyDBInfo {
+    private static final Logger logger = LogManager.getLogger(MyDBInfoMock.class);
+
     private String dbServer;
     private int port;
     private String userName;

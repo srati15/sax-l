@@ -2,9 +2,9 @@ package servlets.challenge;
 
 
 import dao.QuizDao;
-import datatypes.Quiz;
-import datatypes.User;
-import datatypes.question.Question;
+import datatypes.quiz.Quiz;
+import datatypes.quiz.question.Question;
+import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
 
@@ -27,6 +27,10 @@ public class ChallengeSenderServlet extends HttpServlet {
         int quizId = Integer.parseInt(request.getParameter("quizId"));
         QuizDao quizDao = manager.getDao(DaoType.Quiz);
         Quiz quiz = quizDao.findById(Integer.valueOf(quizId));
+        startQuiz(request, response, quiz);
+    }
+
+    public static void startQuiz(HttpServletRequest request, HttpServletResponse response, Quiz quiz) throws ServletException, IOException {
         List<Question> questionList = quiz.getQuestionAnswerMap().keySet().stream().collect(Collectors.toList());
         if (quiz.isRandomized()) {
             Collections.shuffle(questionList);

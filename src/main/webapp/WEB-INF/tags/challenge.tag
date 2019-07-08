@@ -1,11 +1,11 @@
-<%@ tag import="datatypes.Quiz" %>
-<%@ tag import="java.time.format.DateTimeFormatter" %>
 <%@ tag import="dao.QuizDao" %>
+<%@ tag import="datatypes.quiz.Quiz" %>
 <%@ tag import="enums.DaoType" %>
-<%@ tag import="java.util.List" %>
+<%@ tag import="manager.DaoManager" %>
+<%@ tag import="java.time.format.DateTimeFormatter" %>
 <%@ tag import="java.util.ArrayList" %>
 <%@ tag import="java.util.Comparator" %>
-<%@ tag import="manager.DaoManager" %>
+<%@ tag import="java.util.List" %>
 <%@ attribute name="actionServlet" required="true" %>
 <%@ attribute name="receiverName" required="true" %>
 <%@ attribute name="receiverId" required="true" type="java.lang.Integer" %>
@@ -47,7 +47,7 @@
                             </div>
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-dark">Date
-                                    created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDateTime().toLocalDate())%>
+                                    created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDate())%>
                                 </h6>
                                 <h6 class="card-subtitle mb-2 text-dark">Times done: <%=quiz.getTimesDone()%>
                                 </h6>

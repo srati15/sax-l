@@ -1,6 +1,6 @@
 package dao;
 
-import datatypes.Announcement;
+import datatypes.announcement.Announcement;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

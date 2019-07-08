@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
@@ -17,7 +19,7 @@ import static dao.helpers.QueryGenerator.*;
 
 public class ActivityDao implements Dao<Integer, Activity> {
     private static final Logger logger = LogManager.getLogger(ActivityDao.class);
-
+    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
     private static final String ACTIVITY_ID = "id";
     private static final String USER_ID = "user_id";
     private static final String ACTIVITY_NAME = "activity_name";
@@ -38,37 +40,8 @@ public class ActivityDao implements Dao<Integer, Activity> {
 
     @Override
     public void insert(Activity entity) {
-        new Thread(() -> {
-            Connection connection = CreateConnection.getConnection();
-            PreparedStatement statement = null;
-            ResultSet rs = null;
-            try {
-                String query = getInsertQuery(TABLE_NAME, USER_ID, ACTIVITY_NAME, DATE_TIME);
-                statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-                statement.setInt(1, entity.getUserId());
-                statement.setString(2, entity.getActivityName());
-                statement.setTimestamp(3, Timestamp.valueOf(entity.getDateTime()));
-                logger.debug("Executing statement: {}", statement);
-                int result = statement.executeUpdate();
-                connection.commit();
-                if (result == 1) {
-                    rs = statement.getGeneratedKeys();
-                    rs.next();
-                    entity.setId(rs.getInt(1));
-                    cao.add(entity);
-                    logger.info("Activity inserted successfully {}", entity);
-                } else
-                    logger.error("Error inserting activity {}", entity);
-            } catch (SQLException e) {
-                rollback(connection);
-                logger.error(e);
-            } finally {
-                executeFinalBlock(connection, statement, rs);
-            }
-        }).start();
-
+        executor.execute(new InsertTask(entity));
     }
-
 
     @Override
     public Collection<Activity> findAll() {
@@ -168,6 +141,45 @@ public class ActivityDao implements Dao<Integer, Activity> {
                 logger.error(e);
             }
             return null;
+        }
+    }
+
+    private class InsertTask implements Runnable {
+        private Activity entity;
+
+        public InsertTask(Activity entity) {
+            this.entity = entity;
+        }
+
+        @Override
+        public void run() {
+            Connection connection = CreateConnection.getConnection();
+            PreparedStatement statement = null;
+            ResultSet rs = null;
+            try {
+                String query = getInsertQuery(TABLE_NAME, USER_ID, ACTIVITY_NAME, DATE_TIME);
+                statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+                statement.setInt(1, entity.getUserId());
+                statement.setString(2, entity.getActivityName());
+                statement.setTimestamp(3, Timestamp.valueOf(entity.getDateTime()));
+                logger.debug("Executing statement: {}", statement);
+                int result = statement.executeUpdate();
+                connection.commit();
+                if (result == 1) {
+                    rs = statement.getGeneratedKeys();
+                    rs.next();
+                    entity.setId(rs.getInt(1));
+                    cao.add(entity);
+                    logger.info("Activity inserted successfully {}", entity);
+                } else
+                    logger.error("Error inserting activity {}", entity);
+            } catch (SQLException e) {
+                rollback(connection);
+                logger.error(e);
+            } finally {
+                executeFinalBlock(connection, statement, rs);
+            }
+
         }
     }
 }
