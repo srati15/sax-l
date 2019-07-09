@@ -1,12 +1,9 @@
 package servlets.quiz;
 
-import dao.AnswerDao;
-import dao.QuestionDao;
 import datatypes.quiz.Quiz;
-import datatypes.user.User;
 import datatypes.quiz.answer.Answer;
 import datatypes.quiz.question.Question;
-import enums.DaoType;
+import datatypes.user.User;
 import manager.DaoManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,8 +24,6 @@ public class QuizCreationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-        QuestionDao questionDao= manager.getDao(DaoType.Question);
-        AnswerDao answerDao = manager.getDao(DaoType.Answer);
         User user = (User) request.getSession().getAttribute("user");
         //parameter values
         boolean autoCorrection = request.getParameter("correction").equals("yes");
@@ -37,7 +32,8 @@ public class QuizCreationServlet extends HttpServlet {
         boolean randomized = request.getParameter("randomized").equals("yes");
         String quizName = request.getParameter("quizname");
         String quizImageURL = request.getParameter("quizImageUrl");
-        Quiz quiz = new Quiz(quizName, user.getId(), (LocalDateTime.now()), randomized, singlePage, autoCorrection, practiceMode, quizImageURL);
+        String description = request.getParameter("quizDescription");
+        Quiz quiz = new Quiz(quizName, user.getId(), (LocalDateTime.now()), randomized, singlePage, autoCorrection, practiceMode, quizImageURL, description);
         JSONArray questionsArray = new JSONArray(request.getParameter("questions"));
         Map<Question, Answer> questionAnswerMap = new HashMap<>();
         QuestionAnswerJsonDispatcher dispatcher = new QuestionAnswerJsonDispatcher();

@@ -71,20 +71,53 @@
 </div>
 <!-- ***** Welcome Area Start ***** -->
 
-<section class="mosh-aboutUs-area">
+<section class="mosh-clients-area section_padding_100">
     <div class="container">
         <form action="CompleteQuizServlet" method="post">
-            <h2 id="quizTimer"><time>00:00:00</time></h2>
+            <h2 id="quizTimer">
+                <time>00:00:00</time>
+            </h2>
             <input type="hidden" id="completeTime" name="completeTime" value="">
             <c:set var="questionNum" value="1"/>
-            <c:forEach items="${requestScope.currentQuizQuestions}" var="question">
-                <h:question question="${question}" answer="${requestScope.questionAnswerMap.get(question)}"
-                            questionNumber="${questionNum}"/>
-                <c:set var="questionNum" value="${questionNum+1}"/>
-            </c:forEach>
-            <button type="submit" class="btn btn-success" id="clear"><i class="fa fa-hourglass-end"></i> Finish
-                <input type="text" hidden name="quizId" value="<%=quiz.getId()%>">
-            </button>
+            <c:set var="questAnsMap" value="${requestScope.questionAnswerMap}"/>
+            <c:choose>
+                <c:when test="${param.questionId!=null}">
+                    <c:set var="question" value="${requestScope.currentQuizQuestions.get(param.questionId-1)}"/>
+                    <h:question question="${question}" answer="${requestScope.questionAnswerMap.get(question)}"
+                                questionNumber="${param.questionId}"/>
+                    <c:choose>
+                        <c:when test="<%=quiz.isAllowedImmediateCorrection()%>">
+                            <button type="button" class="btn btn-success" id="checkButton"><i
+                                    class="fa fa-check"></i> Check
+                            </button>
+                        </c:when>
+                        <c:when test="${param.questionId==requestScope.currentQuizQuestions.size()}">
+                            <button type="submit" class="btn btn-success" id="cl"><i
+                                    class="fa fa-hourglass-end"></i> Finish
+                                <input type="text" hidden name="quizId" value="${param.quizId}">
+                            </button>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="start-quiz?quizId=${param.quizId}&questionId=${param.questionId+1}">
+                                <button type="button" class="btn btn-info btn-sm" style="float:left">
+                                    <i class="fa fa-arrow-right"></i> Next
+                                </button>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                    <c:set var="questionNum" value="${questionNum+1}"/>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach items="${requestScope.currentQuizQuestions}" var="question">
+                        <h:question question="${question}" answer="${requestScope.questionAnswerMap.get(question)}"
+                                    questionNumber="${questionNum}"/>
+                        <c:set var="questionNum" value="${questionNum+1}"/>
+                    </c:forEach>
+                    <button type="submit" class="btn btn-success" id="clear"><i class="fa fa-hourglass-end"></i> Finish
+                        <input type="text" hidden name="quizId" value="<%=quiz.getId()%>">
+                    </button>
+                </c:otherwise>
+            </c:choose>
         </form>
     </div>
 </section>
@@ -110,8 +143,15 @@
 
 <script src="js/toastr.js"></script>
 
-<script src="js/stopwatch.js"></script>
 
+<script src="js/stopwatch.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#checkButton").click(function(){
+            var questionId = '${question.id}';
+        });
+    });
+</script>
 </body>
 
 </html>

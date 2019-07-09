@@ -118,4 +118,13 @@
         <url-pattern>/top-quizzes</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>quizDetails</servlet-name>
+        <jsp-file>/quiz-details.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>quizDetails</servlet-name>
+        <url-pattern>/quiz-details</url-pattern>
+    </servlet-mapping>
+
 </web-app>

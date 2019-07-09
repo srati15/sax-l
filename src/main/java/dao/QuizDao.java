@@ -32,6 +32,8 @@ public class QuizDao implements Dao<Integer, Quiz>{
     private static final String IS_CORRECTION = "is_allowed_correction";
     private static final String IS_SINGLEPAGE = "is_single_page";
     private static final String TIMES_DONE = "times_done";
+    private static final String QUIZ_DESCRIPTION = "quiz_description";
+
     private static final String TABLE_NAME = "quiz";
 
     public QuizDao() {
@@ -194,7 +196,8 @@ public class QuizDao implements Dao<Integer, Quiz>{
                 boolean isCorrection = rs.getBoolean(IS_CORRECTION);
                 boolean isSinglePage = rs.getBoolean(IS_SINGLEPAGE);
                 int timesDone = rs.getInt(TIMES_DONE);
-                return new Quiz(quizId, quizName, authorId, timesDone, dateCreated.toLocalDateTime(), isRandomized, isSinglePage, isCorrection, isPractice, quizImage);
+                String description = rs.getString(QUIZ_DESCRIPTION);
+                return new Quiz(quizId, quizName, authorId, timesDone, dateCreated.toLocalDateTime(), isRandomized, isSinglePage, isCorrection, isPractice, quizImage, description);
             } catch (SQLException e) {
                 logger.error(e);
             }

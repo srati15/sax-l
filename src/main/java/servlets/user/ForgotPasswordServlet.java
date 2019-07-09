@@ -34,10 +34,10 @@ public class ForgotPasswordServlet extends HttpServlet {
             passwordBuilder.append((char) ('a' + random.nextInt(26)));
         }
         String passwordHash = Cracker.code(passwordBuilder.toString());
-        User updatedUser = new User(user.getId(), user.getUserName(), passwordHash, user.getFirstName(), user.getLastName(), user.getMail());
-        userRepository.update(updatedUser);
-        if (PasswordRecovery.send(updatedUser, passwordBuilder.toString())) {
-            request.setAttribute("info", "Password recovery mail sent to " + updatedUser.getMail());
+        user.setPassword(passwordHash);
+        userRepository.update(user);
+        if (PasswordRecovery.send(user, passwordBuilder.toString())) {
+            request.setAttribute("info", "Password recovery mail sent to " + user.getMail());
             request.getRequestDispatcher("login").forward(request, response);
         } else {
             request.setAttribute("error", "Your mail is invalid. you have to create a new Account");

@@ -1,16 +1,14 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="dao.QuizDao" %>
 <%@ page import="dao.UserDao" %>
-<%@ page import="datatypes.user.Achievement" %>
-<%@ page import="datatypes.user.User" %>
 <%@ page import="datatypes.messages.Message" %>
 <%@ page import="datatypes.messages.TextMessage" %>
+<%@ page import="datatypes.user.User" %>
+<%@ page import="datatypes.user.UserAchievement" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Comparator" %>
 <%@ page import="java.util.List" %>
-<%@ page import="datatypes.user.UserAchievement" %>
-<%@ page import="dao.QuizDao" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -267,6 +265,12 @@
                                 <input type="hidden" name="challengeId" value="${challenge.id}">
                                 <button type="submit" class="btn btn-info btn-sm" style="float:left">
                                     <i class="fa fa-hourglass-start"></i> Start
+                                </button>
+                            </form>
+                            <form action="RejectChallengeServlet" method="post">
+                                <input type="hidden" name="challengeId" value="${challenge.id}">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash"></i> Reject
                                 </button>
                             </form>
 

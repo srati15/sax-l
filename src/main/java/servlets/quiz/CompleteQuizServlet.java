@@ -1,11 +1,10 @@
 package servlets.quiz;
 
 import dao.QuizDao;
-import dao.QuizResultDao;
 import datatypes.quiz.Quiz;
 import datatypes.quiz.QuizResult;
-import datatypes.user.User;
 import datatypes.quiz.question.Question;
+import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
 
@@ -23,13 +22,14 @@ public class CompleteQuizServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
         QuizDao quizDao = manager.getDao(DaoType.Quiz);
-        QuizResultDao quizResultDao = manager.getDao(DaoType.QuizResult);
         Map<String, String[]> params = request.getParameterMap();
         Map<Integer, String> questionAnswers = new HashMap<>();
         Map<Question, Boolean> quizResults = new HashMap<>();
         User user = (User) request.getSession().getAttribute("user");
         params.keySet().stream().filter(question->question.startsWith("questionN")).forEach(question->questionAnswers.put(Integer.valueOf(question.substring(question.lastIndexOf("N")+1)), request.getParameter(question)));
         Quiz quiz = quizDao.findById(Integer.valueOf(request.getParameter("quizId")));
+
+
 
         for (Question question : quiz.getQuestionAnswerMap().keySet()) {
             String answer = quiz.getQuestionAnswerMap().get(question).getAnswer().split(",")[0];

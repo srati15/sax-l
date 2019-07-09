@@ -19,6 +19,7 @@ public class Quiz extends Domain<Integer> {
     private boolean allowedImmediateCorrection;
     private boolean allowedPracticemode;
     private String quizImageURL;
+    private String description;
     private Map<Question, Answer> questionAnswerMap = new HashMap<>();
     public String getQuizName() {
         return quizName;
@@ -26,7 +27,7 @@ public class Quiz extends Domain<Integer> {
     public Quiz(){
 
     }
-    public Quiz(int id, String quizName, int authorId, int timesDone, LocalDateTime dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL) {
+    public Quiz(int id, String quizName, int authorId, int timesDone, LocalDateTime dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL, String description) {
         this.id = id;
         this.quizName = quizName;
         this.authorId = authorId;
@@ -37,9 +38,10 @@ public class Quiz extends Domain<Integer> {
         this.allowedImmediateCorrection = allowedImmediateCorrection;
         this.allowedPracticemode = allowedPracticemode;
         this.quizImageURL = quizImageURL;
+        this.description = description;
     }
 
-    public Quiz(String quizName, int authorId, LocalDateTime dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL) {
+    public Quiz(String quizName, int authorId, LocalDateTime dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL, String description) {
         this.quizName = quizName;
         this.authorId = authorId;
         this.dateCreated = dateCreated;
@@ -48,6 +50,7 @@ public class Quiz extends Domain<Integer> {
         this.allowedImmediateCorrection = allowedImmediateCorrection;
         this.allowedPracticemode = allowedPracticemode;
         this.quizImageURL = quizImageURL;
+        this.description = description;
     }
 
     public boolean isRandomized() {
@@ -80,6 +83,10 @@ public class Quiz extends Domain<Integer> {
 
     public void setQuestionAnswerMap(Map<Question, Answer> questionAnswerMap) {
         this.questionAnswerMap = questionAnswerMap;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setTimesDone(int timesDone) {

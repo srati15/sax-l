@@ -90,7 +90,7 @@
                 <tr>
                     <td>${i+1}
                     </td>
-                    <td>${quiz.quizName}
+                    <td><a href="quiz-details?quizId=${quiz.id}">${quiz.quizName}</a>
                     </td>
                     <td>
                             ${userDao.findById(quiz.authorId).userName}
@@ -112,14 +112,14 @@
                                 </a>
                             </c:otherwise>
                         </c:choose>
-                        <%if (user.getUserType() == UserType.Admin) {%>
-                        <form action="DeleteQuizServlet" method="post" style="float:left">
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="fa fa-remove"></i> Delete
-                            </button>
-                            <input type="hidden" name="deleteQuizId" value="${quiz.id}">
-                        </form>
-                        <%}%>
+                        <c:if test="${user.userType == UserType.Admin}">
+                            <form action="DeleteQuizServlet" method="post" style="float:left">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-remove"></i> Delete
+                                </button>
+                                <input type="hidden" name="deleteQuizId" value="${quiz.id}">
+                            </form>
+                        </c:if>
                     </td>
                 </tr>
                 <c:set var="i" value="${i + 1}" scope="page"/>
@@ -306,6 +306,11 @@
                         </div>
                     </div>
 
+                    <!-- Quiz Description-->
+                    <div class="form-group">
+                        <label for="quizDescription">Quiz Description</label>
+                        <textarea class="form-control" id="quizDescription" name="quizDescription" rows="3"></textarea>
+                    </div>
                     <!-- Text input-->
                     <div class="form-group">
                         <label for="quizname">Quiz Image URL</label>
