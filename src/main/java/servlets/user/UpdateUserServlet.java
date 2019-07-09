@@ -29,7 +29,7 @@ public class UpdateUserServlet extends HttpServlet {
         UserType userType = UserType.User;
         if (request.getParameter("usertype") != null && request.getParameter("usertype").equals("admin"))
             userType = UserType.Admin;
-        if (user.getId() == id && userType == UserType.User && user.getUserType() == UserType.Admin) {
+        if (user.getId() == id && userType == UserType.User && user.getUserType() == UserType.Admin && request.getParameter("usertype")!=null) {
             request.setAttribute("error", "You can't downgrade yourself to user");
             request.getRequestDispatcher("users-list").forward(request, response);
             return;
@@ -52,7 +52,7 @@ public class UpdateUserServlet extends HttpServlet {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setPassword(Cracker.code(password));
-        user.setUserType(userType);
+        if (request.getParameter("usertype")!= null) user.setUserType(userType);
         manager.update(user);
 
         if (user.getUserType() == UserType.Admin) request.getRequestDispatcher("users-list").forward(request, response);

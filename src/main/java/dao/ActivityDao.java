@@ -39,8 +39,9 @@ public class ActivityDao implements Dao<Integer, Activity> {
 
 
     @Override
-    public void insert(Activity entity) {
+    public boolean insert(Activity entity) {
         executor.execute(new InsertTask(entity));
+        return true;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class ActivityDao implements Dao<Integer, Activity> {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public boolean deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -61,20 +62,22 @@ public class ActivityDao implements Dao<Integer, Activity> {
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
+
+                logger.info("Activity Deleted Successfully, {}",findById(id));
                 cao.delete(id);
-                logger.info("Activity Deleted Successfully");
             } else
-                logger.error("Error Deleting Activity");
+                logger.error("Error Deleting Activity, {}", findById(id));
         } catch (SQLException e) {
             rollback(connection);
             logger.error(e);
         } finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
 
     @Override
-    public void update(Activity entity) {
+    public boolean update(Activity entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -90,6 +93,7 @@ public class ActivityDao implements Dao<Integer, Activity> {
             if (result == 1) {
                 cao.add(entity);
                 logger.info("Activity updated sucessfully, {}", entity);
+                return true;
             } else logger.error("Error updating Activity, {}", entity);
         } catch (SQLException e) {
             rollback(connection);
@@ -97,6 +101,7 @@ public class ActivityDao implements Dao<Integer, Activity> {
         } finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
 
     @Override
@@ -147,7 +152,7 @@ public class ActivityDao implements Dao<Integer, Activity> {
     private class InsertTask implements Runnable {
         private Activity entity;
 
-        public InsertTask(Activity entity) {
+        InsertTask(Activity entity) {
             this.entity = entity;
         }
 

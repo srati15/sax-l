@@ -8,6 +8,7 @@ import enums.UserType;
 import manager.DaoManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import security.Cracker;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,7 +44,7 @@ public class CreateUserServlet extends HttpServlet {
             return;
         }
 
-        User user = new User(userName, password, firstName, lastName, mail);
+        User user = new User(userName, Cracker.code(password), firstName, lastName, mail);
         user.setUserType(userType);
         manager.insert(user);
         request.getRequestDispatcher("users-list").forward(request, response);

@@ -1,6 +1,7 @@
 package servlets.challenge;
 
 
+import dao.QuizChallengeDao;
 import dao.QuizDao;
 import datatypes.messages.QuizChallenge;
 import datatypes.quiz.Quiz;
@@ -21,17 +22,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet("/ChallengeSenderServlet")
-public class ChallengeSenderServlet extends HttpServlet {
+@WebServlet("/AcceptChallengeServlet")
+public class AcceptChallengeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-        User user = (User) request.getSession().getAttribute("user");
-        int receiverId = Integer.parseInt(request.getParameter("receiverId"));
-        int quizId = Integer.parseInt(request.getParameter("quizId"));
+        QuizChallengeDao quizChallengeDao = manager.getDao(DaoType.QuizChallenge);
+        int challengeId = Integer.parseInt(request.getParameter("challengeId"));
+        QuizChallenge challenge = quizChallengeDao.findById(challengeId);
         QuizDao quizDao = manager.getDao(DaoType.Quiz);
-        Quiz quiz = quizDao.findById(Integer.valueOf(quizId));
-        QuizChallenge challenge = new QuizChallenge(user.getId(), receiverId, LocalDateTime.now(), quizId, RequestStatus.Pending);
-        manager.insert(challenge);
+        Quiz quiz = quizDao.findById(challenge.getQuizId());
+        User user = (User) request.getSession().getAttribute("user");
+        user.getQuizChallenges().removeIf(s->s.getId() == challengeId);
+        challenge.setRequestStatus(RequestStatus.Accepted);
+        quizChallengeDao.update(challenge);
         startQuiz(request, response, quiz);
     }
 
@@ -42,7 +45,9 @@ public class ChallengeSenderServlet extends HttpServlet {
         }
         request.setAttribute("currentQuizQuestions", questionList);
         request.setAttribute("questionAnswerMap", quiz.getQuestionAnswerMap());
-        request.getRequestDispatcher("/start-quiz.jsp").forward(request, response);
+        String url = "/start-quiz.jsp?quizId="+quiz.getId();
+        if (!quiz.isOnePage()) url="start-quiz?quizId="+quiz.getId()+"&questionId=1";
+        request.getRequestDispatcher(url).forward(request, response);
     }
 
 

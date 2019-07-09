@@ -45,7 +45,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
     }
 
     @Override
-    public void insert(Quiz entity) {
+    public boolean insert(Quiz entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -63,6 +63,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
                 if (rs.next()){
                     entity.setId(rs.getInt(1));
                     cao.add(entity);
+                    return true;
                 }
             }
             else logger.error("Error inserting Quiz, {}", entity);
@@ -72,6 +73,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
+        return false;
     }
 
     @Override
@@ -81,7 +83,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public boolean deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -96,6 +98,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
             if (result == 1) {
                 logger.info("Quiz deleted sucessfully, {}", quiz);
                 cao.delete(id);
+                return true;
             }
             else logger.info("Error deleting Quiz");
         } catch (SQLException e) {
@@ -103,10 +106,11 @@ public class QuizDao implements Dao<Integer, Quiz>{
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
+        return false;
     }
 
     @Override
-    public void update(Quiz entity) {
+    public boolean update(Quiz entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -122,6 +126,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
             if (result == 1) {
                 logger.info("Quiz updated sucessfully, {}",entity);
                 cao.add(entity);
+                return true;
             }
             else logger.error("Error inserting Quiz, {}", entity);
         } catch (SQLException e) {
@@ -130,6 +135,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
+        return false;
     }
 
     private void setParameters(Quiz entity, PreparedStatement statement) throws SQLException {

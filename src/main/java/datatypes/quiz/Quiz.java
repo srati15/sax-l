@@ -111,11 +111,6 @@ public class Quiz extends Domain<Integer> {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(quizName, authorId, timesDone, dateCreated, randomized, onePage, allowedImmediateCorrection, allowedPracticemode, questionAnswerMap);
-    }
-
-    @Override
     public String toString() {
         return "Quiz{" +
                 "quizName='" + quizName + '\'' +

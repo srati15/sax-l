@@ -9,6 +9,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Comparator" %>
 <%@ page import="java.util.List" %>
+<%@ page import="datatypes.user.UserAchievement" %>
+<%@ page import="dao.QuizDao" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -45,9 +47,12 @@
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     User user = (User) request.getSession().getAttribute("user");
     UserDao userDao = manager.getDao(DaoType.User);
+    QuizDao quizDao = manager.getDao(DaoType.Quiz);
     pageContext.setAttribute("friendsIds", user.getFriends());
     pageContext.setAttribute("requestList", user.getPendingFriendRequests());
     pageContext.setAttribute("userDao", userDao);
+    pageContext.setAttribute("quizDao", quizDao);
+    pageContext.setAttribute("user", user);
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -95,7 +100,12 @@
                 <a class="nav-link" data-toggle="tab" href="#messages">Messages</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#achievements">Achievements</a>
+                <a class="nav-link" data-toggle="tab" href="#achievements">Achievements
+                    <span class="badge badge-info">${user.achievements.size()}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#challenges">Quiz Challenges
+                    <span class="badge badge-info">${user.quizChallenges.size()}</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#edit">Edit Profile</a>
@@ -147,7 +157,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="people">
-                <table id="friendsTable" class="table table-striped table-bordered table-sm" >
+                <table id="friendsTable" class="table table-striped table-bordered table-sm">
                     <thead>
                     <tr>
                         <th>Username</th>
@@ -166,10 +176,10 @@
                                 </a>
                             </td>
                             <td>
-                                ${friend.firstName}
+                                    ${friend.firstName}
                             </td>
                             <td>
-                                ${friend.lastName}
+                                    ${friend.lastName}
                             </td>
                             <td>0</td>
                             <td>0</td>
@@ -214,23 +224,65 @@
                         }
                     }
                     textMessages.sort(Comparator.comparing(Message::getTimestamp).reversed());
-                    for (int i = 0 ; i < Math.min(textMessages.size(), 5); i++) {
-                    User sender = userDao.findById(textMessages.get(i).getSenderId());
+                    for (int i = 0; i < Math.min(textMessages.size(), 5); i++) {
+                        User sender = userDao.findById(textMessages.get(i).getSenderId());
                 %>
                 <ul class="list-group">
-                    <li class="list-group-item"><a href="user-profile?userid=<%=sender.getId()%>"><%=userDao.findById(textMessages.get(i).getSenderId()).getUserName()%></a> : <%=textMessages.get(i).getTextMessage()%></li>
+                    <li class="list-group-item"><a
+                            href="user-profile?userid=<%=sender.getId()%>"><%=userDao.findById(textMessages.get(i).getSenderId()).getUserName()%>
+                    </a> : <%=textMessages.get(i).getTextMessage()%>
+                    </li>
                 </ul>
-                    <%}%>
+                <%}%>
             </div>
 
             <div class="tab-pane fade" id="achievements">
                 <ul>
-                    <%for (Achievement achievement: user.getAchievements()) {%>
-                    <li><%=achievement.getAchievementName()%></li>
+                    <%for (UserAchievement achievement : user.getAchievements()) {%>
+                    <li><%=achievement.getAchievement().getAchievementName()%>
+                    </li>
                     <%}%>
                 </ul>
             </div>
 
+            <div class="tab-pane fade" id="challenges">
+                <table id="challengesTable" class="table table-striped table-bordered table-sm">
+                    <thead>
+                    <tr>
+                        <th>Challenger</th>
+                        <th>Quiz</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="challenge" items="${sessionScope.user.quizChallenges}">
+                        <td>
+                                ${userDao.findById(challenge.senderId).userName}
+                        </td>
+                        <td>
+                                ${quizDao.findById(challenge.quizId).quizName}
+                        </td>
+                        <td>
+                            <form action="AcceptChallengeServlet" method="post">
+                                <input type="hidden" name="challengeId" value="${challenge.id}">
+                                <button type="submit" class="btn btn-info btn-sm" style="float:left">
+                                    <i class="fa fa-hourglass-start"></i> Start
+                                </button>
+                            </form>
+
+                        </td>
+                    </c:forEach>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Challenger</th>
+                        <th>Quiz</th>
+                        <th>Action</th>
+                    </tr>
+                    </tfoot>
+                </table>
+
+            </div>
 
             <div class="tab-pane fade" id="edit">
                 <form action="UpdateUserServlet" method="post" id="editForm">
@@ -264,7 +316,8 @@
                             <input type="text" value="<%=user.getLastName()%>" name="lastname">
                         </label>
                         <br>
-                        <button type="submit" class="btn btn-outline-info btn-sm" style="display: block; margin: 0 auto;">
+                        <button type="submit" class="btn btn-outline-info btn-sm"
+                                style="display: block; margin: 0 auto;">
                             <i class="fa fa-sign-in"></i> Update
                         </button>
                         <br>

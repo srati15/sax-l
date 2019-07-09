@@ -41,20 +41,22 @@ public class QuestionDao implements Dao<Integer, Question> {
     }
     @Deprecated
     @Override
-    public void insert(Question entity) {
+    public boolean insert(Question entity) {
         throw new UnsupportedOperationException();
     }
 
-    public void insertAll(Set<Question> questions) {
+    public boolean insertAll(Set<Question> questions) {
         CountDownLatch latch = new CountDownLatch(questions.size());
         questions.forEach(question -> executor.execute(new InsertTask(question, latch)));
         try {
             latch.await();
             logger.info("All questions inserted successfully!");
+            return true;
         } catch (InterruptedException e) {
             logger.error("Error inserting questions");
             logger.error(e);
         }
+        return false;
     }
 
     @Override
@@ -65,13 +67,13 @@ public class QuestionDao implements Dao<Integer, Question> {
 
     @Deprecated
     @Override
-    public void deleteById(Integer integer) {
+    public boolean deleteById(Integer integer) {
         throw new UnsupportedOperationException();
     }
 
     @Deprecated
     @Override
-    public void update(Question entity) {
+    public boolean update(Question entity) {
         throw new UnsupportedOperationException();
     }
 
@@ -159,7 +161,6 @@ public class QuestionDao implements Dao<Integer, Question> {
         public void run() {
             Connection connection = CreateConnection.getConnection();
             PreparedStatement statement = null;
-            ResultSet rs = null;
             String query = getDeleteQuery(TABLE_NAME, QUESTION_ID);
             try {
                 statement = connection.prepareStatement(query);
@@ -186,7 +187,7 @@ public class QuestionDao implements Dao<Integer, Question> {
         private final Question question;
         private final CountDownLatch latch;
 
-        public InsertTask(Question question, CountDownLatch latch) {
+        InsertTask(Question question, CountDownLatch latch) {
             this.question = question;
             this.latch = latch;
         }

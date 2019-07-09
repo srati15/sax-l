@@ -7,13 +7,13 @@ import java.util.Collection;
 public interface Dao<ID, D> {
     D findById(ID id);
 
-    void insert(D entity);
+    boolean insert(D entity);
 
     Collection<D> findAll();
 
-    void deleteById(ID id);
+    boolean deleteById(ID id);
 
-    void update(D entity);
+    boolean update(D entity);
 
     DaoType getDaoType();
 

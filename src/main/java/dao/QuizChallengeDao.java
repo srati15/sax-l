@@ -23,7 +23,7 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
     private static final String RECEIVER_ID = "receiver_id";
     private static final String QUIZ_ID = "quiz_id";
     private static final String STATUS = "status";
-    private static final String TIME_SENT = "time-sent";
+    private static final String TIME_SENT = "time_sent";
     private static final String TABLE_NAME = "quiz_challenges";
 
 
@@ -42,7 +42,7 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
     }
 
     @Override
-    public void insert(QuizChallenge entity) {
+    public boolean insert(QuizChallenge entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement;
         ResultSet rs;
@@ -63,12 +63,14 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
                 rs.next();
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
+                return true;
             }
             else
                 logger.error("Error inserting quizChallenge, {}", entity);
         } catch (SQLException e) {
             logger.error(e);
         }
+        return false;
     }
 
     @Override
@@ -78,7 +80,7 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
     }
 
     @Override
-    public void deleteById(Integer integer) {
+    public boolean deleteById(Integer integer) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -91,6 +93,7 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
             if (result == 1) {
                 logger.info("quizChallenge Deleted Successfully, {}", findById(integer));
                 cao.delete(integer);
+                return true;
             } else
                 logger.error("Error Deleting quizChallenge, {}", findById(integer));
         } catch (SQLException e) {
@@ -99,10 +102,11 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
         } finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
 
     @Override
-    public void update(QuizChallenge entity) {
+    public boolean update(QuizChallenge entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -116,6 +120,7 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
             if (result == 1) {
                 logger.info("quizChallenge accepted Successfully, {}", entity);
                 cao.add(entity);
+                return true;
             } else
                 logger.error("Error accepting quizChallenge, {}", entity);
         } catch (SQLException e) {
@@ -124,6 +129,7 @@ public class QuizChallengeDao implements Dao<Integer, QuizChallenge> {
         } finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
 
     @Override

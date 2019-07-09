@@ -47,8 +47,6 @@
 <%
     DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
     UserDao userDao = daoManager.getDao(DaoType.User);
-    User user = (User) request.getSession().getAttribute("user");
-    pageContext.setAttribute("pageUser", user);
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -68,7 +66,7 @@
                     <h2>Users List</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Users</li>
                         </ol>
                     </nav>
@@ -93,13 +91,10 @@
 <section class="mosh-aboutUs-area">
     <div class="container">
         <h3 class="mb-30">Users List</h3>
-        <%
-        if(user.getUserType() == UserType.Admin){
-        %>
-        <h:create entityName="User" selectFields="<%=createSelectField%>" actionServlet="CreateUserServlet" formFields="<%=formFields%>" formId="createUserForm"/>
-        <%
-        }
-        %>
+        <c:if test="${sessionScope.user!=null && sessionScope.user.userType == UserType.Admin}">
+            <h:create entityName="User" selectFields="<%=createSelectField%>" actionServlet="CreateUserServlet"
+                      formFields="<%=formFields%>" formId="createUserForm"/>
+        </c:if>
         <table id="myTable" class="table table-striped table-bordered table-sm">
             <thead>
             <tr>
@@ -108,11 +103,11 @@
                 <th>Completed Quizes</th>
                 <th>Created Quizes</th>
                 <th>Achievements</th>
-            <c:choose>
-                <c:when test="${pageUser!=null && pageUser.userType==UserType.Admin}">
-                    <th>Action</th>
-                </c:when>
-            </c:choose>
+                <c:choose>
+                    <c:when test="${sessionScope.user!=null && sessionScope.user.userType==UserType.Admin}">
+                        <th>Action</th>
+                    </c:when>
+                </c:choose>
             </tr>
             </thead>
             <tbody>
@@ -122,21 +117,33 @@
                     <td>${i+1}
                     </td>
                     <c:choose>
-                        <c:when test="${currentUser.id == pageUser.id}">
-                            <td><a href="profile">${currentUser.userName}</a></td>
+                        <c:when test="${currentUser.id == sessionScope.user.id}">
+                            <td>
+                                <a href="profile">${currentUser.userName}
+                                    <c:if test="${applicationScope.onlineUsers.containsValue(currentUser)}">
+                                        <span class="badge badge-success">Online</span>
+                                    </c:if>
+                                </a>
+                            </td>
                         </c:when>
-                        <c:when test="${currentUser.id != pageUser.id}">
-                            <td><a href="user-profile?userid=${currentUser.id}">${currentUser.userName}</a></td>
+                        <c:when test="${currentUser.id != sessionScope.user.id}">
+                            <td>
+                                <a href="user-profile?userid=${currentUser.id}">${currentUser.userName}
+                                    <c:if test="${applicationScope.onlineUsers.containsValue(currentUser)}">
+                                        <span class="badge badge-success">Online</span>
+                                    </c:if>
+                                </a>
+                            </td>
                         </c:when>
                     </c:choose>
                     <td>${currentUser.quizResults.size()}</td>
                     <td>${currentUser.quizzes.size()}</td>
                     <td>${currentUser.achievements.size()}</td>
                     <c:choose>
-                        <c:when test="${pageUser!=null && pageUser.userType==UserType.Admin}">
+                        <c:when test="${sessionScope.user!=null && sessionScope.user.userType==UserType.Admin}">
                             <td>
                                 <%
-                                    User user1 =  (User)pageContext.getAttribute("currentUser");
+                                    User user1 = (User) pageContext.getAttribute("currentUser");
                                     List<EditFormField> editFormFields = new ArrayList<>();
                                     editFormFields.add(new EditFormField("Username", FormFields.username.getValue(), InputType.text, true, 4, user1.getUserName(), true));
                                     editFormFields.add(new EditFormField("Password", FormFields.password.getValue(), InputType.password, true, 4, "", false));
@@ -176,7 +183,7 @@
                 <th>Created Quizes</th>
                 <th>Achievements</th>
                 <c:choose>
-                    <c:when test="${pageUser!=null && pageUser.userType==UserType.Admin}">
+                    <c:when test="${sessionScope.user!=null && sessionScope.user.userType==UserType.Admin}">
                         <th>Action</th>
                     </c:when>
                 </c:choose>

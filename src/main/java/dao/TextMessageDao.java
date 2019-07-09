@@ -41,7 +41,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
     }
 
     @Override
-    public void insert(TextMessage entity) {
+    public boolean insert(TextMessage entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -61,6 +61,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
                 logger.info("Text Message inserted successfully, {}", entity);
+                return true;
             }
             else logger.error("Error inserting Text Message, {}", entity);
 
@@ -70,6 +71,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
+        return false;
     }
 
     @Override
@@ -79,10 +81,9 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public boolean deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
-        TextMessage message = findById(id);
         try {
             String query = getDeleteQuery(TABLE_NAME, TEXT_MESSAGE_ID);
             statement = connection.prepareStatement(query);
@@ -93,6 +94,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             if(result == 1){
                 logger.info("message Deleted Successfully, {}", findById(id));
                 cao.delete(id);
+                return true;
             }
             else
                 logger.error("Error Deleting message, {}", findById(id));
@@ -102,11 +104,12 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
         } finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
-
+    @Deprecated
     @Override
-    public void update(TextMessage entity) {
-
+    public boolean update(TextMessage entity) {
+        throw new UnsupportedOperationException();
     }
 
     @Override

@@ -3,6 +3,7 @@ package manager;
 
 import dao.*;
 import datatypes.announcement.Announcement;
+import datatypes.messages.QuizChallenge;
 import datatypes.quiz.QuizResult;
 import datatypes.quiz.answer.Answer;
 import datatypes.messages.FriendRequest;
@@ -16,12 +17,16 @@ import datatypes.user.User;
 import datatypes.user.UserAchievement;
 import enums.DaoType;
 import enums.RequestStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class DaoManager {
+    private static final Logger logger = LogManager.getLogger(DaoManager.class);
+
     private final Map<DaoType, Dao> map;
     private final AnnouncementDao announcementDao = new AnnouncementDao();
     private final AnswerDao answerDao = new AnswerDao();
@@ -47,13 +52,21 @@ public class DaoManager {
         map.put(DaoType.QuizResult, quizResultDao);
         map.put(DaoType.UserAchievement, userAchievementDao);
         map.put(DaoType.Activity, activityDao);
-        //map.put(DaoType.QuizChallenge, quizChallengeDao);
+        map.put(DaoType.QuizChallenge, quizChallengeDao);
         map.values().forEach(Dao::cache);
         setQuizFields();
         setUserFields();
         setTextMessages();
         setAchievements();
         setQuizResults();
+        setQuizChallenges();
+    }
+
+    private void setQuizChallenges() {
+        for (User user : userDao.findAll()) {
+            List<QuizChallenge> quizChallenges = quizChallengeDao.findAll().stream().filter(s->s.getRequestStatus()==RequestStatus.Pending && s.getReceiverId() == user.getId()).collect(Collectors.toList());
+            user.setQuizChallenges(quizChallenges);
+        }
     }
 
     private void setQuizResults() {
@@ -68,10 +81,10 @@ public class DaoManager {
 
     private void setAchievements() {
         Collection<UserAchievement> achievements = userAchievementDao.findAll();
-        Map<Integer, List<Achievement>> userAchievementMap = new HashMap<>();
+        Map<Integer, List<UserAchievement>> userAchievementMap = new HashMap<>();
         achievements.forEach(userAchievement -> {
             userAchievementMap.putIfAbsent(userAchievement.getUserId(), new ArrayList<>());
-            userAchievementMap.get(userAchievement.getUserId()).add(userAchievement.getAchievement());
+            userAchievementMap.get(userAchievement.getUserId()).add(userAchievement);
         });
         userAchievementMap.keySet().forEach(userId -> userDao.findById(userId).setAchievements(userAchievementMap.get(userId)));
     }
@@ -122,11 +135,12 @@ public class DaoManager {
     }
 
     public void insert(FriendRequest friendRequest) {
-        friendRequestDao.insert(friendRequest);
-        Person sender = userDao.findById(friendRequest.getSenderId());
-        User receiver = userDao.findById(friendRequest.getReceiverId());
-        receiver.getPendingFriendRequests().add(sender);
-        activityDao.insert(new Activity(sender.getId(), "sent friend request to "+receiver.getUserName(), LocalDateTime.now()));
+        if (friendRequestDao.insert(friendRequest)){
+            Person sender = userDao.findById(friendRequest.getSenderId());
+            User receiver = userDao.findById(friendRequest.getReceiverId());
+            receiver.getPendingFriendRequests().add(sender);
+            activityDao.insert(new Activity(sender.getId(), "sent friend request to "+receiver.getUserName(), LocalDateTime.now()));
+        }
     }
 
     public void insert(Quiz quiz) {
@@ -145,17 +159,18 @@ public class DaoManager {
             creator.getQuizzes().add(quiz);
             User user = userDao.findById(quiz.getAuthorId());
             Achievement achievement = new Achievement("Amateur Author");
-            if (!user.getAchievements().contains(achievement)) {
+            List<Achievement> achievements = user.getAchievements().stream().map(UserAchievement::getAchievement).collect(Collectors.toList());
+            if (!achievements.contains(achievement)) {
                 UserAchievement userAchievement = new UserAchievement(user.getId(), achievement);
                 insert(userAchievement);
             }
             Achievement prolificAchievement = new Achievement("Prolific Author");
-            if (!user.getAchievements().contains(prolificAchievement) && user.getQuizzes().size() == 5) {
+            if (!achievements.contains(prolificAchievement) && user.getQuizzes().size() == 5) {
                 UserAchievement userAchievement = new UserAchievement(user.getId(), prolificAchievement);
                 insert(userAchievement);
             }
             Achievement prodigiousAchievement = new Achievement("Prodigious Author");
-            if (!user.getAchievements().contains(prodigiousAchievement) && user.getQuizzes().size() == 10) {
+            if (!achievements.contains(prodigiousAchievement) && user.getQuizzes().size() == 10) {
                 UserAchievement userAchievement = new UserAchievement(user.getId(), prodigiousAchievement);
                 insert(userAchievement);
             }
@@ -163,69 +178,92 @@ public class DaoManager {
     }
 
     public void delete(User deleteUser) {
-        userDao.deleteById(deleteUser.getId());
-        // TODO: 7/5/19 delete all user fields from db
+        if (userDao.deleteById(deleteUser.getId())){
+            activityDao.insert(new Activity(deleteUser.getId(), "'s account is being removed",LocalDateTime.now()));
+            deleteUser.getAchievements().forEach(achievement -> userAchievementDao.deleteById(achievement.getId()));
+            deleteUser.getQuizzes().forEach(quiz -> {
+                quizDao.deleteById(quiz.getId());
+                answerDao.deleteAll(quiz.getQuestionAnswerMap().values());
+                questionDao.deleteAll(quiz.getQuestionAnswerMap().keySet());
+            });
+            friendRequestDao.findAllForUser(deleteUser.getId()).forEach(friendRequest -> friendRequestDao.deleteById(friendRequest.getId()));
+            deleteUser.getQuizResults().forEach(s->quizResultDao.deleteById(s.getId()));
+            deleteUser.getTextMessages().values().forEach(textMessages -> textMessages.forEach(textMessage -> textMessageDao.deleteById(textMessage.getId())));
+            activityDao.findAll().stream().filter(activity -> activity.getUserId() == deleteUser.getId()).forEach(activity -> activityDao.deleteById(activity.getId()));
+            quizChallengeDao.findAll().stream().filter(quizChallenge -> quizChallenge.getReceiverId() == deleteUser.getId() || quizChallenge.getSenderId() == deleteUser.getId()).
+                    forEach(quizChallenge -> quizChallengeDao.deleteById(quizChallenge.getId()));
+        }else {
+            logger.error("Unable to delete user, {}", deleteUser);
+        }
+
     }
 
     private void insert(UserAchievement userAchievement) {
         new Thread(() -> {
-            userAchievementDao.insert(userAchievement);
-            userDao.findById(userAchievement.getUserId()).getAchievements().add(userAchievement.getAchievement());
-            activityDao.insert(new Activity(userAchievement.getUserId(), "gained achievement "+userAchievement.getAchievement().getAchievementName(), LocalDateTime.now()));
+            if(userAchievementDao.insert(userAchievement)){
+                userDao.findById(userAchievement.getUserId()).getAchievements().add(userAchievement);
+                activityDao.insert(new Activity(userAchievement.getUserId(), "gained achievement "+userAchievement.getAchievement().getAchievementName(), LocalDateTime.now()));
+            }
         }).start();
     }
 
     public void insert(QuizResult quizResult) {
         new Thread(() -> {
-            quizResultDao.insert(quizResult);
-            activityDao.insert(new Activity(quizResult.getUserId(), "completed quiz, score:"+quizResult.getScore()+" time:"+quizResult.getTimeSpent()+"s", LocalDateTime.now()));
-            User user = userDao.findById(quizResult.getUserId());
-            user.getQuizResults().add(quizResult);
-            Achievement possibleAchievement = new Achievement("Quiz Machine");
-            if (!user.getAchievements().contains(possibleAchievement) && user.getQuizResults().size() == 10) {
-                userAchievementDao.insert(new UserAchievement(user.getId(), possibleAchievement));
-                user.getAchievements().add(possibleAchievement);
-            }
+            if (quizResultDao.insert(quizResult)){
+                activityDao.insert(new Activity(quizResult.getUserId(), "completed quiz, score:"+quizResult.getScore()+" time:"+quizResult.getTimeSpent()+"s", LocalDateTime.now()));
+                User user = userDao.findById(quizResult.getUserId());
+                user.getQuizResults().add(quizResult);
+                Achievement possibleAchievement = new Achievement("Quiz Machine");
+                if (!user.getAchievements().stream().map(UserAchievement::getAchievement).collect(Collectors.toList()).contains(possibleAchievement) && user.getQuizResults().size() == 10) {
+                    UserAchievement achievement = new UserAchievement(user.getId(), possibleAchievement);
+                    userAchievementDao.insert(achievement);
+                    user.getAchievements().add(achievement);
+                }
 
-            List<QuizResult> allQuizResultsOfThisQuiz = quizResultDao.findAll().stream().
-                    filter(result -> result.getQuizId() == quizResult.getQuizId()).
-                    sorted(Comparator.comparingInt(QuizResult::getScore).reversed().
-                            thenComparing(QuizResult::getTimeSpent)).
-                    collect(Collectors.toList());
-            Achievement quizMachineAchievement = new Achievement("I Am The Greatest");
-            if (allQuizResultsOfThisQuiz.size() > 0 && quizResult.equals(allQuizResultsOfThisQuiz.get(0)) && !user.getAchievements().contains(quizMachineAchievement)) {
-                userAchievementDao.insert(new UserAchievement(user.getId(), quizMachineAchievement));
-                user.getAchievements().add(quizMachineAchievement);
+                List<QuizResult> allQuizResultsOfThisQuiz = quizResultDao.findAll().stream().
+                        filter(result -> result.getQuizId() == quizResult.getQuizId()).
+                        sorted(Comparator.comparingInt(QuizResult::getScore).reversed().
+                                thenComparing(QuizResult::getTimeSpent)).
+                        collect(Collectors.toList());
+                Achievement quizMachineAchievement = new Achievement("I Am The Greatest");
+                if (allQuizResultsOfThisQuiz.size() > 0 &&
+                        quizResult.equals(allQuizResultsOfThisQuiz.get(0)) &&
+                        !user.getAchievements().stream().map(UserAchievement::getAchievement).
+                                collect(Collectors.toList()).contains(quizMachineAchievement)) {
+                    UserAchievement achievement = new UserAchievement(user.getId(), quizMachineAchievement);
+                    userAchievementDao.insert(achievement);
+                    user.getAchievements().add(achievement);
+                }
             }
         }).start();
     }
 
     public void delete(Quiz quiz) {
-        quizDao.deleteById(quiz.getId());
+        if (quizDao.deleteById(quiz.getId())){
+            //delete questions
+            questionDao.deleteAll(quiz.getQuestionAnswerMap().keySet());
+            //delete answers
+            answerDao.deleteAll(quiz.getQuestionAnswerMap().values());
 
-        //delete questions
-        questionDao.deleteAll(quiz.getQuestionAnswerMap().keySet());
-        quiz.getQuestionAnswerMap().keySet().forEach(question -> questionDao.deleteById(question.getId()));
-        //delete answers
-        answerDao.deleteAll(quiz.getQuestionAnswerMap().values());
-
-        User user = userDao.findById(quiz.getAuthorId());
-        Quiz quiz1 = user.getQuizzes().stream().filter(q -> q.getId().equals(quiz.getId())).findFirst().get();
-        //remove this quiz from author's created quizzes
-        user.getQuizzes().remove(quiz1);
-        List<QuizResult> resultsInThisQuiz = quizResultDao.findAll().stream().filter(quizResult -> quizResult.getQuizId() == quiz.getId()).collect(Collectors.toList());
-        //delete quizResults of this quiz from db
-        resultsInThisQuiz.forEach(quizResult -> quizResultDao.deleteById(quizResult.getId()));
-        //delete quizResults of this quiz from runtime users
-        resultsInThisQuiz.forEach(quizResult -> userDao.findById(quizResult.getUserId()).getQuizResults().remove(quizResult));
-
-        activityDao.insert(new Activity(quiz.getAuthorId(), "deleted quiz "+quiz.getQuizName(), LocalDateTime.now()));
+            User user = userDao.findById(quiz.getAuthorId());
+            //remove this quiz from author's created quizzes
+            user.getQuizzes().remove(quiz);
+            List<QuizResult> resultsInThisQuiz = quizResultDao.findAll().stream().filter(quizResult -> quizResult.getQuizId() == quiz.getId()).collect(Collectors.toList());
+            //delete quizResults of this quiz from db
+            resultsInThisQuiz.forEach(quizResult -> quizResultDao.deleteById(quizResult.getId()));
+            //delete quizResults of this quiz from runtime users
+            resultsInThisQuiz.forEach(quizResult -> userDao.findById(quizResult.getUserId()).getQuizResults().remove(quizResult));
+            //delete quiz challenges
+            quizChallengeDao.findAll().stream().filter(quizChallenge -> quizChallenge.getQuizId() == quiz.getId()).forEach(quizChallenge -> quizChallengeDao.deleteById(quizChallenge.getId()));
+            activityDao.insert(new Activity(quiz.getAuthorId(), "deleted quiz "+quiz.getQuizName(), LocalDateTime.now()));
+        }
     }
 
     public void insert(TextMessage mes) {
         new Thread(() -> {
-            textMessageDao.insert(mes);
-            setMessages(mes);
+            if (textMessageDao.insert(mes)){
+                setMessages(mes);
+            }
         }).start();
     }
 
@@ -233,11 +271,11 @@ public class DaoManager {
         User sender = userDao.findById(mes.getSenderId());
         User receiver = userDao.findById(mes.getReceiverId());
 
-        sender.getTextMessages().putIfAbsent(receiver, new ArrayList<>());
-        sender.getTextMessages().get(receiver).add(mes);
+        sender.getTextMessages().putIfAbsent(receiver.getUserName(), new ArrayList<>());
+        sender.getTextMessages().get(receiver.getUserName()).add(mes);
 
-        receiver.getTextMessages().putIfAbsent(sender, new ArrayList<>());
-        receiver.getTextMessages().get(sender).add(mes);
+        receiver.getTextMessages().putIfAbsent(sender.getUserName(), new ArrayList<>());
+        receiver.getTextMessages().get(sender.getUserName()).add(mes);
     }
 
     public void update(FriendRequest request) {
@@ -251,32 +289,44 @@ public class DaoManager {
     }
 
     public void delete(FriendRequest request) {
-        friendRequestDao.deleteById(request.getId());
-        User sender = userDao.findById(request.getSenderId());
-        User receiver = userDao.findById(request.getReceiverId());
-        sender.getFriends().remove(receiver);
-        receiver.getFriends().remove(sender);
-        receiver.getPendingFriendRequests().remove(sender);
-        activityDao.insert(new Activity(receiver.getId(), "rejected friendship with "+receiver.getUserName(), LocalDateTime.now()));
+        if (friendRequestDao.deleteById(request.getId())) {
+            User sender = userDao.findById(request.getSenderId());
+            User receiver = userDao.findById(request.getReceiverId());
+            sender.getFriends().remove(receiver);
+            receiver.getFriends().remove(sender);
+            receiver.getPendingFriendRequests().remove(sender);
+            activityDao.insert(new Activity(receiver.getId(), "rejected friendship with "+receiver.getUserName(), LocalDateTime.now()));
+        }
     }
 
     public void insert(User user) {
-        userDao.insert(user);
-        activityDao.insert(new Activity(user.getId(), "Registered", LocalDateTime.now()));
+        if (userDao.insert(user)){
+            activityDao.insert(new Activity(user.getId(), "Registered", LocalDateTime.now()));
+        }
     }
 
     public void update(User user) {
-        userDao.update(user);
-        activityDao.insert(new Activity(user.getId(), "updated profile", LocalDateTime.now()));
+        if (userDao.update(user)){
+            activityDao.insert(new Activity(user.getId(), "updated profile", LocalDateTime.now()));
+        }
     }
 
     public void insert(Announcement announcement) {
-        announcementDao.insert(announcement);
-        activityDao.insert(new Activity(announcement.getUserId(), "created announcement "+announcement, LocalDateTime.now()));
+        if (announcementDao.insert(announcement)){
+            activityDao.insert(new Activity(announcement.getUserId(), "created announcement "+announcement, LocalDateTime.now()));
+        }
     }
 
     public void update(Announcement announcement) {
-        announcementDao.update(announcement);
-        activityDao.insert(new Activity(announcement.getUserId(), "updated announcement "+announcement, LocalDateTime.now()));
+        if (announcementDao.update(announcement)){
+            activityDao.insert(new Activity(announcement.getUserId(), "updated announcement "+announcement, LocalDateTime.now()));
+        }
+    }
+
+    public void insert(QuizChallenge challenge) {
+        if (quizChallengeDao.insert(challenge)) {
+            User receiver = userDao.findById(challenge.getReceiverId());
+            receiver.getQuizChallenges().add(challenge);
+        }
     }
 }

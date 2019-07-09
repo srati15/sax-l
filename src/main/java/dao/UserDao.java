@@ -42,7 +42,7 @@ public class UserDao implements Dao<Integer, User> {
     }
 
     @Override
-    public void insert(User entity) {
+    public boolean insert(User entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -58,18 +58,25 @@ public class UserDao implements Dao<Integer, User> {
             logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
-            if (result == 1) logger.info("User inserted sucessfully");
-            else logger.error("Error inserting User");
-            rs = statement.getGeneratedKeys();
-            rs.next();
-            entity.setId(rs.getInt(1));
-            cao.add(entity);
+            if (result == 1) {
+                rs = statement.getGeneratedKeys();
+                rs.next();
+                entity.setId(rs.getInt(1));
+                cao.add(entity);
+                logger.info("User inserted sucessfully");
+                return true;
+            } else {
+                logger.error("Error inserting User");
+                return false;
+            }
+
         } catch (SQLException e) {
             logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
+        return false;
     }
 
     @Override
@@ -79,7 +86,7 @@ public class UserDao implements Dao<Integer, User> {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public boolean deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -88,18 +95,23 @@ public class UserDao implements Dao<Integer, User> {
             statement.setInt(1, id);
             logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
+            connection.commit();
             if (result == 1) {
                 logger.info("User deleted sucessfully, {}", findById(id));
                 cao.delete(id);
-            } else logger.error("Error deleting User, {}", findById(id));
+                return true;
+            } else {
+                logger.error("Error deleting User, {}", findById(id));
+            }
         } catch (SQLException e) {
             logger.error(e);
         } finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
 
-    public void update(User user) {
+    public boolean update(User user) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -116,6 +128,7 @@ public class UserDao implements Dao<Integer, User> {
             if (result == 1) {
                 logger.info("User updated sucessfully, {}", user);
                 cao.add(user);
+                return true;
             } else logger.error("Error updating user, {}", user);
         } catch (SQLException e) {
             logger.error(e);
@@ -123,6 +136,7 @@ public class UserDao implements Dao<Integer, User> {
         } finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
 
     @Override

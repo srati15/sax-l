@@ -35,10 +35,10 @@ public class AnswerDao implements Dao<Integer, Answer> {
         if (!isCached.get()) cache();
         return cao.findById(id);
     }
-
+    @Deprecated
     @Override
-    public void insert(Answer entity) {
-        //use insertAll instead
+    public boolean insert(Answer entity) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -49,14 +49,14 @@ public class AnswerDao implements Dao<Integer, Answer> {
 
     @Deprecated
     @Override
-    public void deleteById(Integer integer) {
+    public boolean deleteById(Integer integer) {
         //use deleteAll instead
+        return false;
     }
-
+    @Deprecated
     @Override
-    public void update(Answer entity) {
-        // TODO: 6/16/19
-
+    public boolean update(Answer entity) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -86,16 +86,18 @@ public class AnswerDao implements Dao<Integer, Answer> {
         }
     }
 
-    public void insertAll(Collection<Answer> values) {
+    public boolean insertAll(Collection<Answer> values) {
         CountDownLatch latch = new CountDownLatch(values.size());
         values.forEach(answer -> executor.execute(new InsertTask(answer, latch)));
         try {
             latch.await();
             logger.info("All answers inserted successfully!");
+            return true;
         } catch (InterruptedException e) {
             logger.error("Error inserting answers");
             logger.error(e);
         }
+        return false;
     }
 
     public Answer findAnswerForQuestion(Integer questionId) {

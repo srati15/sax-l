@@ -37,7 +37,7 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
     }
 
     @Override
-    public void insert(QuizResult entity) {
+    public boolean insert(QuizResult entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -52,11 +52,12 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1){
-                logger.info("Result inserted successfully, {}",entity);
                 rs = statement.getGeneratedKeys();
                 rs.next();
                 entity.setId(rs.getInt(1));
+                logger.info("Result inserted successfully, {}",entity);
                 cao.add(entity);
+                return true;
             }
             else
                 logger.error("Error inserting result, {}", entity);
@@ -66,7 +67,7 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
-
+        return false;
     }
 
     @Override
@@ -76,7 +77,7 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
     }
 
     @Override
-    public void deleteById(Integer integer) {
+    public boolean deleteById(Integer integer) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -89,6 +90,7 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
             if(result == 1) {
                 logger.info("Result Deleted Successfully, {}", findById(integer));
                 cao.delete(integer);
+                return true;
             }
             else
                 logger.error("Error Deleting Result, {}", findById(integer));
@@ -98,10 +100,11 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
         }finally {
             executeFinalBlock(connection,statement);
         }
+        return false;
     }
 
     @Override
-    public void update(QuizResult entity) {
+    public boolean update(QuizResult entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -119,6 +122,7 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
             if (result == 1) {
                 cao.add(entity);
                 logger.info("Result updated sucessfully, {}", entity);
+                return true;
             }
             else logger.error("Error updating result, {}", entity);
         } catch (SQLException e) {
@@ -127,6 +131,7 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
         }finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
 
     @Override

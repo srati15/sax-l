@@ -8,8 +8,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
@@ -35,7 +38,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
     }
 
     @Override
-    public void insert(FriendRequest entity) {
+    public boolean insert(FriendRequest entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -56,6 +59,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 entity.setId(id);
                 cao.add(entity);
                 logger.info("Request Added Successfully");
+                return true;
             } else
                 logger.error("Error Adding Request");
         } catch (SQLException e) {
@@ -64,7 +68,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
-
+        return false;
     }
 
     @Override
@@ -74,7 +78,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public boolean deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -85,8 +89,9 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                logger.info("Request Deleted Successfully");
+                logger.info("Request Deleted Successfully, {}", findById(id));
                 cao.delete(id);
+                return true;
             } else
                 logger.error("Error Deleting Request");
         } catch (SQLException e) {
@@ -95,10 +100,11 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
         } finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
 
     @Override
-    public void update(FriendRequest entity) {
+    public boolean update(FriendRequest entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -112,6 +118,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             if (result == 1) {
                 logger.info("Request accepted Successfully, {}", entity);
                 cao.add(entity);
+                return true;
             } else
                 logger.error("Error accepting Request, {}",entity);
         } catch (SQLException e) {
@@ -120,6 +127,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
         } finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
 
     @Override
@@ -154,6 +162,11 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             executeFinalBlock(connection, statement, rs);
         }
     }
+
+    public List<FriendRequest> findAllForUser(Integer id) {
+        return findAll().stream().filter(s -> s.getReceiverId() == id || s.getSenderId() == id).collect(Collectors.toList());
+    }
+
     private class FriendRequestMapper implements DBRowMapper<FriendRequest> {
         @Override
         public FriendRequest mapRow(ResultSet rs) {

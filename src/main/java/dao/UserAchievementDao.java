@@ -13,8 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
-import static dao.helpers.QueryGenerator.getInsertQuery;
-import static dao.helpers.QueryGenerator.getSelectQuery;
+import static dao.helpers.QueryGenerator.*;
 
 public class UserAchievementDao implements Dao<Integer, UserAchievement> {
     private static final Logger logger = LogManager.getLogger(UserAchievementDao.class);
@@ -35,7 +34,7 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
     }
 
     @Override
-    public void insert(UserAchievement entity) {
+    public boolean insert(UserAchievement entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -48,18 +47,23 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
             logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
-            if (result == 1) logger.info("User Achievement inserted sucessfully, {}", entity);
+            if (result == 1) {
+                logger.info("User Achievement inserted sucessfully, {}", entity);
+                rs = statement.getGeneratedKeys();
+                rs.next();
+                entity.setId(rs.getInt(1));
+                cao.add(entity);
+                return true;
+            }
             else logger.error("Error inserting User Achievement, {}", entity);
-            rs = statement.getGeneratedKeys();
-            rs.next();
-            entity.setId(rs.getInt(1));
-            cao.add(entity);
+
         } catch (SQLException e) {
             logger.error(e);
             rollback(connection);
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
+        return false;
     }
 
     @Override
@@ -67,17 +71,35 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
         if (!isCached.get()) cache();
         return cao.findAll();
     }
-
     @Override
-    public void deleteById(Integer id) {
-        // TODO: 7/5/19
-
+    public boolean deleteById(Integer id) {
+        Connection connection = CreateConnection.getConnection();
+        PreparedStatement statement = null;
+        try {
+            String query = getDeleteQuery(TABLE_NAME, USER_ACHIEVEMENT_ID);
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            logger.debug("Executing statement: {}", statement);
+            int result = statement.executeUpdate();
+            connection.commit();
+            if (result == 1) {
+                logger.info("User Achievement Deleted Successfully, {}", findById(id));
+                cao.delete(id);
+                return true;
+            } else
+                logger.error("Error Deleting User Achievement");
+        } catch (SQLException e) {
+            rollback(connection);
+            logger.error(e);
+        } finally {
+            executeFinalBlock(connection, statement);
+        }
+        return false;
     }
-
+    @Deprecated
     @Override
-    public void update(UserAchievement entity) {
-        // TODO: 7/5/19
-
+    public boolean update(UserAchievement entity) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -125,7 +147,7 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
         }
 
         @Override
-        public void insert(Achievement entity) {
+        public boolean insert(Achievement entity) {
             throw new UnsupportedOperationException("You can't add achievement manually");
         }
 
@@ -136,12 +158,12 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
         }
 
         @Override
-        public void deleteById(Integer integer) {
+        public boolean deleteById(Integer integer) {
             throw new UnsupportedOperationException("You can't delete achievement manually");
         }
 
         @Override
-        public void update(Achievement entity) {
+        public boolean update(Achievement entity) {
             throw new UnsupportedOperationException("You can't update achievement manually");
         }
 

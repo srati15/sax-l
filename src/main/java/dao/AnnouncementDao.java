@@ -39,7 +39,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
 
 
     @Override
-    public void insert(Announcement entity) {
+    public boolean insert(Announcement entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -59,6 +59,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
                 logger.info("Announcement inserted successfully {}", entity);
+                return true;
             } else
                 logger.error("Error inserting announcement {}", entity);
         } catch (SQLException e) {
@@ -67,6 +68,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
+        return false;
     }
 
 
@@ -77,7 +79,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public boolean deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -90,6 +92,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             if (result == 1) {
                 logger.info("Announcement Deleted Successfully, {}", findById(id));
                 cao.delete(id);
+                return true;
             } else
                 logger.error("Error Deleting Announcement");
         } catch (SQLException e) {
@@ -98,10 +101,11 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
         } finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
 
     @Override
-    public void update(Announcement entity) {
+    public boolean update(Announcement entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -118,6 +122,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             if (result == 1) {
                 cao.add(entity);
                 logger.info("Announcement updated sucessfully, {}", entity);
+                return true;
             } else logger.error("Error updating announcement {}", entity);
         } catch (SQLException e) {
             rollback(connection);
@@ -125,6 +130,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
         } finally {
             executeFinalBlock(connection, statement);
         }
+        return false;
     }
 
     @Override

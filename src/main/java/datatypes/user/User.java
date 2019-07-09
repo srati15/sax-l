@@ -1,11 +1,13 @@
 package datatypes.user;
 
+import datatypes.messages.QuizChallenge;
 import datatypes.quiz.QuizResult;
 import datatypes.messages.TextMessage;
 import datatypes.quiz.Quiz;
 import enums.UserType;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class User extends Person {
     private String password;
@@ -15,9 +17,9 @@ public class User extends Person {
     private List<Quiz> quizzes = new ArrayList<>();
     private List<Person> pendingFriendRequests = new ArrayList<>();
     private List<QuizResult> quizResults = new ArrayList<>();
-    private Map<Person, List<TextMessage>> textMessages = new HashMap<>();
-    private List<Achievement> achievements = new ArrayList<>();
-
+    private Map<String, List<TextMessage>> textMessages = new HashMap<>();
+    private List<UserAchievement> achievements = new ArrayList<>();
+    private List<QuizChallenge> quizChallenges = new ArrayList<>();
     public User(String userName, String password, String firstName, String lastName, String mail) {
         super(userName, firstName, lastName);
         this.password = password;
@@ -70,11 +72,19 @@ public class User extends Person {
         this.pendingFriendRequests = pendingFriendRequests;
     }
 
-    public List<Achievement> getAchievements() {
+    public void setQuizChallenges(List<QuizChallenge> quizChallenges) {
+        this.quizChallenges = quizChallenges;
+    }
+
+    public List<QuizChallenge> getQuizChallenges() {
+        return quizChallenges;
+    }
+
+    public List<UserAchievement> getAchievements() {
         return achievements;
     }
 
-    public void setAchievements(List<Achievement> achievements) {
+    public void setAchievements(List<UserAchievement> achievements) {
         this.achievements = achievements;
     }
 
@@ -82,11 +92,11 @@ public class User extends Person {
         return pendingFriendRequests;
     }
 
-    public Map<Person, List<TextMessage>> getTextMessages() {
+    public Map<String, List<TextMessage>> getTextMessages() {
         return textMessages;
     }
 
-    public void setTextMessages(Map<Person, List<TextMessage>> textMessages) {
+    public void setTextMessages(Map<String, List<TextMessage>> textMessages) {
         this.textMessages = textMessages;
     }
 
@@ -100,17 +110,19 @@ public class User extends Person {
 
     @Override
     public String toString() {
+        List<String> currentFriends = friends.stream().map(Person::getUserName).collect(Collectors.toList());
+        List<String> requests = pendingFriendRequests.stream().map(Person::getUserName).collect(Collectors.toList());
         return "User{" +
-                "password='" + password + '\'' +
-                ", userName='" + getUserName()+'\''+
-                ", firstname='" + getFirstName()+'\''+
-                ", lastName='" + getLastName()+'\''+
                 ", userType=" + userType +
                 ", mail='" + mail + '\'' +
-                ", friends=" + friends +
-                ", friendRequests=" + pendingFriendRequests +
+                ", friends=" + currentFriends +
+                ", quizzes=" + quizzes +
+                ", pendingFriendRequests=" + requests +
+                ", quizResults=" + quizResults +
+                ", textMessages=" + textMessages +
+                ", achievements=" + achievements +
                 ", id=" + id +
-                "} " + super.toString();
+                '}';
     }
 
     @Override
@@ -129,10 +141,6 @@ public class User extends Person {
                 achievements.equals(user.achievements);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(password, userType, mail, friends, quizzes, pendingFriendRequests, quizResults, textMessages, achievements);
-    }
 
     public void setPassword(String password) {
         this.password = password;
