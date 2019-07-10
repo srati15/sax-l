@@ -1,10 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="dao.AnnouncementDao" %>
 <%@ page import="dao.QuizDao" %>
+<%@ page import="dao.QuizResultDao" %>
 <%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.quiz.QuizResult" %>
 <%@ page import="datatypes.user.User" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
+<%@ page import="java.util.*" %>
+<%@ page import="java.util.stream.Collectors" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,6 +40,16 @@
     AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
     UserDao userDao = manager.getDao(DaoType.User);
     QuizDao quizDao = manager.getDao(DaoType.Quiz);
+    QuizResultDao quizResultDao = manager.getDao(DaoType.QuizResult);
+    int quizId = Integer.valueOf(request.getParameter("quizId"));
+    Map<Integer, List<QuizResult>> quizResultMap = new HashMap<>();
+    quizResultDao.findAll().stream().filter(s -> s.getQuizId() == quizId).collect(Collectors.toList()).forEach(s -> {
+        quizResultMap.putIfAbsent(s.getUserId(), new ArrayList<>());
+        quizResultMap.get(s.getUserId()).add(s);
+    });
+    List<QuizResult> topPerformers = quizResultDao.findAll().stream().sorted(Comparator.comparing(QuizResult::getScore).reversed().thenComparing(QuizResult::getTimeSpent)).limit(3).collect(Collectors.toList());
+    pageContext.setAttribute("quizResults", quizResultMap);
+    pageContext.setAttribute("topPerformers", topPerformers);
     pageContext.setAttribute("userDao", userDao);
     User user = (User) request.getSession().getAttribute("user");
     pageContext.setAttribute("user", user);
@@ -69,55 +83,89 @@
     </div>
 </div>
 
-<%
-    int quizId =Integer.valueOf(request.getParameter("quizId"));
-%>
 <c:set var="quiz" value="<%=quizDao.findById(quizId)%>"/>
 <section class="mosh-aboutUs-area">
     <div class="container">
         <div class="row">
-            <div class="col-12 col-md-8">
-                <div class="mosh-blog-posts">
-                    <div class="row">
-                        <!-- Single Blog Start -->
-                        <div class="col-12">
-                            <div class="single-blog wow fadeInUp" data-wow-delay="0.2s">
-                                <!-- Post Thumb -->
-                                <div class="blog-post-thumb">
-                                    <img src="${quiz.quizImageURL}" class="rounded" alt="">
-                                </div>
-                                <!-- Post Meta -->
-                                <div class="post-meta">
-                                    <h6>By <a href="user-profile?userid=${userDao.findById(quiz.authorId).id}">${userDao.findById(quiz.authorId).userName},</a><a href="#">${quiz.dateCreated.toLocalDate()}</a></h6>
-                                </div>
-                                <!-- Post Title -->
-                                <h2>${quiz.quizName}</h2>
-                                <!-- Post Excerpt -->
-                                <p>${quiz.description}</p>
-                                <!-- Read More btn -->
-                                <c:choose>
-                                    <c:when test="${quiz.onePage}">
-                                        <a href="start-quiz?quizId=${quiz.id}">
-                                            <button type="button" class="btn btn-info btn-sm"  style="float:left">
-                                                <i class="fa fa-hourglass-start"></i> Start
-                                            </button>
-                                        </a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="start-quiz?quizId=${quiz.id}&questionId=1">
-                                            <button type="button" class="btn btn-info btn-sm"  style="float:left">
-                                                <i class="fa fa-hourglass-start"></i> Start
-                                            </button>
-                                        </a>
-                                    </c:otherwise>
-                                </c:choose>
-
-                            </div>
-                        </div>
+            <!-- Single Blog Start -->
+            <div class="col-12">
+                <div class="single-blog wow fadeInUp" data-wow-delay="0.2s">
+                    <!-- Post Meta -->
+                    <div class="post-meta">
+                        <h6>By <a
+                                href="user-profile?userid=${userDao.findById(quiz.authorId).id}">${userDao.findById(quiz.authorId).userName},</a><a
+                                href="#">${quiz.dateCreated.toLocalDate()}</a></h6>
                     </div>
+                    <!-- Quiz Title -->
+                    <h2>${quiz.quizName}</h2>
+                    <!-- Post Thumb -->
+                    <div class="blog-post-thumb text-center">
+                        <img src="${quiz.quizImageURL}" class="rounded" alt="" style="max-height:500px;">
+                    </div>
+
+                    <!-- Quiz desc -->
+                    <div class="card">
+                        <div class="card-body">
+                            ${quiz.description} </div>
+                    </div>
+                    <!---all performers--->
+                    <h2 class="text-center">Top Performers</h2>
+                    <div class="card-deck border border-warning rounded-top section_padding_50">
+                        <c:forEach var="quizResult" items="${topPerformers}">
+                            <div class="team-meta-info">
+                                <div class="card" style="width: 18rem;">
+                                    <h5 class="card-title">User: <b><a
+                                            href="user-profile?userid=${userDao.findById(quizResult.userId).id}">${userDao.findById(quizResult.userId).userName}</a></b>
+                                    </h5>
+                                    <div class="card-body">
+                                        <p class="card-text">Score: <b>${quizResult.score}</b> Time:
+                                            <b>${quizResult.timeSpent}</b> Seconds</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                    <h2 class="text-center">All Performers</h2>
+                    <div class="card-deck border border-warning rounded-top section_padding_50">
+                        <c:forEach var="entry" items="${quizResults}">
+                            <div class="team-meta-info">
+                                <div class="card" style="width: 18rem;">
+                                    <h5 class="card-title">User: <b><a
+                                            href="user-profile?userid=${userDao.findById(entry.key).id}">${userDao.findById(entry.key).userName}</a></b>
+                                    </h5>
+                                    <div class="card-body">
+                                        <c:forEach var="quizRes" items="${entry.value}">
+                                            <p class="card-text">Score: <b>${quizRes.score}</b> Time:
+                                                <b>${quizRes.timeSpent}</b> Seconds</p>
+                                        </c:forEach>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+
+                    <!-- Take Quiz -->
+                    <c:choose>
+                        <c:when test="${quiz.onePage}">
+                            <a href="start-quiz?quizId=${quiz.id}">
+                                <button type="button" class="btn btn-info btn-sm" style="float:left">
+                                    <i class="fa fa-hourglass-start"></i> Start
+                                </button>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="start-quiz?quizId=${quiz.id}&questionId=1">
+                                <button type="button" class="btn btn-info btn-sm" style="float:left">
+                                    <i class="fa fa-hourglass-start"></i> Start
+                                </button>
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+
                 </div>
             </div>
         </div>
+    </div>
 </section>
 <!-- ***** Welcome Area End ***** -->
 

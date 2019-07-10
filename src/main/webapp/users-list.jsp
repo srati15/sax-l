@@ -100,6 +100,7 @@
             <tr>
                 <th>#</th>
                 <th>Username</th>
+                <th>Status</th>
                 <th>Completed Quizes</th>
                 <th>Created Quizes</th>
                 <th>Achievements</th>
@@ -136,6 +137,7 @@
                             </td>
                         </c:when>
                     </c:choose>
+                    <td>${currentUser.userType}</td>
                     <td>${currentUser.quizResults.size()}</td>
                     <td>${currentUser.quizzes.size()}</td>
                     <td>${currentUser.achievements.size()}</td>
@@ -167,6 +169,14 @@
                                         formFields="<%=editFormFields%>"
                                         selectFields="<%=editSelectField%>">
                                 </h:edit>
+                                <c:if test="${currentUser.userType==UserType.User}">
+                                    <form action="PromoteUserServlet" method="post" style="float:right">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-remove"></i> Promote
+                                        </button>
+                                        <input type="hidden" name="promotableUserId" value="${currentUser.id}">
+                                    </form>
+                                </c:if>
                             </td>
                         </c:when>
                     </c:choose>
@@ -179,6 +189,7 @@
             <tr>
                 <th>#</th>
                 <th>Username</th>
+                <th>Status</th>
                 <th>Completed Quizes</th>
                 <th>Created Quizes</th>
                 <th>Achievements</th>

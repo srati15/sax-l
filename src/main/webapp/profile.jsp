@@ -1,14 +1,18 @@
+<%@ page import="dao.ActivityDao" %>
 <%@ page import="dao.QuizDao" %>
 <%@ page import="dao.UserDao" %>
 <%@ page import="datatypes.messages.Message" %>
 <%@ page import="datatypes.messages.TextMessage" %>
+<%@ page import="datatypes.server.Activity" %>
 <%@ page import="datatypes.user.User" %>
 <%@ page import="datatypes.user.UserAchievement" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Comparator" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.stream.Collectors" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -46,6 +50,10 @@
     User user = (User) request.getSession().getAttribute("user");
     UserDao userDao = manager.getDao(DaoType.User);
     QuizDao quizDao = manager.getDao(DaoType.Quiz);
+    ActivityDao activityDao = manager.getDao(DaoType.Activity);
+    List<Activity> userActivities = activityDao.findAll().stream().filter(s->s.getUserId() == user.getId()).collect(Collectors.toList());
+    userActivities.sort(Comparator.comparing(Activity::getDateTime).reversed());
+    pageContext.setAttribute("activities", userActivities);
     pageContext.setAttribute("friendsIds", user.getFriends());
     pageContext.setAttribute("requestList", user.getPendingFriendRequests());
     pageContext.setAttribute("userDao", userDao);
@@ -104,6 +112,9 @@
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#challenges">Quiz Challenges
                     <span class="badge badge-info">${user.quizChallenges.size()}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#history">History</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#edit">Edit Profile</a>
@@ -249,9 +260,17 @@
             </div>
 
             <div class="tab-pane fade" id="achievements">
-                <ul>
+                <ul class="list-group">
+                    <a href="#" data-toggle="tooltip" title="Some tooltip text!">Hover over me</a>
+                    <p class="text-primary"></p>
                     <%for (UserAchievement achievement : user.getAchievements()) {%>
-                    <li><%=achievement.getAchievement().getAchievementName()%>
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true"
+                                data-placement="top"
+                                title="<%=achievement.getAchievement().getAchievementName()%>, <p class='text-success'><%=achievement.getAchievement().getAchievementCriteria()%></p>">
+                            <img src="img/core-img/medal.png"
+                                 alt="<%=achievement.getAchievement().getAchievementName()%>">
+                        </button>
                     </li>
                     <%}%>
                 </ul>
@@ -269,7 +288,7 @@
                     <tbody>
                     <c:forEach var="challenge" items="${sessionScope.user.quizChallenges}">
                         <td>
-                                <a href="user-profile?userid=${challenge.senderId}">${userDao.findById(challenge.senderId).userName}</a>
+                            <a href="user-profile?userid=${challenge.senderId}">${userDao.findById(challenge.senderId).userName}</a>
                         </td>
                         <td>
                                 ${quizDao.findById(challenge.quizId).quizName}
@@ -345,6 +364,41 @@
                     </center>
                 </form>
             </div>
+            <div class="tab-pane fade" id="history">
+                <table id="historyTable" class="table table-striped table-bordered table-sm">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Action</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:set var="i" value="0" scope="page"/>
+                    <c:forEach items="${activities}" var="activity">
+                        <tr>
+                            <td>${i+1}</td>
+                            <td>
+                                    ${activity.activityName}
+                            </td>
+                            <td>
+                                ${DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy").format(activity.dateTime)}
+                            </td>
+                        </tr>
+                        <c:set var="i" value="${i + 1}" scope="page"/>
+                    </c:forEach>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>#</th>
+                        <th>Action</th>
+                        <th>Date</th>
+                    </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+
         </div>
     </div>
 </section>
@@ -370,14 +424,12 @@
 <script>
     $(document).ready(function () {
         $('#friendRequestTable').DataTable();
-        $('.dataTables_length').addClass('bs-select');
-    });
-    $(document).ready(function () {
         $('#friendsTable').DataTable();
         $('.dataTables_length').addClass('bs-select');
+        $('[data-toggle="tooltip"]').tooltip();
     });
-
 </script>
+
 </body>
 
 </html>

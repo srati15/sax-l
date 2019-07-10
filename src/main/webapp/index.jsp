@@ -79,6 +79,7 @@
 <c:if test="${sessionScope.user !=null}">
     <jsp:include page="components/top-quizzes.jsp"/>
     <jsp:include page="components/recent-quizzes.jsp"/>
+    <jsp:include page="components/my-quizzes.jsp"/>
     <jsp:include page="components/quiz-activities.jsp"/>
 </c:if>
 

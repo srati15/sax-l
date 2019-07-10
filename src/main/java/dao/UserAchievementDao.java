@@ -203,13 +203,16 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
     private class AchievementMapper implements DBRowMapper<Achievement> {
         public static final String ACHIEVEMENT_ID = "id";
         public static final String ACHIEVEMENT_NAME = "achievement_name";
+        public static final String ACHIEVEMENT_CRITERIA = "achievement_criteria";
+
         public static final String TABLE_NAME = "achievements";
         @Override
         public Achievement mapRow(ResultSet rs) {
             try {
                 int id = rs.getInt(ACHIEVEMENT_ID);
                 String achievementName = rs.getString(ACHIEVEMENT_NAME);
-                Achievement achievement = new Achievement(achievementName);
+                String achievementCriteria = rs.getString(ACHIEVEMENT_CRITERIA);
+                Achievement achievement = new Achievement(achievementName, achievementCriteria );
                 achievement.setId(id);
                 return achievement;
             } catch (SQLException e) {

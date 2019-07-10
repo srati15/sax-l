@@ -161,18 +161,18 @@ public class DaoManager {
             User creator = userDao.findById(quiz.getAuthorId());
             creator.getQuizzes().add(quiz);
             User user = userDao.findById(quiz.getAuthorId());
-            Achievement achievement = new Achievement("Amateur Author");
+            Achievement achievement = new Achievement("Amateur Author", "Gained for creating 1 quiz");
             List<Achievement> achievements = user.getAchievements().stream().map(UserAchievement::getAchievement).collect(Collectors.toList());
             if (!achievements.contains(achievement)) {
                 UserAchievement userAchievement = new UserAchievement(user.getId(), achievement);
                 insert(userAchievement);
             }
-            Achievement prolificAchievement = new Achievement("Prolific Author");
+            Achievement prolificAchievement = new Achievement("Prolific Author", "Gained for creating 5 quizzes");
             if (!achievements.contains(prolificAchievement) && user.getQuizzes().size() == 5) {
                 UserAchievement userAchievement = new UserAchievement(user.getId(), prolificAchievement);
                 insert(userAchievement);
             }
-            Achievement prodigiousAchievement = new Achievement("Prodigious Author");
+            Achievement prodigiousAchievement = new Achievement("Prodigious Author", "Gained for creating 10 quizzes");
             if (!achievements.contains(prodigiousAchievement) && user.getQuizzes().size() == 10) {
                 UserAchievement userAchievement = new UserAchievement(user.getId(), prodigiousAchievement);
                 insert(userAchievement);
@@ -216,7 +216,7 @@ public class DaoManager {
                 activityDao.insert(new Activity(quizResult.getUserId(), "completed quiz, score:"+quizResult.getScore()+" time:"+quizResult.getTimeSpent()+"s", LocalDateTime.now()));
                 User user = userDao.findById(quizResult.getUserId());
                 user.getQuizResults().add(quizResult);
-                Achievement possibleAchievement = new Achievement("Quiz Machine");
+                Achievement possibleAchievement = new Achievement("Quiz Machine", "Gained for taking 10 quizzes");
                 if (!user.getAchievements().stream().map(UserAchievement::getAchievement).collect(Collectors.toList()).contains(possibleAchievement) && user.getQuizResults().size() == 10) {
                     UserAchievement achievement = new UserAchievement(user.getId(), possibleAchievement);
                     userAchievementDao.insert(achievement);
@@ -228,7 +228,7 @@ public class DaoManager {
                         sorted(Comparator.comparingInt(QuizResult::getScore).reversed().
                                 thenComparing(QuizResult::getTimeSpent)).
                         collect(Collectors.toList());
-                Achievement quizMachineAchievement = new Achievement("I Am The Greatest");
+                Achievement quizMachineAchievement = new Achievement("I Am The Greatest", "Gained for getting highest score in a quiz");
                 if (allQuizResultsOfThisQuiz.size() > 0 &&
                         quizResult.equals(allQuizResultsOfThisQuiz.get(0)) &&
                         !user.getAchievements().stream().map(UserAchievement::getAchievement).
@@ -332,6 +332,12 @@ public class DaoManager {
         if (quizChallengeDao.insert(challenge)) {
             User receiver = userDao.findById(challenge.getReceiverId());
             receiver.getQuizChallenges().add(challenge);
+        }
+    }
+
+    public void delete(Integer deleterId, Announcement announcement) {
+        if (announcementDao.deleteById(announcement.getId())) {
+            activityDao.insert(new Activity(deleterId,"deleted announcement", LocalDateTime.now()));
         }
     }
 }
