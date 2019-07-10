@@ -1,11 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="dao.AnnouncementDao" %>
-<%@ page import="datatypes.user.User" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
-<%@ page import="java.util.HashSet" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.Set" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,13 +31,6 @@
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
-    Map<Integer, Set<String>> setMap = (Map<Integer, Set<String>>) request.getServletContext().getAttribute("notifications");
-    User user = (User) request.getSession().getAttribute("user");
-    Set<String> notifications = null;
-    if (user != null) {
-        setMap.putIfAbsent(user.getId(), new HashSet<>());
-        notifications = setMap.get(user.getId());
-    }
 
 %>
 <!-- ***** Preloader Start ***** -->
@@ -79,7 +68,6 @@
 <c:if test="${sessionScope.user !=null}">
     <jsp:include page="components/top-quizzes.jsp"/>
     <jsp:include page="components/recent-quizzes.jsp"/>
-    <jsp:include page="components/my-quizzes.jsp"/>
     <jsp:include page="components/quiz-activities.jsp"/>
 </c:if>
 
@@ -115,23 +103,6 @@
     });
 </script>
 
-<%
-
-%>
-<c:if test="<%=notifications!=null%>">
-    <script>
-        $(document).ready(function () {
-            toastr.options.closeButton = true;
-            toastr.options.timeOut = 0;
-            toastr.options.extendedTimeOut = 0;
-            toastr.options.positionClass = "toast-top-right";
-            <c:forEach items="<%=notifications%>" var="notification">
-            toastr.success('${notification}');
-            </c:forEach>
-        });
-    </script>
-
-</c:if>
 </body>
 
 </html>

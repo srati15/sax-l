@@ -4,7 +4,6 @@ import dao.FriendRequestDao;
 import datatypes.messages.FriendRequest;
 import datatypes.user.User;
 import enums.DaoType;
-import enums.RequestStatus;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -13,9 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 @WebServlet("/FriendRequestDeleteServlet")
 public class FriendRequestDeleteServlet extends HttpServlet {
@@ -30,7 +26,7 @@ public class FriendRequestDeleteServlet extends HttpServlet {
         FriendRequest request2 = friendRequestDao.findBySenderReceiverId(receiverId, user.getId());
         if (request1 != null) {
             removeFromNotifications(manager, request1);
-        } else if (request2 != null){
+        } else if (request2 != null) {
             removeFromNotifications(manager, request2);
         }
         String callingPage = request.getParameter("callingPage");
@@ -43,9 +39,5 @@ public class FriendRequestDeleteServlet extends HttpServlet {
 
     private void removeFromNotifications(DaoManager manager, FriendRequest request2) {
         manager.delete(request2);
-        request2.setStatus(RequestStatus.Accepted);
-        Map<Integer, Set<String>> setMap = (Map<Integer, Set<String>>) getServletContext().getAttribute("notifications");
-        setMap.putIfAbsent(request2.getReceiverId(), new ConcurrentSkipListSet<>());
-        setMap.get(request2.getReceiverId()).removeIf(notif -> notif.endsWith(request2.getTimestamp().toString()));
     }
 }

@@ -19,9 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Collectors;
 
 @WebServlet("/AcceptChallengeServlet")
@@ -37,10 +34,6 @@ public class AcceptChallengeServlet extends HttpServlet {
         user.getQuizChallenges().removeIf(s->s.getId() == challengeId);
         challenge.setRequestStatus(RequestStatus.Accepted);
         quizChallengeDao.update(challenge);
-
-        Map<Integer, Set<String>> setMap = (Map<Integer, Set<String>>) getServletContext().getAttribute("notifications");
-        setMap.putIfAbsent(challenge.getReceiverId(), new ConcurrentSkipListSet<>());
-        setMap.get(challenge.getReceiverId()).removeIf(notif->notif.endsWith(challenge.getTimestamp().toString()));
 
         startQuiz(request, response, quiz);
     }

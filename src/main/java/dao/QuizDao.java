@@ -52,7 +52,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
         PreparedStatement statement = null;
         ResultSet rs = null;
         try {
-            String query = getInsertQuery(TABLE_NAME, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, TIMES_DONE, QUIZ_IMAGE);
+            String query = getInsertQuery(TABLE_NAME, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, TIMES_DONE, QUIZ_IMAGE, QUIZ_DESCRIPTION);
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             setParameters(entity, statement);
             logger.debug("Executing statement: {}", statement);
@@ -150,6 +150,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
         statement.setBoolean(7, entity.isOnePage());
         statement.setInt(8, entity.getTimesDone());
         statement.setString(9, entity.getQuizImageURL());
+        statement.setString(10, entity.getDescription());
     }
 
     @Override

@@ -1,7 +1,10 @@
 package servlets.user;
 
+import dao.UserDao;
 import datatypes.user.User;
+import enums.DaoType;
 import enums.FormFields;
+import enums.UserType;
 import manager.DaoManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,29 +17,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/UpdateUserServlet")
-public class UpdateUserServlet extends HttpServlet {
-    private static final Logger logger = LogManager.getLogger(UpdateUserServlet.class);
+@WebServlet("/EditUserServletFromAdmin")
+public class EditUserServletFromAdmin extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(EditUserServletFromAdmin.class);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
-        User user = (User) request.getSession().getAttribute("user");
+        UserDao userRepository = ((DaoManager) getServletContext().getAttribute("manager")).getDao(DaoType.User);
         String password = request.getParameter(FormFields.password.getValue());
         String confirmPassword = request.getParameter(FormFields.confirmpassword.getValue());
         String firstName = request.getParameter(FormFields.firstname.getValue());
         String lastName = request.getParameter(FormFields.lastname.getValue());
-        if (!password.equals(confirmPassword)) {
-            logger.debug("Passwords don't match, {} {}", password, confirmPassword);
+        UserType userType = request.getParameter("usertype").equals("admin")? UserType.Admin:UserType.User;
+        int hiddenId = Integer.parseInt(request.getParameter("hiddenId"));
+        User editedUser = userRepository.findById(hiddenId);
+        if (!password.equals(confirmPassword)){
             request.setAttribute("error", "Passwords don't match");
-            request.getRequestDispatcher("profile").forward(request, response);
+            request.getRequestDispatcher("users-list").forward(request,response);
             return;
         }
-        user.setPassword(Cracker.code(password));
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        manager.update(user);
+        editedUser.setUserType(userType);
+        editedUser.setPassword(Cracker.code(password));
+        editedUser.setFirstName(firstName);
+        editedUser.setLastName(lastName);
+        manager.update(editedUser);
         request.setAttribute("info", "Profile updated successfully");
-        request.getRequestDispatcher("profile").forward(request, response);
-
+        request.getRequestDispatcher("users-list").forward(request, response);
     }
 }

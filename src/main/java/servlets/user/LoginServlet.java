@@ -1,10 +1,8 @@
 package servlets.user;
 
 import dao.ActivityDao;
-import dao.QuizDao;
 import dao.UserDao;
 import datatypes.server.Activity;
-import datatypes.quiz.Quiz;
 import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
@@ -20,8 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -41,7 +38,7 @@ public class LoginServlet extends HttpServlet {
         }
         if (!user.getPassword().equals(passwordHash)) {
             request.setAttribute("error", "Wrong login credentials");
-            logger.error("Wrong login credentials");
+            logger.debug("Wrong login credentials");
             request.getRequestDispatcher("login").forward(request, response);
             return;
         }

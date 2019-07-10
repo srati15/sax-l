@@ -163,7 +163,7 @@
                                 </h:delete>
                                 <!-- ***** update user modal ***** -->
                                 <h:edit entityName="User"
-                                        actionServlet="UpdateUserServlet"
+                                        actionServlet="EditUserServletFromAdmin"
                                         hiddenParameterName="hiddenId"
                                         hiddenParameterValue="${currentUser.id}"
                                         formFields="<%=editFormFields%>"
@@ -240,6 +240,15 @@
         toastr.error("${requestScope.error}");
     </script>
     ${requestScope.remove("error")}
+</c:if>
+<c:if test="${requestScope.info !=null}">
+    <script>
+        toastr.options.closeButton = true;
+        toastr.options.timeOut = 0;
+        toastr.options.extendedTimeOut = 0;
+        toastr.success("${requestScope.error}");
+    </script>
+    ${requestScope.remove("info")}
 </c:if>
 </body>
 </html>

@@ -37,6 +37,7 @@
     <link href="style.css" rel="stylesheet">
 
     <link href="css/loginpanel.css" rel="stylesheet">
+    <link href="css/toastr.css" rel="stylesheet">
 
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
@@ -51,7 +52,7 @@
     UserDao userDao = manager.getDao(DaoType.User);
     QuizDao quizDao = manager.getDao(DaoType.Quiz);
     ActivityDao activityDao = manager.getDao(DaoType.Activity);
-    List<Activity> userActivities = activityDao.findAll().stream().filter(s->s.getUserId() == user.getId()).collect(Collectors.toList());
+    List<Activity> userActivities = activityDao.findAll().stream().filter(s -> s.getUserId() == user.getId()).collect(Collectors.toList());
     userActivities.sort(Comparator.comparing(Activity::getDateTime).reversed());
     pageContext.setAttribute("activities", userActivities);
     pageContext.setAttribute("friendsIds", user.getFriends());
@@ -382,7 +383,7 @@
                                     ${activity.activityName}
                             </td>
                             <td>
-                                ${DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy").format(activity.dateTime)}
+                                    ${DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy").format(activity.dateTime)}
                             </td>
                         </tr>
                         <c:set var="i" value="${i + 1}" scope="page"/>
@@ -419,7 +420,27 @@
 <script src="js/plugins.js"></script>
 <!-- Active js -->
 <script src="js/active.js"></script>
+<script src="js/jquery.validate.js"></script>
 
+<script src="js/toastr.js"></script>
+<c:if test="${requestScope.error !=null}">
+    <script>
+        toastr.options.closeButton = true;
+        toastr.options.timeOut = 0;
+        toastr.options.extendedTimeOut = 0;
+        toastr.error("${requestScope.error}");
+    </script>
+    ${requestScope.remove("error")}
+</c:if>
+<c:if test="${requestScope.info !=null}">
+    <script>
+        toastr.options.closeButton = true;
+        toastr.options.timeOut = 0;
+        toastr.options.extendedTimeOut = 0;
+        toastr.success("${requestScope.error}");
+    </script>
+    ${requestScope.remove("info")}
+</c:if>
 <script type="text/javascript" src="js/datatables.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -429,7 +450,6 @@
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
-
 </body>
 
 </html>
