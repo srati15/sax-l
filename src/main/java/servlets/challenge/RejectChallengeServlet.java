@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 @WebServlet("/RejectChallengeServlet")
 public class RejectChallengeServlet extends HttpServlet {
@@ -26,6 +29,10 @@ public class RejectChallengeServlet extends HttpServlet {
         user.getQuizChallenges().removeIf(s->s.getId() == challengeId);
         challenge.setRequestStatus(RequestStatus.Rejected);
         quizChallengeDao.update(challenge);
+
+        Map<Integer, Set<String>> setMap = (Map<Integer, Set<String>>) getServletContext().getAttribute("notifications");
+        setMap.putIfAbsent(challenge.getReceiverId(), new ConcurrentSkipListSet<>());
+        setMap.get(challenge.getReceiverId()).removeIf(notif->notif.endsWith(challenge.getTimestamp().toString()));
         request.getRequestDispatcher("profile").forward(request,response);
     }
 

@@ -25,6 +25,7 @@ public class LogoutServlet extends HttpServlet {
         activityDao.insert(new Activity(user.getId(), "logged out", LocalDateTime.now()));
         Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");
         userMap.remove(user.getId());
+        request.getSession().invalidate();
         request.getRequestDispatcher("").forward(request, response);
     }
 }

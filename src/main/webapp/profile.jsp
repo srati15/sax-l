@@ -170,7 +170,11 @@
                     <c:forEach items="${friendsIds}" var="friend">
                         <tr>
                             <td>
+
                                 <a href="user-profile?userid=${friend.id}">${friend.userName}
+                                    <c:if test="${applicationScope.onlineUsers.containsValue(friend)}">
+                                        <span class="badge badge-success">Online</span>
+                                    </c:if>
                                 </a>
                             </td>
                             <td>
@@ -265,7 +269,7 @@
                     <tbody>
                     <c:forEach var="challenge" items="${sessionScope.user.quizChallenges}">
                         <td>
-                                ${userDao.findById(challenge.senderId).userName}
+                                <a href="user-profile?userid=${challenge.senderId}">${userDao.findById(challenge.senderId).userName}</a>
                         </td>
                         <td>
                                 ${quizDao.findById(challenge.quizId).quizName}

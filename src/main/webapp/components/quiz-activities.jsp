@@ -48,8 +48,12 @@
                             <span>Date created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDate())%></span>
                             <span>Results</span>
                             <%for (QuizResult result : quizMap.get(quiz)) {%>
-                            <span>Score: <b><%=result.getScore()%></b></span>
-                            <span>Time: <b><%=result.getTimeSpent()/60%></b> Minutes <b><%=result.getTimeSpent()%60%></b> Seconds </span>
+                            <div class="card">
+                                <div class="card-body">
+                                    <span>Score: <b><%=result.getScore()%></b></span>
+                                    <span>Time: <b><%=result.getTimeSpent() / 60%></b> Minutes <b><%=result.getTimeSpent() % 60%></b> Seconds </span>
+                                </div>
+                            </div>
                             <%}%>
                         </div>
                         <a href="start-quiz?quizId=<%=quiz.getId()%>" class="btn mosh-btn mosh-btn-2">Start</a>

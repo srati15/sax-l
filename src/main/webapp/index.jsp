@@ -3,6 +3,9 @@
 <%@ page import="datatypes.user.User" %>
 <%@ page import="enums.DaoType" %>
 <%@ page import="manager.DaoManager" %>
+<%@ page import="java.util.HashSet" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,6 +35,14 @@
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
+    Map<Integer, Set<String>> setMap = (Map<Integer, Set<String>>) request.getServletContext().getAttribute("notifications");
+    User user = (User) request.getSession().getAttribute("user");
+    Set<String> notifications = null;
+    if (user != null) {
+        setMap.putIfAbsent(user.getId(), new HashSet<>());
+        notifications = setMap.get(user.getId());
+    }
+
 %>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -102,6 +113,24 @@
         </c:forEach>
     });
 </script>
+
+<%
+
+%>
+<c:if test="<%=notifications!=null%>">
+    <script>
+        $(document).ready(function () {
+            toastr.options.closeButton = true;
+            toastr.options.timeOut = 0;
+            toastr.options.extendedTimeOut = 0;
+            toastr.options.positionClass = "toast-top-right";
+            <c:forEach items="<%=notifications%>" var="notification">
+            toastr.success('${notification}');
+            </c:forEach>
+        });
+    </script>
+
+</c:if>
 </body>
 
 </html>
