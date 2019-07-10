@@ -1,19 +1,22 @@
 package datatypes.user;
 
 import datatypes.messages.QuizChallenge;
-import datatypes.quiz.QuizResult;
 import datatypes.messages.TextMessage;
 import datatypes.quiz.Quiz;
+import datatypes.quiz.QuizResult;
 import enums.UserType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class User extends Person {
     private String password;
     private UserType userType;
     private final String mail;
-    private List<Person> friends;
+    private List<Person> friends = new ArrayList<>();
     private List<Quiz> quizzes = new ArrayList<>();
     private List<Person> pendingFriendRequests = new ArrayList<>();
     private List<QuizResult> quizResults = new ArrayList<>();

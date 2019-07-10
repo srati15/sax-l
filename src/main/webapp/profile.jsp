@@ -189,7 +189,7 @@
                                         actionServlet="ChallengeSenderServlet">
                                 </h:challenge>
 
-                                <form action="FriendRequestDeleteServlet" method="post">
+                                <form action="FriendRequestDeleteServlet" method="post" style="float: left;">
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <i class="fa fa-trash"></i> Unfriend
                                     </button>
@@ -222,13 +222,23 @@
                         }
                     }
                     textMessages.sort(Comparator.comparing(Message::getTimestamp).reversed());
-                    for (int i = 0; i < Math.min(textMessages.size(), 5); i++) {
+                    for (int i = 0; i < textMessages.size(); i++) {
                         User sender = userDao.findById(textMessages.get(i).getSenderId());
                 %>
                 <ul class="list-group">
-                    <li class="list-group-item"><a
-                            href="user-profile?userid=<%=sender.getId()%>"><%=userDao.findById(textMessages.get(i).getSenderId()).getUserName()%>
-                    </a> : <%=textMessages.get(i).getTextMessage()%>
+                    <li class="list-group-item">
+                        <div class="card">
+                            <h5 class="card-header"><a
+                                    href="user-profile?userid=<%=sender.getId()%>"><%=userDao.findById(textMessages.get(i).getSenderId()).getUserName()%>
+                            </a></h5>
+                            <div class="card-body">
+                                <h6 class="lead" style=" float: left">
+                                    <%=textMessages.get(i).getTextMessage()%>
+                                </h6>
+                                <h6 class="card-text" style="float: right"><%=textMessages.get(i).getTimestamp()%>
+                                </h6>
+                            </div>
+                        </div>
                     </li>
                 </ul>
                 <%}%>

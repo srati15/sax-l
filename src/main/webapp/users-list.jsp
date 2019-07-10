@@ -161,7 +161,7 @@
                                 </h:delete>
                                 <!-- ***** update user modal ***** -->
                                 <h:edit entityName="User"
-                                        actionServlet="CreateUserServlet"
+                                        actionServlet="UpdateUserServlet"
                                         hiddenParameterName="hiddenId"
                                         hiddenParameterValue="${currentUser.id}"
                                         formFields="<%=editFormFields%>"

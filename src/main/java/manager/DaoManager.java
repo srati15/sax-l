@@ -3,13 +3,13 @@ package manager;
 
 import dao.*;
 import datatypes.announcement.Announcement;
+import datatypes.messages.FriendRequest;
 import datatypes.messages.QuizChallenge;
+import datatypes.messages.TextMessage;
+import datatypes.quiz.Quiz;
 import datatypes.quiz.QuizResult;
 import datatypes.quiz.answer.Answer;
-import datatypes.messages.FriendRequest;
-import datatypes.messages.TextMessage;
 import datatypes.quiz.question.Question;
-import datatypes.quiz.Quiz;
 import datatypes.server.Activity;
 import datatypes.user.Achievement;
 import datatypes.user.Person;
@@ -22,10 +22,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
 public class DaoManager {
     private static final Logger logger = LogManager.getLogger(DaoManager.class);
+    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
 
     private final Map<DaoType, Dao> map;
     private final AnnouncementDao announcementDao = new AnnouncementDao();
@@ -144,7 +147,7 @@ public class DaoManager {
     }
 
     public void insert(Quiz quiz) {
-        new Thread(() -> {
+        executor.execute(() -> {
             quizDao.insert(quiz);
             activityDao.insert(new Activity(quiz.getAuthorId(), "created quiz "+quiz.getQuizName(), LocalDateTime.now()));
             quiz.getQuestionAnswerMap().keySet().forEach(s -> s.setQuizId(quiz.getId()));
@@ -174,7 +177,7 @@ public class DaoManager {
                 UserAchievement userAchievement = new UserAchievement(user.getId(), prodigiousAchievement);
                 insert(userAchievement);
             }
-        }).start();
+        });
     }
 
     public void delete(User deleteUser) {
@@ -199,16 +202,16 @@ public class DaoManager {
     }
 
     private void insert(UserAchievement userAchievement) {
-        new Thread(() -> {
+        executor.execute(() -> {
             if(userAchievementDao.insert(userAchievement)){
                 userDao.findById(userAchievement.getUserId()).getAchievements().add(userAchievement);
                 activityDao.insert(new Activity(userAchievement.getUserId(), "gained achievement "+userAchievement.getAchievement().getAchievementName(), LocalDateTime.now()));
             }
-        }).start();
+        });
     }
 
     public void insert(QuizResult quizResult) {
-        new Thread(() -> {
+        executor.execute(() -> {
             if (quizResultDao.insert(quizResult)){
                 activityDao.insert(new Activity(quizResult.getUserId(), "completed quiz, score:"+quizResult.getScore()+" time:"+quizResult.getTimeSpent()+"s", LocalDateTime.now()));
                 User user = userDao.findById(quizResult.getUserId());
@@ -235,7 +238,7 @@ public class DaoManager {
                     user.getAchievements().add(achievement);
                 }
             }
-        }).start();
+        });
     }
 
     public void delete(Quiz quiz) {
@@ -260,11 +263,11 @@ public class DaoManager {
     }
 
     public void insert(TextMessage mes) {
-        new Thread(() -> {
+        executor.execute(() -> {
             if (textMessageDao.insert(mes)){
                 setMessages(mes);
             }
-        }).start();
+        });
     }
 
     private void setMessages(TextMessage mes) {
@@ -280,12 +283,14 @@ public class DaoManager {
 
     public void update(FriendRequest request) {
         friendRequestDao.update(request);
-        User sender = userDao.findById(request.getSenderId());
         User receiver = userDao.findById(request.getReceiverId());
+        User sender = userDao.findById(request.getSenderId());
+        System.out.println(receiver);
+        System.out.println(sender);
         sender.getFriends().add(receiver);
         receiver.getFriends().add(sender);
         receiver.getPendingFriendRequests().remove(sender);
-        activityDao.insert(new Activity(receiver.getId(), "accepted "+receiver.getUserName()+"'s friend request", LocalDateTime.now()));
+        activityDao.insert(new Activity(receiver.getId(), "accepted "+sender.getUserName()+"'s friend request", LocalDateTime.now()));
     }
 
     public void delete(FriendRequest request) {
