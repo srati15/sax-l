@@ -41,7 +41,6 @@
 
 </head>
 <body>
-
 <%
     DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
     AnnouncementDao announcementDao = daoManager.getDao(DaoType.Announcement);

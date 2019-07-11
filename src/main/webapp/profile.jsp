@@ -262,7 +262,6 @@
 
             <div class="tab-pane fade" id="achievements">
                 <ul class="list-group">
-                    <a href="#" data-toggle="tooltip" title="Some tooltip text!">Hover over me</a>
                     <p class="text-primary"></p>
                     <%for (UserAchievement achievement : user.getAchievements()) {%>
                     <li class="list-group-item">

@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Quiz extends Domain<Integer> {
     private String quizName;
     private int authorId;
-    private int timesDone;
     private LocalDateTime dateCreated;
     private boolean randomized;
     private boolean onePage;
@@ -20,6 +20,7 @@ public class Quiz extends Domain<Integer> {
     private boolean allowedPracticemode;
     private String quizImageURL;
     private String description;
+    private AtomicInteger timesDone = new AtomicInteger(0);
     private Map<Question, Answer> questionAnswerMap = new HashMap<>();
     public String getQuizName() {
         return quizName;
@@ -27,11 +28,10 @@ public class Quiz extends Domain<Integer> {
     public Quiz(){
 
     }
-    public Quiz(int id, String quizName, int authorId, int timesDone, LocalDateTime dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL, String description) {
+    public Quiz(int id, String quizName, int authorId, LocalDateTime dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL, String description) {
         this.id = id;
         this.quizName = quizName;
         this.authorId = authorId;
-        this.timesDone = timesDone;
         this.dateCreated = dateCreated;
         this.randomized = randomized;
         this.onePage = onePage;
@@ -78,7 +78,7 @@ public class Quiz extends Domain<Integer> {
     }
 
     public int getTimesDone() {
-        return timesDone;
+        return timesDone.get();
     }
 
     public void setQuestionAnswerMap(Map<Question, Answer> questionAnswerMap) {
@@ -90,7 +90,7 @@ public class Quiz extends Domain<Integer> {
     }
 
     public void setTimesDone(int timesDone) {
-        this.timesDone = timesDone;
+        this.timesDone.set(timesDone);
     }
 
     public Map<Question, Answer> getQuestionAnswerMap() {
@@ -107,7 +107,7 @@ public class Quiz extends Domain<Integer> {
         if (o == null || getClass() != o.getClass()) return false;
         Quiz quiz = (Quiz) o;
         return authorId == quiz.authorId &&
-                timesDone == quiz.timesDone &&
+                timesDone.equals(quiz.timesDone) &&
                 randomized == quiz.randomized &&
                 onePage == quiz.onePage &&
                 allowedImmediateCorrection == quiz.allowedImmediateCorrection &&

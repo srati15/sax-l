@@ -6,6 +6,8 @@
 <%@ page import="manager.DaoManager" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.*" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
+
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     User user = (User) request.getSession().getAttribute("user");
@@ -35,7 +37,7 @@
                         for (Quiz quiz : quizMap.keySet()) {
                     %>
 
-                    <!-- Single Team Slide -->
+                    <!-- Quiz Activities -->
                     <div class="single-team-slide text-center border border-warning rounded-top">
                         <!-- Thumbnail -->
                         <div class="team-thumbnail">
@@ -56,10 +58,9 @@
                             </div>
                             <%}%>
                         </div>
-                        <a href="start-quiz?quizId=<%=quiz.getId()%>" class="btn mosh-btn mosh-btn-2">Start</a>
-                        <!-- Social Info -->
+                        <h:start quiz="<%=quiz%>" buttonClass="btn mosh-btn mosh-btn-2" styled="false"/>
                     </div>
-                    <!-- Single Team Slide -->
+                    <!-- Quiz Activities -->
 
                     <%}%>
                 </div>

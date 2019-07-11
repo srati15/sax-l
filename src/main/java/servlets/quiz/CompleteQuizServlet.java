@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class CompleteQuizServlet extends HttpServlet {
         int result = (int) quizResults.values().stream().filter(s -> s).count();
 
 
-        QuizResult quizResult = new QuizResult(quiz.getId(), user.getId(), result, seconds );
+        QuizResult quizResult = new QuizResult(quiz.getId(), user.getId(), result, seconds, LocalDateTime.now());
         manager.insert(quizResult);
         quiz.setTimesDone(quiz.getTimesDone()+1);
         quizDao.update(quiz);

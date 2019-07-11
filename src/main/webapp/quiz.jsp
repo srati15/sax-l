@@ -7,6 +7,7 @@
 <%@ page import="enums.UserType" %>
 <%@ page import="manager.DaoManager" %>
 <%@ page import="dao.QuizResultDao" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -98,22 +99,7 @@
                             ${userDao.findById(quiz.authorId).userName}
                     </td>
                     <td>
-                        <c:choose>
-                            <c:when test="${quiz.onePage}">
-                                <a href="start-quiz?quizId=${quiz.id}">
-                                    <button type="button" class="btn btn-info btn-sm"  style="float:left">
-                                        <i class="fa fa-hourglass-start"></i> Start
-                                    </button>
-                                </a>
-                            </c:when>
-                            <c:otherwise>
-                                <a href="start-quiz?quizId=${quiz.id}&questionId=1">
-                                    <button type="button" class="btn btn-info btn-sm"  style="float:left">
-                                        <i class="fa fa-hourglass-start"></i> Start
-                                    </button>
-                                </a>
-                            </c:otherwise>
-                        </c:choose>
+                        <h:start quiz="${quiz}" buttonClass="btn btn-info btn-sm" styled="true"/>
                         <c:if test="${user.userType == UserType.Admin}">
                             <form action="DeleteQuizServlet" method="post" style="float:left">
                                 <button type="submit" class="btn btn-danger btn-sm">
@@ -121,7 +107,7 @@
                                 </button>
                                 <input type="hidden" name="deleteQuizId" value="${quiz.id}">
                             </form>
-                            <c:if test="${quizResultDao.findAll().stream().filter(q->q.getQuizId()==quiz.id).count() != 0}">
+                            <c:if test="${quiz.timesDone != 0}">
                                 <form action="ClearQuizHistoryServlet" method="post" style="float:left">
                                     <button type="submit" class="btn btn-warning btn-sm">
                                         <i class="fa fa-trash"></i> Clear History

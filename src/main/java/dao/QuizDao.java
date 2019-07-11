@@ -31,7 +31,6 @@ public class QuizDao implements Dao<Integer, Quiz>{
     private static final String IS_PRACTICE = "is_allowed_practice_mode";
     private static final String IS_CORRECTION = "is_allowed_correction";
     private static final String IS_SINGLEPAGE = "is_single_page";
-    private static final String TIMES_DONE = "times_done";
     private static final String QUIZ_DESCRIPTION = "quiz_description";
 
     private static final String TABLE_NAME = "quiz";
@@ -52,7 +51,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
         PreparedStatement statement = null;
         ResultSet rs = null;
         try {
-            String query = getInsertQuery(TABLE_NAME, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, TIMES_DONE, QUIZ_IMAGE, QUIZ_DESCRIPTION);
+            String query = getInsertQuery(TABLE_NAME, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE,  QUIZ_IMAGE, QUIZ_DESCRIPTION);
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             setParameters(entity, statement);
             logger.debug("Executing statement: {}", statement);
@@ -117,7 +116,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
         PreparedStatement statement = null;
         ResultSet rs = null;
         try {
-            String query = getUpdateQuery(TABLE_NAME, QUIZ_ID, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, TIMES_DONE, QUIZ_IMAGE);
+            String query = getUpdateQuery(TABLE_NAME, QUIZ_ID, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, QUIZ_IMAGE);
             statement = connection.prepareStatement(query);
             setParameters(entity, statement);
             statement.setInt(10, entity.getId());
@@ -148,9 +147,8 @@ public class QuizDao implements Dao<Integer, Quiz>{
         statement.setBoolean(5, entity.isAllowedImmediateCorrection());
         statement.setBoolean(6, entity.isAllowedPracticemode());
         statement.setBoolean(7, entity.isOnePage());
-        statement.setInt(8, entity.getTimesDone());
-        statement.setString(9, entity.getQuizImageURL());
-        statement.setString(10, entity.getDescription());
+        statement.setString(8, entity.getQuizImageURL());
+        statement.setString(9, entity.getDescription());
     }
 
     @Override
@@ -196,9 +194,8 @@ public class QuizDao implements Dao<Integer, Quiz>{
                 boolean isPractice = rs.getBoolean(IS_PRACTICE);
                 boolean isCorrection = rs.getBoolean(IS_CORRECTION);
                 boolean isSinglePage = rs.getBoolean(IS_SINGLEPAGE);
-                int timesDone = rs.getInt(TIMES_DONE);
                 String description = rs.getString(QUIZ_DESCRIPTION);
-                return new Quiz(quizId, quizName, authorId, timesDone, dateCreated.toLocalDateTime(), isRandomized, isSinglePage, isCorrection, isPractice, quizImage, description);
+                return new Quiz(quizId, quizName, authorId, dateCreated.toLocalDateTime(), isRandomized, isSinglePage, isCorrection, isPractice, quizImage, description);
             } catch (SQLException e) {
                 logger.error(e);
             }

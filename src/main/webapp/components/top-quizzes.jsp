@@ -6,6 +6,8 @@
 <%@ page import="java.util.Comparator" %>
 <%@ page import="java.util.List" %>
 <%@ page import="datatypes.quiz.Quiz" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
+
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
     QuizDao quizDao = manager.getDao(DaoType.Quiz);
@@ -32,7 +34,7 @@
                             if (num > 5) break;
                     %>
 
-                    <!-- Single Team Slide -->
+                    <!-- Top quizzes -->
                     <div class="single-team-slide text-center border border-warning rounded-top">
                         <!-- Thumbnail -->
                         <div class="team-thumbnail">
@@ -45,8 +47,7 @@
                             <span>Date created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDate())%></span>
                             <span>Done <%=quiz.getTimesDone()%> times</span>
                         </div>
-                        <a href="start-quiz?quizId=<%=quiz.getId()%>" class="btn mosh-btn mosh-btn-2">Start</a>
-                        <!-- Social Info -->
+                        <h:start quiz="<%=quiz%>" buttonClass="btn mosh-btn mosh-btn-2" styled="false"/>
                     </div>
                     <!-- Single Team Slide -->
 

@@ -9,6 +9,9 @@
 <%@ page import="manager.DaoManager" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.util.stream.Collectors" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,7 +40,6 @@
 
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-    AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
     UserDao userDao = manager.getDao(DaoType.User);
     QuizDao quizDao = manager.getDao(DaoType.Quiz);
     QuizResultDao quizResultDao = manager.getDao(DaoType.QuizResult);
@@ -48,6 +50,8 @@
         quizResultMap.get(s.getUserId()).add(s);
     });
     List<QuizResult> topPerformers = quizResultDao.findAll().stream().sorted(Comparator.comparing(QuizResult::getScore).reversed().thenComparing(QuizResult::getTimeSpent)).limit(3).collect(Collectors.toList());
+    List<QuizResult> topPerformersToday = quizResultDao.findAll().stream().filter(q->q.getTimestamp().toLocalDate().equals(LocalDate.now())).sorted(Comparator.comparing(QuizResult::getScore).reversed().thenComparing(QuizResult::getTimeSpent)).limit(3).collect(Collectors.toList());
+    pageContext.setAttribute("topPerformersToday",topPerformersToday);
     pageContext.setAttribute("quizResults", quizResultMap);
     pageContext.setAttribute("topPerformers", topPerformers);
     pageContext.setAttribute("userDao", userDao);
@@ -93,8 +97,7 @@
                     <!-- Post Meta -->
                     <div class="post-meta">
                         <h6>By <a
-                                href="user-profile?userid=${userDao.findById(quiz.authorId).id}">${userDao.findById(quiz.authorId).userName},</a><a
-                                href="#">${quiz.dateCreated.toLocalDate()}</a></h6>
+                                href="user-profile?userid=${userDao.findById(quiz.authorId).id}">${userDao.findById(quiz.authorId).userName},</a>${quiz.dateCreated.toLocalDate()}</h6>
                     </div>
                     <!-- Quiz Title -->
                     <h2>${quiz.quizName}</h2>
@@ -108,23 +111,9 @@
                         <div class="card-body">
                             ${quiz.description} </div>
                     </div>
-                    <!---all performers--->
-                    <h2 class="text-center">Top Performers</h2>
-                    <div class="card-deck border border-warning rounded-top section_padding_50">
-                        <c:forEach var="quizResult" items="${topPerformers}">
-                            <div class="team-meta-info">
-                                <div class="card" style="width: 18rem;">
-                                    <h5 class="card-title">User: <b><a
-                                            href="user-profile?userid=${userDao.findById(quizResult.userId).id}">${userDao.findById(quizResult.userId).userName}</a></b>
-                                    </h5>
-                                    <div class="card-body">
-                                        <p class="card-text">Score: <b>${quizResult.score}</b> Time:
-                                            <b>${quizResult.timeSpent}</b> Seconds</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
-                    </div>
+                    <h:performer userDao="${userDao}" title="Top Performers" quizResults="${topPerformers}"/>
+                    <h:performer userDao="${userDao}" title="Top Performers Today" quizResults="${topPerformersToday}"/>
+
                     <h2 class="text-center">All Performers</h2>
                     <div class="card-deck border border-warning rounded-top section_padding_50">
                         <c:forEach var="entry" items="${quizResults}">
@@ -145,23 +134,7 @@
                     </div>
 
                     <!-- Take Quiz -->
-                    <c:choose>
-                        <c:when test="${quiz.onePage}">
-                            <a href="start-quiz?quizId=${quiz.id}">
-                                <button type="button" class="btn btn-info btn-sm" style="float:left">
-                                    <i class="fa fa-hourglass-start"></i> Start
-                                </button>
-                            </a>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="start-quiz?quizId=${quiz.id}&questionId=1">
-                                <button type="button" class="btn btn-info btn-sm" style="float:left">
-                                    <i class="fa fa-hourglass-start"></i> Start
-                                </button>
-                            </a>
-                        </c:otherwise>
-                    </c:choose>
-
+                    <h:start quiz="${quiz}" buttonClass="btn btn-info btn-sm" styled="true"/>
                 </div>
             </div>
         </div>

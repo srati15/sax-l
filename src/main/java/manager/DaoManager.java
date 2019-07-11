@@ -107,6 +107,7 @@ public class DaoManager {
             List<Question> questions = questionDao.getQuestionForQuiz(quiz.getId());
             questions.forEach(question -> questionAnswerMap.put(question, answerDao.findAnswerForQuestion(question.getId())));
             quiz.setQuestionAnswerMap(questionAnswerMap);
+            quiz.setTimesDone((int) quizResultDao.findAll().stream().filter(s->s.getQuizId() == quiz.getId()).count());
         }
     }
 
@@ -219,6 +220,8 @@ public class DaoManager {
                 activityDao.insert(new Activity(quizResult.getUserId(), "completed quiz, score:"+quizResult.getScore()+" time:"+quizResult.getTimeSpent()+"s", LocalDateTime.now()));
                 User user = userDao.findById(quizResult.getUserId());
                 user.getQuizResults().add(quizResult);
+                int current = quizDao.findById(quizResult.getQuizId()).getTimesDone();
+                quizDao.findById(quizResult.getQuizId()).setTimesDone(current+1);
                 Achievement possibleAchievement = new Achievement("Quiz Machine", "Gained for taking 10 quizzes");
                 if (!user.getAchievements().stream().map(UserAchievement::getAchievement).collect(Collectors.toList()).contains(possibleAchievement) && user.getQuizResults().size() == 10) {
                     UserAchievement achievement = new UserAchievement(user.getId(), possibleAchievement);
@@ -353,6 +356,9 @@ public class DaoManager {
                 quizResultDao.deleteById(result.getId());
                 userDao.findById(result.getUserId()).getQuizResults().remove(result);
             });
+            Quiz quiz = quizDao.findById(quizId);
+            quiz.setTimesDone(0);
+            quizDao.update(quiz);
             activityDao.insert(new Activity(userId, "deleted history for quiz "+quizDao.findById(quizId).getQuizName(), LocalDateTime.now()));
             logger.info("{} cleared history for quiz {}",userDao.findById(userId).getUserName(), quizDao.findById(quizId).getQuizName());
         });

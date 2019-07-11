@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -25,6 +26,8 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
     private static final String QUIZ_ID = "quiz_id";
     private static final String SCORE = "score";
     private static final String TIME_SPENT = "time_spent";
+    private static final String TIMESTAMP = "date_happened";
+
     private static final String TABLE_NAME = "results";
 
     public QuizResultDao(){
@@ -171,11 +174,10 @@ public class QuizResultDao implements Dao<Integer, QuizResult> {
                 int quizId = rs.getInt(QUIZ_ID);
                 int score = rs.getInt(SCORE);
                 int timeSpent = rs.getInt(TIME_SPENT);
-
-                QuizResult quizResult = new QuizResult(quizId,userId,score,timeSpent);
+                LocalDateTime timestamp = rs.getTimestamp(TIMESTAMP).toLocalDateTime();
+                QuizResult quizResult = new QuizResult(quizId,userId,score,timeSpent, timestamp);
                 quizResult.setId(resultId);
                 return quizResult;
-
             } catch (SQLException e) {
                 logger.error(e);
             }
