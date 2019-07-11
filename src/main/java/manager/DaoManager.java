@@ -23,10 +23,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class DaoManager {
@@ -45,7 +42,7 @@ public class DaoManager {
     private final UserAchievementDao userAchievementDao = new UserAchievementDao();
     private final QuizChallengeDao quizChallengeDao = new QuizChallengeDao();
     private final ActivityDao activityDao = new ActivityDao((ThreadPoolExecutor) Executors.newFixedThreadPool(4));
-
+    private CountDownLatch latch ;
     public DaoManager() {
         map = new HashMap<>();
         map.put(DaoType.Announcement, announcementDao);
@@ -59,13 +56,24 @@ public class DaoManager {
         map.put(DaoType.UserAchievement, userAchievementDao);
         map.put(DaoType.Activity, activityDao);
         map.put(DaoType.QuizChallenge, quizChallengeDao);
-        map.values().forEach(Dao::cache);
-        setQuizFields();
-        setUserFields();
-        setTextMessages();
-        setAchievements();
-        setQuizResults();
-        setQuizChallenges();
+        latch = new CountDownLatch(map.size());
+        map.values().forEach(dao -> {
+            executor.execute(()->{
+                dao.cache();
+                latch.countDown();
+            });
+        });
+        try {
+            latch.await();
+            setQuizFields();
+            setUserFields();
+            setTextMessages();
+            setAchievements();
+            setQuizResults();
+            setQuizChallenges();
+        } catch (InterruptedException e) {
+            logger.error(e);
+        }
     }
 
     private void setQuizChallenges() {
@@ -102,6 +110,7 @@ public class DaoManager {
     }
 
     private void setQuizFields() {
+        System.out.println("asdjkaksd");
         for (Quiz quiz : quizDao.findAll()) {
             Map<Question, Answer> questionAnswerMap = new HashMap<>();
             List<Question> questions = questionDao.getQuestionForQuiz(quiz.getId());

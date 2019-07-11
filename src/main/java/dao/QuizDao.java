@@ -116,7 +116,7 @@ public class QuizDao implements Dao<Integer, Quiz>{
         PreparedStatement statement = null;
         ResultSet rs = null;
         try {
-            String query = getUpdateQuery(TABLE_NAME, QUIZ_ID, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, QUIZ_IMAGE);
+            String query = getUpdateQuery(TABLE_NAME, QUIZ_ID, QUIZ_AUTHOR, QUIZ_NAME, DATE_CREATED, IS_RANDOMIZED, IS_CORRECTION, IS_PRACTICE, IS_SINGLEPAGE, QUIZ_IMAGE, QUIZ_DESCRIPTION);
             statement = connection.prepareStatement(query);
             setParameters(entity, statement);
             statement.setInt(10, entity.getId());
