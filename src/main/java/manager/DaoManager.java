@@ -2,11 +2,8 @@ package manager;
 
 
 import dao.*;
-import database.CreateConnection;
 import datatypes.announcement.Announcement;
-import datatypes.messages.FriendRequest;
-import datatypes.messages.QuizChallenge;
-import datatypes.messages.TextMessage;
+import datatypes.messages.*;
 import datatypes.quiz.Quiz;
 import datatypes.quiz.QuizResult;
 import datatypes.quiz.answer.Answer;
@@ -18,6 +15,7 @@ import datatypes.user.User;
 import datatypes.user.UserAchievement;
 import enums.DaoType;
 import enums.RequestStatus;
+import mail.ReplySender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,6 +39,8 @@ public class DaoManager {
     private final QuizResultDao quizResultDao = new QuizResultDao();
     private final UserAchievementDao userAchievementDao = new UserAchievementDao();
     private final QuizChallengeDao quizChallengeDao = new QuizChallengeDao();
+    private final AdminMessageDao adminMessageDao = new AdminMessageDao();
+    private final AdminReplyMessageDao adminReplyMessageDao = new AdminReplyMessageDao();
     private final ActivityDao activityDao = new ActivityDao((ThreadPoolExecutor) Executors.newFixedThreadPool(4));
     private CountDownLatch latch ;
     public DaoManager() {
@@ -56,6 +56,8 @@ public class DaoManager {
         map.put(DaoType.UserAchievement, userAchievementDao);
         map.put(DaoType.Activity, activityDao);
         map.put(DaoType.QuizChallenge, quizChallengeDao);
+        map.put(DaoType.AdminMessage, adminMessageDao);
+        map.put(DaoType.AdminReply, adminReplyMessageDao);
         latch = new CountDownLatch(map.size());
         map.values().forEach(dao -> {
             executor.execute(()->{
@@ -110,7 +112,6 @@ public class DaoManager {
     }
 
     private void setQuizFields() {
-        System.out.println("asdjkaksd");
         for (Quiz quiz : quizDao.findAll()) {
             Map<Question, Answer> questionAnswerMap = new HashMap<>();
             List<Question> questions = questionDao.getQuestionForQuiz(quiz.getId());
@@ -392,5 +393,20 @@ public class DaoManager {
             threadPool.shutdownNow();
             Thread.currentThread().interrupt();
         }
+    }
+
+    public void insert(AdminMessage adminMessage) {
+        adminMessageDao.insert(adminMessage);
+    }
+
+    public boolean insert(AdminReply adminReply) {
+        if (adminReplyMessageDao.insert(adminReply)){
+            ReplySender.send(adminMessageDao.findById(adminReply.getMessageId()), adminReply.getReplyText());
+            AdminMessage message = adminMessageDao.findById(adminReply.getMessageId());
+            message.setSeen(true);
+            adminMessageDao.update(message);
+            return true;
+        }
+        return false;
     }
 }

@@ -1,5 +1,6 @@
 package mail;
 
+import datatypes.messages.AdminMessage;
 import datatypes.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,12 +9,12 @@ import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.Properties;
 
-public class PasswordRecovery {
-    private static final Logger logger = LogManager.getLogger(PasswordRecovery.class);
+public class ReplySender {
+    private static final Logger logger = LogManager.getLogger(ReplySender.class);
 
     private static final Properties properties = new MailInfo().getProperties();
-    private static final String htmlTemplate = new TemplateReader("recovery.html").getText();
-    public static boolean send(User user, String password) {
+    private static final String htmlTemplate = new TemplateReader("reply.html").getText();
+    public static boolean send(AdminMessage adminMessage, String reply) {
 
         Session session = Session.getInstance(properties,
                 new Authenticator() {
@@ -22,16 +23,14 @@ public class PasswordRecovery {
                     }
                 });
         try {
-            if (isValidMail(user.getMail())) {
+            if (isValidMail(adminMessage.getMail())) {
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(properties.getProperty("mail.smtp.from")));
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getMail()));
-                message.setSubject("Password Recovery | Sax-l");
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(adminMessage.getMail()));
+                message.setSubject("Re : "+adminMessage.getSubject());
                 String copy = htmlTemplate;
-                copy = copy.replaceAll("%USERNAME%", user.getUserName());
-                copy = copy.replaceAll("%FIRSTNAME%", user.getFirstName());
-                copy = copy.replaceAll("%LASTNAME%", user.getLastName());
-                copy = copy.replaceAll("%TEMP_PASSWORD%", password);
+                copy = copy.replaceAll("%FIRSTNAME%", adminMessage.getName());
+                copy = copy.replaceAll("%REPLY_TEXT%", reply);
 
                 MimeBodyPart mimeBodyPart = new MimeBodyPart();
                 mimeBodyPart.setContent(copy, "text/html");
@@ -42,7 +41,7 @@ public class PasswordRecovery {
 
                 Transport.send(message);
 
-                logger.info("Password Recovery mail sent");
+                logger.info("Reply mail sent");
                 return true;
             }
         } catch (MessagingException e) {

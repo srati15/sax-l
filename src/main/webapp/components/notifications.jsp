@@ -18,16 +18,14 @@
 
 <script>
     $(document).ready(function () {
-        toastr.options.timeOut=10000;
-        toastr.options.position="toast-bottom-right";
+        toastr.options.timeOut = 10000;
+        toastr.options.position = "toast-bottom-right";
         <c:forEach items="<%=announcementDao.findAll()%>" var="announcement">
-        toastr.info("${announcement.announcementText}", "Announcement", {});
+        toastr.info("${announcement.announcementText}", "Announcement");
         </c:forEach>
-    });
-    <c:if test="${sessionScope.user!= null}">
-    $(document).ready(function () {
-        toastr.options.timeOut=10000;
-        toastr.options.position="toast-bottom-right";
+        <c:if test="${sessionScope.user!= null}">
+        toastr.options.timeOut = 10000;
+        toastr.options.position = "toast-bottom-right";
         <c:forEach var="challenge" items="<%=user.getQuizChallenges()%>">
         <% QuizChallenge challenge = (QuizChallenge) pageContext.getAttribute("challenge");%>
         toastr.success("sent you a challenge" + '\n' + "<%=challenge.getTimestamp()%>", "<%=StringUtils.capitalize(userDao.findById(challenge.getSenderId()).getUserName())%>");
@@ -36,18 +34,23 @@
         <% Person person = (Person) pageContext.getAttribute("person");%>
         toastr.success("<%=person.getUserName()%> sent you a Friend Request");
         </c:forEach>
-    });
-    </c:if>
-    <c:if test="${requestScope.error !=null}">
+        </c:if>
+        <c:if test="${requestScope.error !=null}">
+        toastr.options.position = "toast-bottom-right";
         toastr.error("${requestScope.error}");
         ${requestScope.remove("error")}
-    </c:if>
-    <c:if test="${requestScope.info !=null}">
+        </c:if>
+        <c:if test="${requestScope.info !=null}">
+        toastr.options.position = "toast-bottom-right";
         toastr.success("${requestScope.info}");
         ${requestScope.remove("info")}
-    </c:if>
-    <c:if test="${requestScope.warn !=null}">
+        </c:if>
+        <c:if test="${requestScope.warn !=null}">
+        toastr.options.position = "toast-bottom-right";
+
         toastr.warning("${requestScope.warn}");
         ${requestScope.remove("warn")}
-    </c:if>
+        </c:if>
+    });
+
 </script>

@@ -12,6 +12,8 @@
                     <div class="collapse navbar-collapse justify-content-end" id="mosh-navbar">
                         <ul class="navbar-nav animated" id="nav">
                             <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/" id="home-ref">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="contact" id="contact-ref">Contact</a></li>
+
                             <c:if test="${sessionScope.user !=null}">
                                 <li class="nav-item"><a class="nav-link" href="profile" id="profile-ref">Profile</a></li>
                                 <li class="nav-item"><a class="nav-link" href="users-list" id="users-list-ref">Users</a></li>

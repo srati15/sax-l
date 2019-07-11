@@ -136,7 +136,7 @@
 </section>
 <!-- ***** Welcome Area End ***** -->
 
-<!-- ***** Clients Area Start ***** -->
+<!-- ***** Quiz Area Start ***** -->
 <section class="mosh-clients-area section_padding_100 clearfix">
     <div class="container">
         <h2 id="questionNum">Question N1</h2>
@@ -148,19 +148,19 @@
         </div>
         <div style="float: left; width: 70%; display: block">
             <p>
-                <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#questionResponse"
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#questionResponse"
                         aria-expanded="false" aria-controls="collapseExample">
                     Question-Response
                 </button>
-                <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#pictureResponse"
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#pictureResponse"
                         aria-expanded="false" aria-controls="collapseExample">
                     Picture-Response
                 </button>
-                <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#fillBlank"
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#fillBlank"
                         aria-expanded="false" aria-controls="collapseExample">
                     Fill in the blank
                 </button>
-                <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#multipleChoice"
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multipleChoice"
                         aria-expanded="false" aria-controls="collapseExample">
                     Multiple choice
                 </button>
@@ -369,7 +369,7 @@
         </div>
     </div>
 </section>
-<!-- ***** Clients Area End ***** -->
+<!-- ***** Quiz Area End ***** -->
 
 
 <!-- ***** Footer Area Start ***** -->

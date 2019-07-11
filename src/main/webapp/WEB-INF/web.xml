@@ -127,4 +127,23 @@
         <url-pattern>/quiz-details</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>contact</servlet-name>
+        <jsp-file>/contact.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>contact</servlet-name>
+        <url-pattern>/contact</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>inbox</servlet-name>
+        <jsp-file>/inbox.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>inbox</servlet-name>
+        <url-pattern>/inbox</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -11,7 +11,9 @@ public enum DaoType {
     QuizResult(8),
     UserAchievement(9),
     QuizChallenge(10),
-    Activity(11);
+    Activity(11),
+    AdminMessage(12),
+    AdminReply(13);
     private final int value;
     DaoType(int value) {
         this.value = value;

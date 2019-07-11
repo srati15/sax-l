@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 public class TemplateReader {
     private final String text;
-    public TemplateReader(){
-        InputStream stream=getClass().getClassLoader().getResourceAsStream("recovery.html");
+    public TemplateReader(String fileName){
+        InputStream stream=getClass().getClassLoader().getResourceAsStream(fileName);
         Scanner s = new Scanner(stream).useDelimiter("\\A");
         text = s.hasNext() ? s.next() : "";
     }

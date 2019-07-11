@@ -50,8 +50,8 @@
         quizResultMap.get(s.getUserId()).add(s);
     });
     List<QuizResult> topPerformers = quizResultDao.findAll().stream().sorted(Comparator.comparing(QuizResult::getScore).reversed().thenComparing(QuizResult::getTimeSpent)).limit(3).collect(Collectors.toList());
-    List<QuizResult> topPerformersToday = quizResultDao.findAll().stream().filter(q->q.getTimestamp().toLocalDate().equals(LocalDate.now())).sorted(Comparator.comparing(QuizResult::getScore).reversed().thenComparing(QuizResult::getTimeSpent)).limit(3).collect(Collectors.toList());
-    pageContext.setAttribute("topPerformersToday",topPerformersToday);
+    List<QuizResult> topPerformersToday = quizResultDao.findAll().stream().filter(q -> q.getTimestamp().toLocalDate().equals(LocalDate.now())).sorted(Comparator.comparing(QuizResult::getScore).reversed().thenComparing(QuizResult::getTimeSpent)).limit(3).collect(Collectors.toList());
+    pageContext.setAttribute("topPerformersToday", topPerformersToday);
     pageContext.setAttribute("quizResults", quizResultMap);
     pageContext.setAttribute("topPerformers", topPerformers);
     pageContext.setAttribute("userDao", userDao);
@@ -97,7 +97,8 @@
                     <!-- Post Meta -->
                     <div class="post-meta">
                         <h6>By <a
-                                href="user-profile?userid=${userDao.findById(quiz.authorId).id}">${userDao.findById(quiz.authorId).userName},</a>${quiz.dateCreated.toLocalDate()}</h6>
+                                href="user-profile?userid=${userDao.findById(quiz.authorId).id}">${userDao.findById(quiz.authorId).userName},</a>${quiz.dateCreated.toLocalDate()}
+                        </h6>
                     </div>
                     <!-- Quiz Title -->
                     <h2>${quiz.quizName}</h2>
@@ -107,34 +108,42 @@
                     </div>
 
                     <!-- Quiz desc -->
-                    <div class="card">
-                        <div class="card-body">
-                            ${quiz.description} </div>
-                    </div>
+                    <c:if test="${quiz.description.length()>0}">
+                        <div class="card">
+                            <div class="card-body">
+                                    ${quiz.description}
+                            </div>
+                        </div>
+                    </c:if>
+                    <!-- Take Quiz -->
+                    <p class="text-center">
+                        <h:start quiz="${quiz}" buttonClass="btn mosh-btn" styled="false"/>
+                    </p>
+
                     <h:performer userDao="${userDao}" title="Top Performers" quizResults="${topPerformers}"/>
                     <h:performer userDao="${userDao}" title="Top Performers Today" quizResults="${topPerformersToday}"/>
 
-                    <h2 class="text-center">All Performers</h2>
-                    <div class="card-deck border border-warning rounded-top section_padding_50">
-                        <c:forEach var="entry" items="${quizResults}">
-                            <div class="team-meta-info">
-                                <div class="card" style="width: 18rem;">
-                                    <h5 class="card-title">User: <b><a
-                                            href="user-profile?userid=${userDao.findById(entry.key).id}">${userDao.findById(entry.key).userName}</a></b>
-                                    </h5>
-                                    <div class="card-body">
-                                        <c:forEach var="quizRes" items="${entry.value}">
-                                            <p class="card-text">Score: <b>${quizRes.score}</b> Time:
-                                                <b>${quizRes.timeSpent}</b> Seconds</p>
-                                        </c:forEach>
+
+                    <c:if test="${quizResults.size() > 0}">
+                        <h2 class="text-center">All Performers</h2>
+                        <div class="card-deck border border-warning rounded-top section_padding_50">
+                            <c:forEach var="entry" items="${quizResults}">
+                                <div class="team-meta-info">
+                                    <div class="card" style="width: 18rem;">
+                                        <h5 class="card-title">User: <b><a
+                                                href="user-profile?userid=${userDao.findById(entry.key).id}">${userDao.findById(entry.key).userName}</a></b>
+                                        </h5>
+                                        <div class="card-body">
+                                            <c:forEach var="quizRes" items="${entry.value}">
+                                                <p class="card-text">Score: <b>${quizRes.score}</b> Time:
+                                                    <b>${quizRes.timeSpent}</b> Seconds</p>
+                                            </c:forEach>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </c:forEach>
-                    </div>
-
-                    <!-- Take Quiz -->
-                    <h:start quiz="${quiz}" buttonClass="btn btn-info btn-sm" styled="true"/>
+                            </c:forEach>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>

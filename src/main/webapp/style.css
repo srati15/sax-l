@@ -939,6 +939,49 @@ img {
     float: left;
 }
 
+
+
+.contact-form-area h2,
+.contact-information h2 {
+    font-size: 40px;
+    margin-bottom: 50px;
+    font-weight: 900;
+}
+
+.contact-form-area .form-control {
+    font-size: 12px;
+    color: #cbcddc;
+    background-color: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 2px solid #ebebeb;
+    border-radius: 0;
+    height: 50px;
+    margin-bottom: 10px;
+    padding: 15px;
+    font-style: italic;
+}
+
+.contact-form-area .form-control:hover,
+.contact-form-area .form-control:focus {
+    box-shadow: none;
+}
+
+.contact-form-area textarea.form-control {
+    height: 140px;
+}
+
+.contact-social-info > a {
+    color: #cbcddc;
+    padding: 0 10px;
+    display: inline-block;
+}
+
+.contact-social-info > a:hover {
+    color: #4a7aec;
+}
+
 /* --------------------------------
 ============= The End =============
 ---------------------------------*/
