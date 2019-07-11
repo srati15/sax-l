@@ -103,20 +103,7 @@
 <script src="js/jquery.validate.js"></script>
 
 <script src="js/toastr.js"></script>
-<c:if test="${requestScope.error !=null}">
-    <script>
-        toastr.options.closeButton = true;
-        toastr.options.timeOut = 0;
-        toastr.options.extendedTimeOut = 0;
-        toastr.error("${requestScope.error}");
-    </script>
-    ${requestScope.remove("error")}
-</c:if>
-<c:if test="${requestScope.info !=null}">
-    <script>
-        toastr.success("${requestScope.info}");
-    </script>
-    ${requestScope.remove("info")}
-</c:if>
+<jsp:include page="components/notifications.jsp"/>
+
 </body>
 </html>

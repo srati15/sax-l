@@ -2,6 +2,9 @@ package servlets.quiz;
 
 import dao.QuizDao;
 import datatypes.quiz.Quiz;
+import datatypes.quiz.QuizResult;
+import datatypes.quiz.question.Question;
+import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
 
@@ -11,16 +14,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-@WebServlet("/DeleteQuizServlet")
-public class DeleteQuizServlet extends HttpServlet {
+@WebServlet("/ClearQuizHistoryServlet")
+public class ClearQuizHistoryServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-        int quizId= Integer.parseInt(request.getParameter("deleteQuizId"));
-        QuizDao quizDao = manager.getDao(DaoType.Quiz);
-        Quiz quiz = quizDao.findById(quizId);
-        manager.delete(quiz);
-        request.setAttribute("warn", "Quiz removing request is being processed...");
+        int quizId = Integer.parseInt(request.getParameter("clearedQuizId"));
+        Integer userId = ((User) request.getSession().getAttribute("user")).getId();
+        manager.deleteHistoryForQuiz(userId,quizId);
+        request.setAttribute("warn","Quiz history is being cleared...");
         request.getRequestDispatcher("quiz").forward(request, response);
     }
+
 }

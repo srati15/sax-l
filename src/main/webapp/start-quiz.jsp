@@ -116,13 +116,8 @@
 
 
 <script src="js/stopwatch.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#checkButton").click(function () {
-            var questionId = '${question.id}';
-        });
-    });
-</script>
+<jsp:include page="components/notifications.jsp"/>
+
 </body>
 
 </html>

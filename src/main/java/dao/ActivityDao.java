@@ -9,8 +9,10 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
@@ -19,7 +21,7 @@ import static dao.helpers.QueryGenerator.*;
 
 public class ActivityDao implements Dao<Integer, Activity> {
     private static final Logger logger = LogManager.getLogger(ActivityDao.class);
-    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
+    private ThreadPoolExecutor executor;
     private static final String ACTIVITY_ID = "id";
     private static final String USER_ID = "user_id";
     private static final String ACTIVITY_NAME = "activity_name";
@@ -29,6 +31,10 @@ public class ActivityDao implements Dao<Integer, Activity> {
     private final DBRowMapper<Activity> mapper = new ActivityMapper();
     private final Cao<Integer, Activity> cao = new Cao<>();
     private final AtomicBoolean isCached = new AtomicBoolean(false);
+
+    public ActivityDao(ThreadPoolExecutor newFixedThreadPool) {
+        this.executor = newFixedThreadPool;
+    }
 
 
     @Override
@@ -132,6 +138,23 @@ public class ActivityDao implements Dao<Integer, Activity> {
         }
     }
 
+    public void shutDown() {
+        logger.info("ActivityDao is shutting down..");
+        awaitTerminationAfterShutdown(executor);
+        logger.info("ActivityDao has shut down !!");
+    }
+
+    private void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+        threadPool.shutdown();
+        try {
+            if (!threadPool.awaitTermination(60, TimeUnit.SECONDS)) {
+                threadPool.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            threadPool.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+    }
     private class ActivityMapper implements DBRowMapper<Activity> {
 
         @Override

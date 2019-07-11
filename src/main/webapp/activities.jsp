@@ -1,5 +1,4 @@
 <%@ page import="dao.ActivityDao" %>
-<%@ page import="dao.AnnouncementDao" %>
 <%@ page import="dao.UserDao" %>
 <%@ page import="datatypes.server.Activity" %>
 <%@ page import="datatypes.user.User" %>
@@ -35,13 +34,12 @@
 
     <link href="css/datatables.min.css" rel="stylesheet">
 
-
+    <link href="css/toastr.css" rel="stylesheet">
 </head>
 <body>
 
 <%
     DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
-    AnnouncementDao announcementDao = daoManager.getDao(DaoType.Announcement);
     ActivityDao activityDao = daoManager.getDao(DaoType.Activity);
     UserDao userDao = daoManager.getDao(DaoType.User);
     List<Activity> activities = new ArrayList<>(activityDao.findAll());
@@ -157,14 +155,7 @@
 </script>
 <script src="js/toastr.js"></script>
 
-<c:if test="${requestScope.error !=null}">
-    <script>
-        toastr.options.closeButton = true;
-        toastr.options.timeOut = 0;
-        toastr.options.extendedTimeOut = 0;
-        toastr.error("${requestScope.error}");
-    </script>
-    ${requestScope.remove("error")}
-</c:if>
+<jsp:include page="components/notifications.jsp"/>
+
 </body>
 </html>

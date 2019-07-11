@@ -30,6 +30,8 @@
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
 
+    <link href="css/toastr.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -162,6 +164,10 @@
 <script src="js/plugins.js"></script>
 <!-- Active js -->
 <script src="js/active.js"></script>
+
+<script src="js/toastr.js"></script>
+
+<jsp:include page="components/notifications.jsp"/>
 
 <script>
     function openForm() {

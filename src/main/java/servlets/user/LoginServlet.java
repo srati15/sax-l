@@ -43,6 +43,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
         request.getSession().setAttribute("user", user);
+        request.setAttribute("info", "Successful login.\n"+user.getUserName()+", Welcome to Sax-L");
         Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");
         userMap.put(user.getId(), user);
         ActivityDao activityDao = manager.getDao(DaoType.Activity);

@@ -37,6 +37,7 @@
 
     <link href="css/datatables.min.css" rel="stylesheet">
 
+    <link href="css/toastr.css" rel="stylesheet">
 
 </head>
 <body>
@@ -167,14 +168,7 @@
 </script>
 <script src="js/toastr.js"></script>
 
-<c:if test="${requestScope.error !=null}">
-    <script>
-        toastr.options.closeButton = true;
-        toastr.options.timeOut = 0;
-        toastr.options.extendedTimeOut = 0;
-        toastr.error("${requestScope.error}");
-    </script>
-    ${requestScope.remove("error")}
-</c:if>
+<jsp:include page="components/notifications.jsp"/>
+
 </body>
 </html>

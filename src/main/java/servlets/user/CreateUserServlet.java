@@ -46,7 +46,8 @@ public class CreateUserServlet extends HttpServlet {
 
         User user = new User(userName, Cracker.code(password), firstName, lastName, mail);
         user.setUserType(userType);
-        manager.insert(user);
+        if (manager.insert(user)) request.setAttribute("info", "Registration is successful");
+
         request.getRequestDispatcher("users-list").forward(request, response);
     }
 }

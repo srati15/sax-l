@@ -11,9 +11,7 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -23,7 +21,7 @@ import static dao.helpers.QueryGenerator.*;
 
 public class QuestionDao implements Dao<Integer, Question> {
     private static final Logger logger = LogManager.getLogger(QuestionDao.class);
-    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
+    private ThreadPoolExecutor executor;
 
     private final Cao<Integer, Question> cao = new Cao<>();
     private final QuestionMapper questionMapper = new QuestionMapper();
@@ -33,6 +31,10 @@ public class QuestionDao implements Dao<Integer, Question> {
     private static final String QUESTION_TYPE = "question_type_id";
     private static final String QUESTION_TEXT = "question_text";
     private static final String TABLE_NAME = "question";
+
+    public QuestionDao(ThreadPoolExecutor newFixedThreadPool) {
+        this.executor = newFixedThreadPool;
+    }
 
     @Override
     public Question findById(Integer id) {
@@ -121,6 +123,22 @@ public class QuestionDao implements Dao<Integer, Question> {
         }
     }
 
+    public void shutDown() {
+        logger.info("QuestionDao is shutting down..");
+        awaitTerminationAfterShutdown(executor);
+        logger.info("QuestionDao has shut down !!");
+    }
+    private void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+        threadPool.shutdown();
+        try {
+            if (!threadPool.awaitTermination(60, TimeUnit.SECONDS)) {
+                threadPool.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            threadPool.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+    }
     private class QuestionMapper implements DBRowMapper<Question> {
         @Override
         public Question mapRow(ResultSet rs) {

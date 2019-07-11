@@ -133,6 +133,7 @@
 <script src="js/active.js"></script>
 
 <script src="js/toastr.js"></script>
+<jsp:include page="components/notifications.jsp"/>
 
 </body>
 

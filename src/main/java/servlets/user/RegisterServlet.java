@@ -47,7 +47,7 @@ public class RegisterServlet extends HttpServlet {
 
         User user = new User(userName, passwordHash, firstName, lastName, mail);
         DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
-        manager.insert(user);
+        if (manager.insert(user)) request.setAttribute("info", "Registration is successful.\n"+user.getUserName()+", Welcome to Sax-L");
 
         request.getSession().setAttribute("user", user);
         Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");

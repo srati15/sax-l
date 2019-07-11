@@ -2,6 +2,7 @@ package manager;
 
 
 import dao.*;
+import database.CreateConnection;
 import datatypes.announcement.Announcement;
 import datatypes.messages.FriendRequest;
 import datatypes.messages.QuizChallenge;
@@ -22,8 +23,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class DaoManager {
@@ -32,8 +35,8 @@ public class DaoManager {
 
     private final Map<DaoType, Dao> map;
     private final AnnouncementDao announcementDao = new AnnouncementDao();
-    private final AnswerDao answerDao = new AnswerDao();
-    private final QuestionDao questionDao = new QuestionDao();
+    private final AnswerDao answerDao = new AnswerDao((ThreadPoolExecutor) Executors.newFixedThreadPool(4));
+    private final QuestionDao questionDao = new QuestionDao((ThreadPoolExecutor) Executors.newFixedThreadPool(4));
     private final FriendRequestDao friendRequestDao = new FriendRequestDao();
     private final TextMessageDao textMessageDao = new TextMessageDao();
     private final QuizDao quizDao = new QuizDao();
@@ -41,7 +44,7 @@ public class DaoManager {
     private final QuizResultDao quizResultDao = new QuizResultDao();
     private final UserAchievementDao userAchievementDao = new UserAchievementDao();
     private final QuizChallengeDao quizChallengeDao = new QuizChallengeDao();
-    private final ActivityDao activityDao = new ActivityDao();
+    private final ActivityDao activityDao = new ActivityDao((ThreadPoolExecutor) Executors.newFixedThreadPool(4));
 
     public DaoManager() {
         map = new HashMap<>();
@@ -285,8 +288,6 @@ public class DaoManager {
         friendRequestDao.update(request);
         User receiver = userDao.findById(request.getReceiverId());
         User sender = userDao.findById(request.getSenderId());
-        System.out.println(receiver);
-        System.out.println(sender);
         sender.getFriends().add(receiver);
         receiver.getFriends().add(sender);
         receiver.getPendingFriendRequests().remove(sender);
@@ -304,16 +305,20 @@ public class DaoManager {
         }
     }
 
-    public void insert(User user) {
+    public boolean insert(User user) {
         if (userDao.insert(user)){
             activityDao.insert(new Activity(user.getId(), "Registered", LocalDateTime.now()));
+            return true;
         }
+        return false;
     }
 
-    public void update(User user) {
+    public boolean update(User user) {
         if (userDao.update(user)){
             activityDao.insert(new Activity(user.getId(), "updated profile", LocalDateTime.now()));
+            return true;
         }
+        return false;
     }
 
     public void insert(Announcement announcement) {
@@ -338,6 +343,39 @@ public class DaoManager {
     public void delete(Integer deleterId, Announcement announcement) {
         if (announcementDao.deleteById(announcement.getId())) {
             activityDao.insert(new Activity(deleterId,"deleted announcement", LocalDateTime.now()));
+        }
+    }
+
+    public void deleteHistoryForQuiz(int userId, int quizId) {
+        executor.execute(()->{
+            List<QuizResult> quizResults = quizResultDao.findAll().stream().filter(quizResult -> quizResult.getQuizId() == quizId).collect(Collectors.toList());
+            quizResults.forEach(result->{
+                quizResultDao.deleteById(result.getId());
+                userDao.findById(result.getUserId()).getQuizResults().remove(result);
+            });
+            activityDao.insert(new Activity(userId, "deleted history for quiz "+quizDao.findById(quizId).getQuizName(), LocalDateTime.now()));
+            logger.info("{} cleared history for quiz {}",userDao.findById(userId).getUserName(), quizDao.findById(quizId).getQuizName());
+        });
+    }
+    public void shutDown(){
+        logger.info("DaoManager is shutting down..");
+        executor.execute(()->{
+            activityDao.shutDown();
+            questionDao.shutDown();
+            answerDao.shutDown();
+        });
+        awaitTerminationAfterShutdown(executor);
+        logger.info("Dao manager has shut down !!");
+    }
+    private void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+        threadPool.shutdown();
+        try {
+            if (!threadPool.awaitTermination(60, TimeUnit.SECONDS)) {
+                threadPool.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            threadPool.shutdownNow();
+            Thread.currentThread().interrupt();
         }
     }
 }

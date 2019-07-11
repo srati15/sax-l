@@ -114,8 +114,9 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             statement.setString(1, entity.getAnnouncementText());
             statement.setString(2, entity.getHyperLink());
             statement.setBoolean(3, entity.isActive());
-            statement.setInt(4, entity.getId());
-            statement.setInt(5, entity.getUserId());
+            statement.setInt(4, entity.getUserId());
+            statement.setInt(5, entity.getId());
+
             logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();

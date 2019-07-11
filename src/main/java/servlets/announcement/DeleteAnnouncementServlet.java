@@ -19,6 +19,7 @@ public class DeleteAnnouncementServlet extends HttpServlet {
         AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
         User user = (User) request.getSession().getAttribute("user");
         manager.delete(user.getId(),announcementDao.findById(Integer.parseInt(request.getParameter("announcementId"))));
+        request.setAttribute("warn", "Announcement deleted successfully");
         request.getRequestDispatcher("announcements").forward(request, response);
     }
 

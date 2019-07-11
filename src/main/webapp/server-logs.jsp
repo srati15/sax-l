@@ -1,14 +1,3 @@
-<%@ page import="dao.ActivityDao" %>
-<%@ page import="dao.AnnouncementDao" %>
-<%@ page import="dao.UserDao" %>
-<%@ page import="datatypes.server.Activity" %>
-<%@ page import="datatypes.user.User" %>
-<%@ page import="enums.DaoType" %>
-<%@ page import="manager.DaoManager" %>
-<%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Comparator" %>
-<%@ page import="java.util.List" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -34,7 +23,7 @@
     <link href="css/responsive.css" rel="stylesheet">
 
     <link href="css/datatables.min.css" rel="stylesheet">
-
+    <link href="css/toastr.css" rel="stylesheet">
 
 </head>
 <body>
@@ -141,15 +130,7 @@
     });
 </script>
 <script src="js/toastr.js"></script>
+<jsp:include page="components/notifications.jsp"/>
 
-<c:if test="${requestScope.error !=null}">
-    <script>
-        toastr.options.closeButton = true;
-        toastr.options.timeOut = 0;
-        toastr.options.extendedTimeOut = 0;
-        toastr.error("${requestScope.error}");
-    </script>
-    ${requestScope.remove("error")}
-</c:if>
 </body>
 </html>

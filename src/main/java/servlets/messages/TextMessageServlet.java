@@ -21,11 +21,11 @@ public class TextMessageServlet extends HttpServlet {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
         User user = (User) request.getSession().getAttribute("user");
         int receiverId = Integer.parseInt(request.getParameter("receiverId"));
-        TextMessageDao textMessageDao = manager.getDao(DaoType.TextMessage);
         Timestamp dateSent = Timestamp.valueOf(LocalDateTime.now());
         String message = request.getParameter("msg");
         TextMessage mes = new TextMessage(user.getId(), receiverId, dateSent.toLocalDateTime(), message);
         manager.insert(mes);
+        request.setAttribute("info", "Message sent");
         request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
     }
 

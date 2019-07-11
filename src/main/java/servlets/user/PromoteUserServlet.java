@@ -25,7 +25,11 @@ public class PromoteUserServlet extends HttpServlet {
         UserDao userDao = manager.getDao(DaoType.User);
         User promotable = userDao.findById(promotableUserId);
         promotable.setUserType(UserType.Admin);
-        manager.update(promotable);
+        if (manager.update(promotable)){
+            logger.info("{} is promoted to Admin", promotable.getUserName());
+        }else {
+            logger.error("Error promoting {}", promotable.getUserName());
+        }
         request.getRequestDispatcher("users-list").forward(request, response);
     }
 

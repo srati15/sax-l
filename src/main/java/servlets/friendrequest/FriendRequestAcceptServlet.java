@@ -28,7 +28,7 @@ public class FriendRequestAcceptServlet extends HttpServlet {
             removeFromNotifications(manager, request1);
         } else if (request2 != null) {
             removeFromNotifications(manager, request2);
-        }
+        };
         request.getRequestDispatcher("profile").forward(request, response);
     }
 

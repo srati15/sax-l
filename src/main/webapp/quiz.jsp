@@ -6,6 +6,7 @@
 <%@ page import="enums.DaoType" %>
 <%@ page import="enums.UserType" %>
 <%@ page import="manager.DaoManager" %>
+<%@ page import="dao.QuizResultDao" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,10 +35,11 @@
 
 <%
     DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-    AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
     UserDao userDao = manager.getDao(DaoType.User);
     QuizDao quizDao = manager.getDao(DaoType.Quiz);
+    QuizResultDao quizResultDao = manager.getDao(DaoType.QuizResult);
     pageContext.setAttribute("userDao", userDao);
+    pageContext.setAttribute("quizResultDao", quizResultDao);
     User user = (User) request.getSession().getAttribute("user");
     pageContext.setAttribute("user", user);
 %>
@@ -119,6 +121,14 @@
                                 </button>
                                 <input type="hidden" name="deleteQuizId" value="${quiz.id}">
                             </form>
+                            <c:if test="${quizResultDao.findAll().stream().filter(q->q.getQuizId()==quiz.id).count() != 0}">
+                                <form action="ClearQuizHistoryServlet" method="post" style="float:left">
+                                    <button type="submit" class="btn btn-warning btn-sm">
+                                        <i class="fa fa-trash"></i> Clear History
+                                    </button>
+                                    <input type="hidden" name="clearedQuizId" value="${quiz.id}">
+                                </form>
+                            </c:if>
                         </c:if>
                     </td>
                 </tr>
@@ -397,17 +407,8 @@
 <script src="js/jquery.validate.js"></script>
 <script src="js/quiz.js"></script>
 
-<script>
-    $(document).ready(function () {
-        toastr.options.closeButton = true;
-        toastr.options.timeOut = 0;
-        toastr.options.extendedTimeOut = 0;
-        toastr.options.positionClass = "toast-bottom-right";
-        <c:forEach items="<%=announcementDao.findAll()%>" var="announcement">
-        toastr.info('${announcement.announcementText}');
-        </c:forEach>
-    });
-</script>
+<jsp:include page="components/notifications.jsp"/>
+
 
 </body>
 

@@ -118,7 +118,7 @@ public class AnnouncementDaoTest extends DaoTest{
     }
 
     @Test
-    public boolean deleteById() {
+    public void deleteById() {
         AnnouncementDao announcementDao = new AnnouncementDao();
         Announcement ann = new Announcement(1,"dato", "", true);
         announcementDao.insert(ann);

@@ -8,9 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.Collection;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
@@ -19,7 +17,7 @@ import static dao.helpers.QueryGenerator.*;
 
 public class AnswerDao implements Dao<Integer, Answer> {
     private static final Logger logger = LogManager.getLogger(AnswerDao.class);
-    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
+    private ThreadPoolExecutor executor;
 
     private final Cao<Integer, Answer> cao = new Cao<>();
     private final AnswerMapper answerMapper = new AnswerMapper();
@@ -29,12 +27,17 @@ public class AnswerDao implements Dao<Integer, Answer> {
     private static final String ANSWER_TEXT = "answer_string";
     private static final String TABLE_NAME = "answers";
 
+    public AnswerDao(ThreadPoolExecutor newFixedThreadPool) {
+        this.executor = newFixedThreadPool;
+    }
+
 
     @Override
     public Answer findById(Integer id) {
         if (!isCached.get()) cache();
         return cao.findById(id);
     }
+
     @Deprecated
     @Override
     public boolean insert(Answer entity) {
@@ -53,6 +56,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
         //use deleteAll instead
         return false;
     }
+
     @Deprecated
     @Override
     public boolean update(Answer entity) {
@@ -116,6 +120,24 @@ public class AnswerDao implements Dao<Integer, Answer> {
         }
     }
 
+    public void shutDown() {
+        logger.info("AnswerDao is shutting down..");
+        awaitTerminationAfterShutdown(executor);
+        logger.info("AnswerDao has shut down !!");
+    }
+
+    private void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+        threadPool.shutdown();
+        try {
+            if (!threadPool.awaitTermination(60, TimeUnit.SECONDS)) {
+                threadPool.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            threadPool.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+    }
+
     private class AnswerMapper implements DBRowMapper<Answer> {
         @Override
         public Answer mapRow(ResultSet rs) {
@@ -133,6 +155,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
             return null;
         }
     }
+
     private class DeleteTask implements Runnable {
         private final Answer answer;
         private final CountDownLatch latch;
@@ -168,6 +191,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
             }
         }
     }
+
     private class InsertTask implements Runnable {
         private final Answer answer;
         private final CountDownLatch latch;

@@ -23,6 +23,7 @@ public class EditAnnouncementServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("editAnnouncementId"));
         Announcement announcement = new Announcement(id, user.getId(), announcementText, hyperlink, active);
         manager.update(announcement);
+        request.setAttribute("info", "Announcement updated successfully");
         request.getRequestDispatcher("announcements").forward(request, response);
     }
 

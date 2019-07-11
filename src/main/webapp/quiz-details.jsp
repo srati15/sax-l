@@ -191,17 +191,8 @@
 <script src="js/jquery.validate.js"></script>
 <script src="js/quiz.js"></script>
 
-<script>
-    $(document).ready(function () {
-        toastr.options.closeButton = true;
-        toastr.options.timeOut = 0;
-        toastr.options.extendedTimeOut = 0;
-        toastr.options.positionClass = "toast-bottom-right";
-        <c:forEach items="<%=announcementDao.findAll()%>" var="announcement">
-        toastr.info('${announcement.announcementText}');
-        </c:forEach>
-    });
-</script>
+<jsp:include page="components/notifications.jsp"/>
+
 
 </body>
 

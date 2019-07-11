@@ -29,8 +29,6 @@ public class CompleteQuizServlet extends HttpServlet {
         params.keySet().stream().filter(question->question.startsWith("questionN")).forEach(question->questionAnswers.put(Integer.valueOf(question.substring(question.lastIndexOf("N")+1)), request.getParameter(question)));
         Quiz quiz = quizDao.findById(Integer.valueOf(request.getParameter("quizId")));
 
-
-
         for (Question question : quiz.getQuestionAnswerMap().keySet()) {
             String answer = quiz.getQuestionAnswerMap().get(question).getAnswer().split(",")[0];
             if (questionAnswers.get(question.getId())!= null && questionAnswers.get(question.getId()).equalsIgnoreCase(answer)) {
@@ -52,7 +50,7 @@ public class CompleteQuizServlet extends HttpServlet {
         request.setAttribute("userAnswers", questionAnswers);
         request.setAttribute("score", result);
         request.setAttribute("timespent", time);
-
+        request.setAttribute("info", "You have successfully finished quiz.\n Score:"+result);
         request.getRequestDispatcher("quiz-result?quizId="+quiz.getId()).forward(request, response);
     }
 

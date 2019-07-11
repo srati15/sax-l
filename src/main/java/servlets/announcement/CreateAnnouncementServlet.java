@@ -22,6 +22,7 @@ public class CreateAnnouncementServlet extends HttpServlet {
         boolean active = request.getParameter(FormFields.activeOrNot.getValue()).equals("Active");
         Announcement announcement = new Announcement(user.getId(), announcementText, hyperlink, active);
         manager.insert(announcement);
+        request.setAttribute("info", "Announcement created successfully");
         request.getRequestDispatcher("announcements").forward(request, response);
     }
 

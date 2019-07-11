@@ -44,7 +44,7 @@ public class QuizCreationServlet extends HttpServlet {
         }
         quiz.setQuestionAnswerMap(questionAnswerMap);
         manager.insert(quiz);
-
+        request.setAttribute("info", "Quiz creation request is being processed.. thank you "+user.getUserName());
 
         request.getRequestDispatcher("quiz").forward(request, response);
     }

@@ -26,7 +26,10 @@ public class DeleteUserServlet extends HttpServlet {
             request.getRequestDispatcher("users-list").forward(request, response);
             return;
         }
-        if (user.getId() != deleteUserId)  manager.delete(deleteUser);
+        if (user.getId() != deleteUserId)  {
+            manager.delete(deleteUser);
+            request.setAttribute("warn", deleteUser.getUserName()+"'s account has been removed");
+        }
         request.getRequestDispatcher("users-list").forward(request, response);
     }
 
