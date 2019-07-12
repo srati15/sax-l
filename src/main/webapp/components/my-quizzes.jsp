@@ -34,7 +34,7 @@
                             </div>
                             <!-- Meta Info -->
                             <div class="team-meta-info">
-                                <h4><%=quiz.getQuizName()%>
+                                <h4><a href="quiz-details?quizId=<%=quiz.getId()%>"><%=quiz.getQuizName()%></a>
                                 </h4>
                                 <span>Date created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDate())%></span>
                                 <span>Results</span>

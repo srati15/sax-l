@@ -8,10 +8,10 @@
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
 
     <!-- Title -->
-    <title>Sax-L - Quiz Website | Home</title>
+    <title>Sax-L - Quiz Website | Admin page</title>
 
     <!-- Favicon -->
     <link rel="icon" href="img/core-img/favicon.ico">
@@ -61,13 +61,13 @@
 <section class="mosh--services-area section_padding_100">
     <div class="container">
         <div class="row">
-            <h:admin-feature imageSource="img/core-img/promotion.png" heading="Announcements" reference="announcements"></h:admin-feature>
-            <h:admin-feature imageSource="img/core-img/user.png" heading="Users" reference="users-list"></h:admin-feature>
-            <h:admin-feature imageSource="img/core-img/quiz.png" heading="Quizzes" reference="quiz"></h:admin-feature>
-            <h:admin-feature imageSource="img/core-img/activities.png" heading="Activities" reference="activities"></h:admin-feature>
-            <h:admin-feature imageSource="img/core-img/server.png" heading="Server logs" reference="server-logs"></h:admin-feature>
-            <h:admin-feature imageSource="img/core-img/mail.png" heading="Inbox Messages" reference="inbox"></h:admin-feature>
-            <h:admin-feature imageSource="img/core-img/stats.png" heading="Statistics" reference="statistics"></h:admin-feature>
+            <h:admin-feature imageSource="img/core-img/promotion.png" heading="Announcements" reference="announcements"/>
+            <h:admin-feature imageSource="img/core-img/user.png" heading="Users" reference="users-list"/>
+            <h:admin-feature imageSource="img/core-img/quiz.png" heading="Quizzes" reference="quiz"/>
+            <h:admin-feature imageSource="img/core-img/activities.png" heading="Activities" reference="activities"/>
+            <h:admin-feature imageSource="img/core-img/server.png" heading="Server logs" reference="server-logs"/>
+            <h:admin-feature imageSource="img/core-img/mail.png" heading="Inbox Messages" reference="inbox"/>
+            <h:admin-feature imageSource="img/core-img/stats.png" heading="Statistics" reference="statistics"/>
         </div>
     </div>
 </section>

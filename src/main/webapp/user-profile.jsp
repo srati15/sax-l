@@ -8,6 +8,8 @@
 <%@ page import="dao.TextMessageDao" %>
 <%@ page import="java.util.List" %>
 <%@ page import="datatypes.messages.TextMessage" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,10 +18,10 @@
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
 
     <!-- Title -->
-    <title>Sax-L - Quiz Website | Home</title>
+    <title>Sax-L - Quiz Website | User profile</title>
 
     <!-- Favicon -->
     <link rel="icon" href="img/core-img/favicon.ico">
@@ -45,9 +47,9 @@
     if (user.getId() == id) request.getRequestDispatcher("profile").forward(request, response);
     User profileUser = userDao.findById(id);
     TextMessageDao textMessageDao = manager.getDao(DaoType.TextMessage);
-    List<TextMessage>messages = textMessageDao.getTextMessagesOfGivenUsers(user.getId(), id);
-    pageContext.setAttribute("request1",friendRequestDao.findBySenderReceiverId(user.getId(), id));
-    pageContext.setAttribute("request2",friendRequestDao.findBySenderReceiverId(id, user.getId()));
+    List<TextMessage> messages = textMessageDao.getTextMessagesOfGivenUsers(user.getId(), id);
+    pageContext.setAttribute("request1", friendRequestDao.findBySenderReceiverId(user.getId(), id));
+    pageContext.setAttribute("request2", friendRequestDao.findBySenderReceiverId(id, user.getId()));
     pageContext.setAttribute("mess", messages);
 %>
 <!-- ***** Preloader Start ***** -->
@@ -74,46 +76,6 @@
                             <li class="breadcrumb-item active" aria-current="page"><%=profileUser.getUserName()%>'s
                                 profile
                             </li>
-                            <c:choose>
-                                <c:when test="${request1 == null && request2 == null}">
-                                    <div style="margin: -5px 2px 0 10px">
-                                        <form action="FriendRequestSenderServlet" method="post">
-                                            <input type="submit" class="btn btn-success btn-sm"
-                                                   value=  "Send Friend Request"/>
-                                            <input type="text" hidden name="receiverId" value="<%=id%>"/>
-                                        </form>
-                                    </div>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:choose>
-                                        <c:when test="${request1!=null && request1.status == RequestStatus.Pending}">
-                                             <div style="margin: -5px 2px 0 10px">
-                                                <form action="FriendRequestDeleteServlet" method="post">
-                                                    <input type="submit" class="btn btn-warning btn-sm"
-                                                           value="Cancel Friend Request"/>
-                                                    <input type="text" hidden name="receiverId" value="<%=id%>"/>
-                                                </form>
-                                            </div>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:choose>
-                                                <c:when test="${(request1!=null && request1.status == RequestStatus.Accepted) || (request2 !=null && request2.status==RequestStatus.Accepted)}">
-                                                    <div style="margin: -5px 2px 0 10px">
-                                                        <form action="FriendRequestDeleteServlet" method="post">
-                                                            <input type="submit" class="btn btn-warning btn-sm"
-                                                                   value="Remove Friend"/>
-                                                            <input type="text" hidden name="receiverId" value="<%=id%>"/>
-                                                        </form>
-                                                    </div>
-                                                </c:when>
-                                            </c:choose>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:otherwise>
-                            </c:choose>
-                            <div style="margin: -5px 2px 0 0">
-                                <button class="btn btn-success btn-sm" onclick="openForm()"><i class="fa fa-paper-plane"></i> Send Message</button>
-                            </div>
                         </ol>
                     </nav>
                 </div>
@@ -122,21 +84,92 @@
     </div>
 </div>
 <!-- ***** Breadcumb Area End ***** -->
+<section class="mosh-aboutUs-area">
+    <div class="container">
+        <div class="ui link cards">
+            <div class="card">
+                <div class="content">
+                    <div class="header"><%=profileUser.getUserName()%>
+                    </div>
+                    <div class="description">
+                        Name: <%=profileUser.getFirstName()%><br>
+                        Last Name: <%=profileUser.getLastName()%><br>
+                        Achievements: <%=profileUser.getAchievements().size()%><br>
+                        Friends: <%=profileUser.getFriends().size()%><br>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <span class="right floated">
+                        <c:choose>
+                            <c:when test="${request1 == null && request2 == null}">
+                <div style="margin: -5px 2px 0 10px">
+                    <form action="FriendRequestSenderServlet" method="post">
+                        <input type="submit" class="btn btn-success btn-sm"
+                               value="Send Friend Request"/>
+                        <input type="text" hidden name="receiverId" value="<%=id%>"/>
+                    </form>
+                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <c:choose>
+                                    <c:when test="${request1!=null && request1.status == RequestStatus.Pending}">
+                        <div style="margin: -5px 2px 0 10px">
+                            <form action="FriendRequestDeleteServlet" method="post">
+                                <input type="submit" class="btn btn-warning btn-sm"
+                                       value="Cancel Friend Request"/>
+                                <input type="text" hidden name="receiverId" value="<%=id%>"/>
+                            </form>
+                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:choose>
+                                            <c:when test="${(request1!=null && request1.status == RequestStatus.Accepted) || (request2 !=null && request2.status==RequestStatus.Accepted)}">
+                                <div style="margin: -5px 2px 0 10px">
+                                    <form action="FriendRequestDeleteServlet" method="post">
+                                        <input type="submit" class="btn btn-warning btn-sm"
+                                               value="Remove Friend"/>
+                                        <input type="text" hidden name="receiverId" value="<%=id%>"/>
+                                    </form>
+                                </div>
+                                            </c:when>
+                                        </c:choose>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:otherwise>
+                        </c:choose>
+                    </span>
+                    <span>
+                        <div style="margin: -5px 2px 0 0">
+            <button class="btn btn-success btn-sm" onclick="openForm()"><i class="fa fa-paper-plane"></i> Send Message
+            </button>
+        </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <div class="chat-popup" id="myForm">
     <form action="TextMessageServlet" method="post" class="form-container">
         <div style="overflow-y: scroll; max-height:300px;">
-            <%for(int i = 0; i < messages.size(); i++){
-                TextMessage curr = messages.get(i);
-                if(curr.getSenderId() == user.getId()){%>
+            <%
+                for (int i = 0; i < messages.size(); i++) {
+                    TextMessage curr = messages.get(i);
+                    if (curr.getSenderId() == user.getId()) {
+            %>
             <div class="my-user darker">
-                <p><%=curr.getTextMessage()%></p>
+                <p><%=curr.getTextMessage()%>
+                </p>
             </div>
-            <%}else{%>
+            <%} else {%>
             <div class="my-user">
-                <p><%=curr.getTextMessage()%></p>
+                <p><%=curr.getTextMessage()%>
+                </p>
             </div>
-            <%}
-            }%>
+            <%
+                    }
+                }
+            %>
         </div>
         <label>
             <textarea placeholder="Type message.." name="msg" required></textarea>
@@ -148,6 +181,7 @@
         <button type="button" class="btn btn-warning btn-sm" onclick="closeForm()">Close</button>
     </form>
 </div>
+
 
 <!-- ***** Footer Area Start ***** -->
 <footer class="footer-area clearfix">
@@ -230,13 +264,15 @@
         text-align: right;
     }
 
-    .darker p{
+    .darker p {
         color: #383f83;
     }
-    p{
+
+    p {
         word-wrap: break-word;
     }
-    .my-user::after{
+
+    .my-user::after {
         content: "";
         clear: both;
         display: table;

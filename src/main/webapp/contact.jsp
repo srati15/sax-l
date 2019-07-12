@@ -6,10 +6,10 @@
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
 
     <!-- Title -->
-    <title>Sax-L - Quiz Website | Login</title>
+    <title>Sax-L - Quiz Website | Contact</title>
 
     <!-- Favicon -->
     <link rel="icon" href="img/core-img/favicon.ico">
@@ -40,7 +40,7 @@
         <div class="row h-100 align-items-center">
             <div class="col-12">
                 <div class="bradcumbContent">
-                    <h2>Login Page</h2>
+                    <h2>Contact Page</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>

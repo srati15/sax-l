@@ -20,10 +20,10 @@
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
 
     <!-- Title -->
-    <title>Sax-L - Quiz Website | Home</title>
+    <title>Sax-L - Quiz Website | Details</title>
 
     <!-- Favicon -->
     <link rel="icon" href="img/core-img/favicon.ico">
@@ -91,34 +91,33 @@
 <section class="mosh-aboutUs-area">
     <div class="container">
         <div class="row">
+
             <!-- Single Blog Start -->
             <div class="col-12">
-                <div class="single-blog wow fadeInUp" data-wow-delay="0.2s">
-                    <!-- Post Meta -->
-                    <div class="post-meta">
-                        <h6>By <a
-                                href="user-profile?userid=${userDao.findById(quiz.authorId).id}">${userDao.findById(quiz.authorId).userName},</a>${quiz.dateCreated.toLocalDate()}
-                        </h6>
-                    </div>
-                    <!-- Quiz Title -->
-                    <h2>${quiz.quizName}</h2>
-                    <!-- Post Thumb -->
-                    <div class="blog-post-thumb text-center">
-                        <img src="${quiz.quizImageURL}" class="rounded" alt="" style="max-height:500px;">
-                    </div>
 
-                    <!-- Quiz desc -->
-                    <c:if test="${quiz.description.length()>0}">
-                        <div class="card">
-                            <div class="card-body">
-                                    ${quiz.description}
+                <div class="single-blog wow fadeInUp" data-wow-delay="0.2s">
+                    <div class="ui divided items">
+                        <div class="item">
+                            <div class="image">
+                                <img src="${quiz.quizImageURL}">
+                            </div>
+                            <div class="content">
+                                <a class="header">${quiz.quizName}</a>
+                                <div class="meta">
+                                    <span class="cinema">
+                                        By <a
+                                            href="user-profile?userid=${userDao.findById(quiz.authorId).id}">${userDao.findById(quiz.authorId).userName},</a>${quiz.dateCreated.toLocalDate()}
+                                    </span>
+                                </div>
+                                <div class="description">
+                                    <p>${quiz.description}</p>
+                                </div>
+                                <div class="extra" style="float:right">
+                                    <h:start quiz="${quiz}" buttonClass="btn mosh-btn" styled="false"/>
+                                </div>
                             </div>
                         </div>
-                    </c:if>
-                    <!-- Take Quiz -->
-                    <p class="text-center">
-                        <h:start quiz="${quiz}" buttonClass="btn mosh-btn" styled="false"/>
-                    </p>
+                    </div>
 
                     <div class="ui comments blue segments">
                         <h3 class="ui top attached header">Comments</h3>
