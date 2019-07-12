@@ -7,16 +7,20 @@
             <div class="menu_area h-100">
                 <nav class="navbar h-100 navbar-expand-lg align-items-center">
                     <!-- Logo -->
-                    <a class="navbar-brand" href="${pageContext.request.contextPath}/"><img src="../img/core-img/logo.png" alt="logo"></a>
+                    <a class="navbar-brand" href="${pageContext.request.contextPath}/"><img
+                            src="../img/core-img/logo.png" alt="logo"></a>
 
                     <div class="collapse navbar-collapse justify-content-end" id="mosh-navbar">
                         <ul class="navbar-nav animated" id="nav">
-                            <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/" id="home-ref">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/"
+                                                    id="home-ref">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="contact" id="contact-ref">Contact</a></li>
 
                             <c:if test="${sessionScope.user !=null}">
-                                <li class="nav-item"><a class="nav-link" href="profile" id="profile-ref">Profile</a></li>
-                                <li class="nav-item"><a class="nav-link" href="users-list" id="users-list-ref">Users</a></li>
+                                <li class="nav-item"><a class="nav-link" href="profile" id="profile-ref">Profile</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" href="users-list" id="users-list-ref">Users</a>
+                                </li>
                                 <li class="nav-item"><a class="nav-link" href="quiz" id="quiz-ref">Quizzes</a></li>
                             </c:if>
                             <c:if test="${sessionScope.user !=null && sessionScope.user.userType == UserType.Admin}">
@@ -24,36 +28,40 @@
                             </c:if>
                         </ul>
                         <c:choose>
-                            <c:when test="${sessionScope.user ==null}">
-                                <div class="login-register-btn">
-                                    <a href="login">
-                                        <button type="submit" class="btn btn-info btn-sm">
-                                            <i class="fa fa-sign-in"></i> Login
-                                        </button>
-                                    </a>
-                                    <a href="register">
-                                        <button type="submit" class="btn btn-info btn-sm">
-                                            <i class="fa fa-user-circle-o"></i> Register
-                                        </button>
-                                    </a>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <form action="LogoutServlet" method="post">
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa fa-sign-out"></i> Sign out
-                                    </button>
-                                </form>
-                                <a href="profile">
-                                    <button type="submit" class="btn btn-info btn-sm">
-                                        <i class="fa fa-user"></i> Profile
+                        <c:when test="${sessionScope.user ==null}">
+                        <div class="login-register-btn">
+                            <div class="mini blue ui buttons">
+                                <a href="login">
+                                    <button class=" ui button">
+                                        <i class="fa fa-sign-in"></i> Login
                                     </button>
                                 </a>
-                            </c:otherwise>
-                        </c:choose>
+                                <a href="register">
+                                    <button class=" ui button">
+                                        <i class="fa fa-user-circle-o"></i> Register
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
-                </nav>
+                    </c:when>
+                    <c:otherwise>
+                    <form action="LogoutServlet" method="post">
+                        <button type="submit" class="mini red ui button">
+                            <i class="fa fa-sign-out"></i> Sign out
+                        </button>
+                    </form>
+                    <a href="profile">
+                        <button type="submit" class="mini teal ui button">
+                            <i class="fa fa-user"></i> Profile
+                        </button>
+                    </a>
+                    </c:otherwise>
+                    </c:choose>
             </div>
+            </nav>
         </div>
     </div>
+</div>
 </div>

@@ -42,6 +42,7 @@
     UserDao userDao = manager.getDao(DaoType.User);
     User user = (User) request.getSession().getAttribute("user");
     int id = Integer.parseInt(request.getParameter("userid"));
+    if (user.getId() == id) request.getRequestDispatcher("profile").forward(request, response);
     User profileUser = userDao.findById(id);
     TextMessageDao textMessageDao = manager.getDao(DaoType.TextMessage);
     List<TextMessage>messages = textMessageDao.getTextMessagesOfGivenUsers(user.getId(), id);

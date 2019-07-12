@@ -5,9 +5,7 @@ import datatypes.quiz.answer.Answer;
 import datatypes.quiz.question.Question;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Quiz extends Domain<Integer> {
@@ -22,12 +20,11 @@ public class Quiz extends Domain<Integer> {
     private String description;
     private AtomicInteger timesDone = new AtomicInteger(0);
     private Map<Question, Answer> questionAnswerMap = new HashMap<>();
+    private List<Comment> comments = new ArrayList<>();
     public String getQuizName() {
         return quizName;
     }
-    public Quiz(){
 
-    }
     public Quiz(int id, String quizName, int authorId, LocalDateTime dateCreated, boolean randomized, boolean onePage, boolean allowedImmediateCorrection, boolean allowedPracticemode, String quizImageURL, String description) {
         this.id = id;
         this.quizName = quizName;
@@ -81,6 +78,13 @@ public class Quiz extends Domain<Integer> {
         return timesDone.get();
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
     public void setQuestionAnswerMap(Map<Question, Answer> questionAnswerMap) {
         this.questionAnswerMap = questionAnswerMap;
     }

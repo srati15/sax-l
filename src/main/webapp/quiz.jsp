@@ -146,226 +146,233 @@
                 0%
             </div>
         </div>
-        <div style="float: left; width: 70%; display: block">
-            <p>
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#questionResponse"
-                        aria-expanded="false" aria-controls="collapseExample">
-                    Question-Response
-                </button>
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#pictureResponse"
-                        aria-expanded="false" aria-controls="collapseExample">
-                    Picture-Response
-                </button>
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#fillBlank"
-                        aria-expanded="false" aria-controls="collapseExample">
-                    Fill in the blank
-                </button>
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#multipleChoice"
-                        aria-expanded="false" aria-controls="collapseExample">
-                    Multiple choice
-                </button>
-            </p>
-            <div class="collapse" id="questionResponse">
-                <div class="card card-body">
+        <div class="ui horizontal segments">
+            <div class="ui segment" id="collapseSegment">
 
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="simpleQuestionText">Question</label>
-                        <div class="col-md-8">
-                            <input id="simpleQuestionText" name="simpleQuestionText" type="text" placeholder=""
-                                   class="form-control input-md" required>
-
-                        </div>
-                    </div>
-
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="simpleAnswerText">Answer</label>
-                        <div class="col-md-8">
-                            <input id="simpleAnswerText" name="simpleAnswerText" type="text" placeholder=""
-                                   class="form-control input-md" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <button type="button" class="btn btn-info" id="simpleQuestionSubmit">Submit</button>
-                    </div>
+                <div class="blue ui buttons" id="uiButtons">
+                    <button class="ui button" type="button" data-toggle="collapse" data-target="#questionResponse"
+                            aria-expanded="false" aria-controls="collapseExample">
+                        Question-Response
+                    </button>
+                    <button class="ui button" type="button" data-toggle="collapse" data-target="#pictureResponse"
+                            aria-expanded="false" aria-controls="collapseExample">
+                        Picture-Response
+                    </button>
+                    <button class="ui button" type="button" data-toggle="collapse" data-target="#fillBlank"
+                            aria-expanded="false" aria-controls="collapseExample">
+                        Fill in the blank
+                    </button>
+                    <button class="ui button" type="button" data-toggle="collapse" data-target="#multipleChoice"
+                            aria-expanded="false" aria-controls="collapseExample">
+                        Multiple choice
+                    </button>
                 </div>
-            </div>
-            <div class="collapse" id="pictureResponse">
-                <div class="card card-body">
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="pictureQuestionText">Image source</label>
-                        <div class="col-md-8">
-                            <input id="pictureQuestionText" name="pictureQuestionText" type="text" placeholder=""
-                                   class="form-control input-md" required>
 
-                        </div>
-                    </div>
+                <div class="collapse" id="questionResponse">
+                    <div class="card card-body">
 
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="pictureAnswerText">Answer</label>
-                        <div class="col-md-8">
-                            <input id="pictureAnswerText" name="pictureAnswerText" type="text" placeholder=""
-                                   class="form-control input-md" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-info" id="pictureSubmit">Submit</button>
-                    </div>
-                </div>
-            </div>
-            <div class="collapse" id="fillBlank">
-                <div class="card card-body">
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="fillBlankText1">Question</label>
-                        <div class="row">
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="simpleQuestionText">Question</label>
                             <div class="col-md-8">
-                                <input id="fillBlankText1" name="fillBlankText1" type="text"
-                                       placeholder="Question before blank"
+                                <input id="simpleQuestionText" name="simpleQuestionText" type="text" placeholder=""
                                        class="form-control input-md" required>
+
                             </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="simpleAnswerText">Answer</label>
                             <div class="col-md-8">
-                                <input id="fillBlankText2" name="fillBlankText2" type="text"
-                                       placeholder="Question after blank"
+                                <input id="simpleAnswerText" name="simpleAnswerText" type="text" placeholder=""
                                        class="form-control input-md" required>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="fillBlankAnswer">Answer</label>
-                        <div class="col-md-8">
-                            <input id="fillBlankAnswer" name="fillBlankAnswer" type="text" placeholder=""
-                                   class="form-control input-md" required>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" id="simpleQuestionSubmit">Submit</button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-info" id="fillBlankSubmit">Submit</button>
-                    </div>
                 </div>
-            </div>
-            <div class="collapse" id="multipleChoice">
-                <form id="multiple">
+                <div class="collapse" id="pictureResponse">
                     <div class="card card-body">
                         <!-- Text input-->
                         <div class="form-group">
-                            <label class="col-md-4 control-label" for="multipleChoiceText">Question</label>
+                            <label class="col-md-4 control-label" for="pictureQuestionText">Image source</label>
                             <div class="col-md-8">
-                                <input id="multipleChoiceText" name="multipleChoiceText" type="text" placeholder=""
+                                <input id="pictureQuestionText" name="pictureQuestionText" type="text" placeholder=""
                                        class="form-control input-md" required>
+
                             </div>
                         </div>
 
                         <!-- Text input-->
                         <div class="form-group">
-                            <label class="col-md-4 control-label" for="multipleCorrectAnswer">Correct Answer</label>
+                            <label class="col-md-4 control-label" for="pictureAnswerText">Answer</label>
                             <div class="col-md-8">
-                                <input id="multipleCorrectAnswer" name="multipleCorrectAnswer" type="text"
-                                       placeholder=""
+                                <input id="pictureAnswerText" name="pictureAnswerText" type="text" placeholder=""
                                        class="form-control input-md" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-4 control-label" for="multipleWrongAnswer1">Wrong Answers</label>
-                            <div class="col-md-8">
-                                <input id="multipleWrongAnswer1" name="multipleWrongAnswer1" type="text" placeholder=""
-                                       class="form-control input-md" required>
-                                <input id="multipleWrongAnswer2" name="multipleWrongAnswer2" type="text" placeholder=""
-                                       class="form-control input-md" required>
-                                <input id="multipleWrongAnswer3" name="multipleWrongAnswer3" type="text" placeholder=""
-                                       class="form-control input-md" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="btn btn-info" id="multipleChoiceSubmit">Submit</button>
+                            <button type="button" class="btn btn-info" id="pictureSubmit">Submit</button>
                         </div>
                     </div>
-                </form>
+                </div>
+                <div class="collapse" id="fillBlank">
+                    <div class="card card-body">
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="fillBlankText1">Question</label>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input id="fillBlankText1" name="fillBlankText1" type="text"
+                                           placeholder="Question before blank"
+                                           class="form-control input-md" required>
+                                </div>
+                                <div class="col-md-8">
+                                    <input id="fillBlankText2" name="fillBlankText2" type="text"
+                                           placeholder="Question after blank"
+                                           class="form-control input-md" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="fillBlankAnswer">Answer</label>
+                            <div class="col-md-8">
+                                <input id="fillBlankAnswer" name="fillBlankAnswer" type="text" placeholder=""
+                                       class="form-control input-md" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" id="fillBlankSubmit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse" id="multipleChoice">
+                    <form id="multiple">
+                        <div class="card card-body">
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="multipleChoiceText">Question</label>
+                                <div class="col-md-8">
+                                    <input id="multipleChoiceText" name="multipleChoiceText" type="text" placeholder=""
+                                           class="form-control input-md" required>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="multipleCorrectAnswer">Correct Answer</label>
+                                <div class="col-md-8">
+                                    <input id="multipleCorrectAnswer" name="multipleCorrectAnswer" type="text"
+                                           placeholder=""
+                                           class="form-control input-md" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="multipleWrongAnswer1">Wrong Answers</label>
+                                <div class="col-md-8">
+                                    <input id="multipleWrongAnswer1" name="multipleWrongAnswer1" type="text" placeholder=""
+                                           class="form-control input-md" required>
+                                    <input id="multipleWrongAnswer2" name="multipleWrongAnswer2" type="text" placeholder=""
+                                           class="form-control input-md" required>
+                                    <input id="multipleWrongAnswer3" name="multipleWrongAnswer3" type="text" placeholder=""
+                                           class="form-control input-md" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-info" id="multipleChoiceSubmit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
             </div>
+            <div class="ui segment">
+                <div>
+                    <form action="QuizCreationServlet" method="post" id="submitQuizForm">
+                        <fieldset>
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label for="quizname">Quiz Name</label>
+                                <div>
+                                    <input id="quizname" name="quizname" type="text" placeholder=""
+                                           class="form-control input-md"
+                                           required="">
+                                </div>
+                            </div>
 
-        </div>
-        <div style="float: end">
-            <form action="QuizCreationServlet" method="post" id="submitQuizForm">
-                <fieldset>
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label for="quizname">Quiz Name</label>
-                        <div>
-                            <input id="quizname" name="quizname" type="text" placeholder=""
-                                   class="form-control input-md"
-                                   required="">
-                        </div>
-                    </div>
+                            <!-- Quiz Description-->
+                            <div class="form-group">
+                                <label for="quizDescription">Quiz Description</label>
+                                <textarea class="form-control" id="quizDescription" name="quizDescription" rows="3"></textarea>
+                            </div>
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label for="quizname">Quiz Image URL</label>
+                                <div>
+                                    <input id="quizImageUrl" name="quizImageUrl" type="text" placeholder=""
+                                           class="form-control input-md"
+                                           required="">
+                                </div>
+                            </div>
 
-                    <!-- Quiz Description-->
-                    <div class="form-group">
-                        <label for="quizDescription">Quiz Description</label>
-                        <textarea class="form-control" id="quizDescription" name="quizDescription" rows="3"></textarea>
-                    </div>
-                    <!-- Text input-->
-                    <div class="form-group">
-                        <label for="quizname">Quiz Image URL</label>
-                        <div>
-                            <input id="quizImageUrl" name="quizImageUrl" type="text" placeholder=""
-                                   class="form-control input-md"
-                                   required="">
-                        </div>
-                    </div>
+                            <!-- Select Basic -->
+                            <div class="form-group">
+                                <label for="correction">Allow immediate correction</label>
+                                <div>
+                                    <select id="correction" name="correction" class="form-control">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <!-- Select Basic -->
-                    <div class="form-group">
-                        <label for="correction">Allow immediate correction</label>
-                        <div>
-                            <select id="correction" name="correction" class="form-control">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                    </div>
+                            <!-- Select Basic -->
+                            <div class="form-group">
+                                <label for="singlepage">Show all question on single page</label>
+                                <div>
+                                    <select id="singlepage" name="singlepage" class="form-control">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <!-- Select Basic -->
-                    <div class="form-group">
-                        <label for="singlepage">Show all question on single page</label>
-                        <div>
-                            <select id="singlepage" name="singlepage" class="form-control">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                    </div>
+                            <!-- Select Basic -->
+                            <div class="form-group">
+                                <label for="practice">Allow practice mode</label>
+                                <div>
+                                    <select id="practice" name="practice" class="form-control">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <!-- Select Basic -->
-                    <div class="form-group">
-                        <label for="practice">Allow practice mode</label>
-                        <div>
-                            <select id="practice" name="practice" class="form-control">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                    </div>
+                            <!-- Select Basic -->
+                            <div class="form-group">
+                                <label for="randomized">Randomize questions</label>
+                                <div>
+                                    <select id="randomized" name="randomized" class="form-control">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <!-- Select Basic -->
-                    <div class="form-group">
-                        <label for="randomized">Randomize questions</label>
-                        <div>
-                            <select id="randomized" name="randomized" class="form-control">
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
-                            </select>
-                        </div>
-                    </div>
+                        </fieldset>
 
-                </fieldset>
+                        <button type="submit" class="btn btn-success" id="finishCreationButton" style="display: none">Finish
+                        </button>
+                    </form>
+                </div>
 
-                <button type="submit" class="btn btn-success" id="finishCreationButton" style="display: none">Finish
-                </button>
-            </form>
+            </div>
         </div>
     </div>
 </section>

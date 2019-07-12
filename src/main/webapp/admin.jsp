@@ -1,8 +1,7 @@
-<%@ page import="dao.AnnouncementDao" %>
-<%@ page import="enums.DaoType" %>
-<%@ page import="manager.DaoManager" %>
+
 <!DOCTYPE html>
 <html lang="en">
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <head>
     <meta charset="UTF-8">
@@ -28,9 +27,6 @@
 
 <body>
 
-<%DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-    AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
-%>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
     <div class="mosh-preloader"></div>
@@ -65,78 +61,13 @@
 <section class="mosh--services-area section_padding_100">
     <div class="container">
         <div class="row">
-            <!-- Single Feature Area -->
-            <div class="col-12 col-sm-6 col-md-4">
-                <div class="single-feature-area d-flex mb-100">
-                    <div class="feature-icon mr-30">
-                        <img src="img/core-img/promotion.png" alt="">
-                    </div>
-                    <div class="feature-content">
-                        <h4>Announcements!</h4>
-                        <p><a href="announcements">Manage announcements</a></p>
-                    </div>
-                </div>
-            </div>
-            <!-- Single Feature Area -->
-            <div class="col-12 col-sm-6 col-md-4">
-                <div class="single-feature-area d-flex mb-100">
-                    <div class="feature-icon mr-30">
-                        <img src="img/core-img/user.png" alt="">
-                    </div>
-                    <div class="feature-content">
-                        <h4>Users</h4>
-                        <p><a href="users-list">Manage Users</a></p>
-                    </div>
-                </div>
-            </div>
-            <!-- Single Feature Area -->
-            <div class="col-12 col-sm-6 col-md-4">
-                <div class="single-feature-area d-flex mb-100">
-                    <div class="feature-icon mr-30">
-                        <img src="img/core-img/quiz.png" alt="">
-                    </div>
-                    <div class="feature-content">
-                        <h4>Quizzes</h4>
-                        <p><a href="quiz">Manage Quizzes</a></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-sm-6 col-md-4">
-                <div class="single-feature-area d-flex mb-100">
-                    <div class="feature-icon mr-30">
-                        <img src="img/core-img/activities.png" alt="">
-                    </div>
-                    <div class="feature-content">
-                        <h4>Activity logs</h4>
-                        <p><a href="activities">Manage activities</a></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-sm-6 col-md-4">
-                <div class="single-feature-area d-flex mb-100">
-                    <div class="feature-icon mr-30">
-                        <img src="img/core-img/server.png" alt="">
-                    </div>
-                    <div class="feature-content">
-                        <h4>Server logs</h4>
-                        <p><a href="server-logs">Manage Server logs</a></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-sm-6 col-md-4">
-                <div class="single-feature-area d-flex mb-100">
-                    <div class="feature-icon mr-30">
-                        <img src="img/core-img/mail.png" alt="">
-                    </div>
-                    <div class="feature-content">
-                        <h4>Inbox Messages</h4>
-                        <p><a href="inbox">Manage Inbox Messages</a></p>
-                    </div>
-                </div>
-            </div>
+            <h:admin-feature imageSource="img/core-img/promotion.png" heading="Announcements" reference="announcements"></h:admin-feature>
+            <h:admin-feature imageSource="img/core-img/user.png" heading="Users" reference="users-list"></h:admin-feature>
+            <h:admin-feature imageSource="img/core-img/quiz.png" heading="Quizzes" reference="quiz"></h:admin-feature>
+            <h:admin-feature imageSource="img/core-img/activities.png" heading="Activities" reference="activities"></h:admin-feature>
+            <h:admin-feature imageSource="img/core-img/server.png" heading="Server logs" reference="server-logs"></h:admin-feature>
+            <h:admin-feature imageSource="img/core-img/mail.png" heading="Inbox Messages" reference="inbox"></h:admin-feature>
+            <h:admin-feature imageSource="img/core-img/stats.png" heading="Statistics" reference="statistics"></h:admin-feature>
         </div>
     </div>
 </section>

@@ -20,7 +20,6 @@
     });
     if (quizMap.size() > 0) {
 %>
-<section class="mosh-clients-area section_padding_100 clearfix">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-md-10">
@@ -67,6 +66,5 @@
             </div>
         </div>
     </div>
-</section>
 
 <%}%>

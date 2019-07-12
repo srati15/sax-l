@@ -40,9 +40,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel
-                    </button>
-                    <input type="submit" class="btn btn-primary" value="Create"/>
+                    <div class="ui buttons">
+                        <button class="ui button" data-dismiss="modal">Cancel</button>
+                        <div class="or"></div>
+                        <button type="submit" class="ui positive button">Create</button>
+                    </div>
                 </div>
             </form>
 

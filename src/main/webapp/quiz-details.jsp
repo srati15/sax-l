@@ -120,33 +120,64 @@
                         <h:start quiz="${quiz}" buttonClass="btn mosh-btn" styled="false"/>
                     </p>
 
-                    <h:performer userDao="${userDao}" title="Top Performers" quizResults="${topPerformers}"/>
-                    <h:performer userDao="${userDao}" title="Top Performers Today" quizResults="${topPerformersToday}"/>
-
-
-                    <c:if test="${quizResults.size() > 0}">
-                        <h2 class="text-center">All Performers</h2>
-                        <div class="card-deck border border-warning rounded-top section_padding_50">
-                            <c:forEach var="entry" items="${quizResults}">
-                                <div class="team-meta-info">
-                                    <div class="card" style="width: 18rem;">
-                                        <h5 class="card-title">User: <b><a
-                                                href="user-profile?userid=${userDao.findById(entry.key).id}">${userDao.findById(entry.key).userName}</a></b>
-                                        </h5>
-                                        <div class="card-body">
-                                            <c:forEach var="quizRes" items="${entry.value}">
-                                                <p class="card-text">Score: <b>${quizRes.score}</b> Time:
-                                                    <b>${quizRes.timeSpent}</b> Seconds</p>
-                                            </c:forEach>
-                                        </div>
+                    <div class="ui comments blue segments">
+                        <h3 class="ui top attached header">Comments</h3>
+                        <c:forEach var="comment" items="${quiz.comments}">
+                            <h:comments userDao="${userDao}" comment="${comment}"/>
+                        </c:forEach>
+                        <form class="ui reply form" action="AddCommentServlet" method="post">
+                            <textarea class="form-control" name="commentText"></textarea>
+                            <input hidden name="quizId" value="${quiz.id}"/>
+                            <button class="ui blue button" type="submit">
+                                <i class="fa fa-reply"></i> Add Reply
+                            </button>
+                        </form>
+                    </div>
+                    <div class="row ui horizontal segments">
+                        <c:if test="${topPerformers.size() > 0}">
+                            <div class="col-sm">
+                                <h:performer userDao="${userDao}" title="Top Performers"
+                                             quizResults="${topPerformers}"/>
+                            </div>
+                        </c:if>
+                        <c:if test="${topPerformersToday.size() > 0}">
+                            <div class="col-sm">
+                                <h:performer userDao="${userDao}" title="Top Performers Today"
+                                             quizResults="${topPerformersToday}"/>
+                            </div>
+                        </c:if>
+                        <c:if test="${quizResults.size() > 0}">
+                            <div class="col-sm">
+                                <div class="ui segment">
+                                    <h2 class="text-center">All Performers</h2>
+                                    <div class="card-deck">
+                                        <c:forEach var="entry" items="${quizResults}">
+                                            <div class="team-meta-info">
+                                                <div class="card" style="width: 18rem;">
+                                                    <h5 class="card-title">User: <b><a
+                                                            href="user-profile?userid=${userDao.findById(entry.key).id}">${userDao.findById(entry.key).userName}</a></b>
+                                                    </h5>
+                                                    <div class="card-body">
+                                                        <c:forEach var="quizRes" items="${entry.value}">
+                                                            <p class="card-text">Score: <b>${quizRes.score}</b> Time:
+                                                                <b>${quizRes.timeSpent}</b> Seconds</p>
+                                                        </c:forEach>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
                                     </div>
+
                                 </div>
-                            </c:forEach>
-                        </div>
-                    </c:if>
+                            </div>
+                        </c:if>
+                    </div>
                 </div>
+
+
             </div>
         </div>
+    </div>
     </div>
 </section>
 <!-- ***** Welcome Area End ***** -->

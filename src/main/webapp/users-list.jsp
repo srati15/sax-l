@@ -170,8 +170,8 @@
                                 </h:edit>
                                 <c:if test="${currentUser.userType==UserType.User}">
                                     <form action="PromoteUserServlet" method="post" style="float:right">
-                                        <button type="submit" class="btn btn-primary btn-sm">
-                                            <i class="fa fa-remove"></i> Promote
+                                        <button type="submit"  class="mini ui green button">
+                                            <i class="fa fa-coffee"></i> Promote
                                         </button>
                                         <input type="hidden" name="promotableUserId" value="${currentUser.id}">
                                     </form>

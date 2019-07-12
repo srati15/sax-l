@@ -1,14 +1,25 @@
 create table achievements
 (
-    id               int auto_increment
+    id                   int auto_increment
         primary key,
-    achievement_name varchar(255) null
+    achievement_name     varchar(255) null,
+    achievement_criteria varchar(255) null
+);
+
+create table activity
+(
+    id            int auto_increment
+        primary key,
+    user_id       int                                 null,
+    activity_name varchar(255)                        null,
+    date_happened timestamp default CURRENT_TIMESTAMP null
 );
 
 create table announcements
 (
     id                int auto_increment
         primary key,
+    user_id           int                      null,
     announcement_text varchar(255)             not null,
     hyperlink         varchar(255) default '/' null,
     active            tinyint(1)   default 1   null
@@ -22,6 +33,16 @@ create table answers
     answer_string varchar(125) not null
 );
 
+create table comment
+(
+    id           int auto_increment
+        primary key,
+    quiz_id      int                                 null,
+    user_id      int                                 null,
+    comment_text text                                null,
+    comment_date timestamp default CURRENT_TIMESTAMP null
+);
+
 create table friend_requests
 (
     id             int auto_increment
@@ -30,6 +51,18 @@ create table friend_requests
     receiver_id    int                                 not null,
     request_status int                                 not null,
     date_sent      timestamp default CURRENT_TIMESTAMP not null
+);
+
+create table inbox
+(
+    id              int auto_increment
+        primary key,
+    first_name      varchar(255)         null,
+    sender_mail     varchar(255)         null,
+    message_subject varchar(255)         null,
+    message_text    text                 null,
+    seen            tinyint(1) default 0 null,
+    date_sent       timestamp            null
 );
 
 create table question
@@ -60,6 +93,7 @@ create table quiz
         primary key,
     quiz_name                varchar(100)                         not null,
     quiz_author_id           int                                  not null,
+    quiz_description         varchar(8000)                        null,
     date_created             datetime   default CURRENT_TIMESTAMP null,
     quiz_image_url           varchar(255)                         null,
     randomized               tinyint(1) default 1                 not null,
@@ -69,14 +103,35 @@ create table quiz
     times_done               int        default 0                 null
 );
 
+create table quiz_challenges
+(
+    id          int auto_increment
+        primary key,
+    sender_id   int                                  not null,
+    receiver_id int                                  not null,
+    quiz_id     int                                  not null,
+    status      tinyint(1) default 0                 null,
+    time_sent   datetime   default CURRENT_TIMESTAMP null
+);
+
+create table reply_message
+(
+    id         int auto_increment
+        primary key,
+    message_id int                                 null,
+    reply_text text                                null,
+    date_sent  timestamp default CURRENT_TIMESTAMP null
+);
+
 create table results
 (
-    result_id  int auto_increment
+    result_id     int auto_increment
         primary key,
-    user_id    int not null,
-    quiz_id    int not null,
-    score      int not null,
-    time_spent int null
+    user_id       int                                 not null,
+    quiz_id       int                                 not null,
+    score         int                                 not null,
+    time_spent    int                                 null,
+    date_happened timestamp default CURRENT_TIMESTAMP null
 );
 
 create table text_message

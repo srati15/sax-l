@@ -1,11 +1,17 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: lasha
-  Date: 5/27/19
-  Time: 8:16 PM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="dao.ActivityDao" %>
+<%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.server.Activity" %>
+<%@ page import="datatypes.user.User" %>
+<%@ page import="enums.DaoType" %>
+<%@ page import="manager.DaoManager" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Comparator" %>
+<%@ page import="java.util.List" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,15 +29,23 @@
 
     <!-- Core Stylesheet -->
     <link href="style.css" rel="stylesheet">
-    <link href="css/loginpanel.css" rel="stylesheet">
     <!-- Responsive CSS -->
     <link href="css/responsive.css" rel="stylesheet">
 
+    <link href="css/datatables.min.css" rel="stylesheet">
+
     <link href="css/toastr.css" rel="stylesheet">
-
-
 </head>
 <body>
+
+<%
+    DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
+    ActivityDao activityDao = daoManager.getDao(DaoType.Activity);
+    UserDao userDao = daoManager.getDao(DaoType.User);
+    List<Activity> activities = new ArrayList<>(activityDao.findAll());
+    activities.sort(Comparator.comparing(Activity::getDateTime).reversed());
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy");
+%>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
     <div class="mosh-preloader"></div>
@@ -47,11 +61,11 @@
         <div class="row h-100 align-items-center">
             <div class="col-12">
                 <div class="bradcumbContent">
-                    <h2>Login Page</h2>
+                    <h2>Activity logs</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Login Form</li>
+                            <li class="breadcrumb-item active" aria-current="page">Activities</li>
                         </ol>
                     </nav>
                 </div>
@@ -59,42 +73,28 @@
         </div>
     </div>
 </div>
-<!-- ***** Breadcumb Area End ***** -->
-<!-- ***** Login Area Start ***** -->
 
 <section class="mosh-aboutUs-area">
-    <div class="login">
-
-        <form action="LoginServlet" method="post" id="loginSection">
-            <input type="text" placeholder="Username" minlength="4" required name="username">
-            <input type="password" placeholder="password" minlength="4" required name="password">
-            <br>
-            <div style="margin-top: 20px; display: flex; align-items: center; justify-content: center;">
-                <div class="mini ui buttons">
-                    <a href="forgot">
-                        <div class="mini ui animated negative button" tabindex="0">
-                            <div class="visible content">Forgot?</div>
-                            <div class="hidden content">
-                                Recover
-                            </div>
+    <div class="container"  >
+        <div class="ui inverted segment">
+            <h3 class="mb-30 text-white text-center">Statistics</h3>
+            <div class="ui inverted statistics">
+                <c:forEach items="${requestScope.stats}" var="entry">
+                    <div class="statistic">
+                        <div class="value">
+                                ${entry.value}
                         </div>
-                    </a>
-                    <div class="or"></div>
-                    <button class="mini ui animated positive button" type="submit" tabindex="0">
-                        <div class="visible content">Sign in</div>
-                        <div class="hidden content">
-                            <i class="fa fa-sign-in" ></i>
+                        <div class="label">
+                                ${entry.key}
                         </div>
-                    </button>
-                </div>
+                    </div>
+                </c:forEach>
             </div>
-
-        </form>
+        </div>
 
     </div>
-
 </section>
-<!-- ***** Login Area End ***** -->
+<!-- ***** Users list Area End ***** -->
 <footer class="footer-area clearfix">
     <jsp:include page="components/footer.jsp"/>
 </footer>
@@ -110,10 +110,16 @@
 <!-- Active js -->
 <script src="js/active.js"></script>
 
-<!---Validate js -->
-<script src="js/jquery.validate.js"></script>
-
+<!---table scroll -->
+<script type="text/javascript" src="js/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+        $('.dataTables_length').addClass('bs-select');
+    });
+</script>
 <script src="js/toastr.js"></script>
+
 <jsp:include page="components/notifications.jsp"/>
 
 </body>

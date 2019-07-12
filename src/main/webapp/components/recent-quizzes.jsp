@@ -15,7 +15,6 @@
     quizzes.sort(Comparator.comparing(Quiz::getDateCreated).reversed());
     if (quizzes.size() > 0) {
 %>
-<section class="mosh-team-area section_padding_100">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-12 col-md-10">
@@ -57,5 +56,4 @@
         </div>
 
     </div>
-</section>
 <%}%>

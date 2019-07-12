@@ -4,6 +4,7 @@ package manager;
 import dao.*;
 import datatypes.announcement.Announcement;
 import datatypes.messages.*;
+import datatypes.quiz.Comment;
 import datatypes.quiz.Quiz;
 import datatypes.quiz.QuizResult;
 import datatypes.quiz.answer.Answer;
@@ -42,6 +43,7 @@ public class DaoManager {
     private final AdminMessageDao adminMessageDao = new AdminMessageDao();
     private final AdminReplyMessageDao adminReplyMessageDao = new AdminReplyMessageDao();
     private final ActivityDao activityDao = new ActivityDao((ThreadPoolExecutor) Executors.newFixedThreadPool(4));
+    private final CommentDao commentDao = new CommentDao();
     private CountDownLatch latch ;
     public DaoManager() {
         map = new HashMap<>();
@@ -58,6 +60,7 @@ public class DaoManager {
         map.put(DaoType.QuizChallenge, quizChallengeDao);
         map.put(DaoType.AdminMessage, adminMessageDao);
         map.put(DaoType.AdminReply, adminReplyMessageDao);
+        map.put(DaoType.Comment, commentDao);
         latch = new CountDownLatch(map.size());
         map.values().forEach(dao -> {
             executor.execute(()->{
@@ -72,10 +75,19 @@ public class DaoManager {
             setTextMessages();
             setAchievements();
             setQuizResults();
+            setQuizComments();
             setQuizChallenges();
         } catch (InterruptedException e) {
             logger.error(e);
         }
+    }
+
+    private void setQuizComments() {
+        quizDao.findAll().forEach(quiz -> {
+            quiz.setComments(commentDao.findAll().stream()
+                    .filter(comment -> comment.getQuizId() == quiz.getId())
+                    .collect(Collectors.toList()));
+        });
     }
 
     private void setQuizChallenges() {
@@ -258,24 +270,28 @@ public class DaoManager {
     }
 
     public void delete(Quiz quiz) {
-        if (quizDao.deleteById(quiz.getId())){
-            //delete questions
-            questionDao.deleteAll(quiz.getQuestionAnswerMap().keySet());
-            //delete answers
-            answerDao.deleteAll(quiz.getQuestionAnswerMap().values());
+        executor.execute(()->{
+            if (quizDao.deleteById(quiz.getId())){
+                //delete questions
+                questionDao.deleteAll(quiz.getQuestionAnswerMap().keySet());
+                //delete answers
+                answerDao.deleteAll(quiz.getQuestionAnswerMap().values());
+                //delete comments
+                quiz.getComments().forEach(comment -> commentDao.deleteById(comment.getId()));
 
-            User user = userDao.findById(quiz.getAuthorId());
-            //remove this quiz from author's created quizzes
-            user.getQuizzes().remove(quiz);
-            List<QuizResult> resultsInThisQuiz = quizResultDao.findAll().stream().filter(quizResult -> quizResult.getQuizId() == quiz.getId()).collect(Collectors.toList());
-            //delete quizResults of this quiz from db
-            resultsInThisQuiz.forEach(quizResult -> quizResultDao.deleteById(quizResult.getId()));
-            //delete quizResults of this quiz from runtime users
-            resultsInThisQuiz.forEach(quizResult -> userDao.findById(quizResult.getUserId()).getQuizResults().remove(quizResult));
-            //delete quiz challenges
-            quizChallengeDao.findAll().stream().filter(quizChallenge -> quizChallenge.getQuizId() == quiz.getId()).forEach(quizChallenge -> quizChallengeDao.deleteById(quizChallenge.getId()));
-            activityDao.insert(new Activity(quiz.getAuthorId(), "deleted quiz "+quiz.getQuizName(), LocalDateTime.now()));
-        }
+                User user = userDao.findById(quiz.getAuthorId());
+                //remove this quiz from author's created quizzes
+                user.getQuizzes().remove(quiz);
+                List<QuizResult> resultsInThisQuiz = quizResultDao.findAll().stream().filter(quizResult -> quizResult.getQuizId() == quiz.getId()).collect(Collectors.toList());
+                //delete quizResults of this quiz from db
+                resultsInThisQuiz.forEach(quizResult -> quizResultDao.deleteById(quizResult.getId()));
+                //delete quizResults of this quiz from runtime users
+                resultsInThisQuiz.forEach(quizResult -> userDao.findById(quizResult.getUserId()).getQuizResults().remove(quizResult));
+                //delete quiz challenges
+                quizChallengeDao.findAll().stream().filter(quizChallenge -> quizChallenge.getQuizId() == quiz.getId()).forEach(quizChallenge -> quizChallengeDao.deleteById(quizChallenge.getId()));
+                activityDao.insert(new Activity(quiz.getAuthorId(), "deleted quiz "+quiz.getQuizName(), LocalDateTime.now()));
+            }
+        });
     }
 
     public void insert(TextMessage mes) {
@@ -408,5 +424,19 @@ public class DaoManager {
             return true;
         }
         return false;
+    }
+
+    public void insert(Comment comment) {
+        if (commentDao.insert(comment)){
+            activityDao.insert(new Activity(comment.getUserId(), "added a comment", comment.getCommentDate()));
+            quizDao.findById(comment.getQuizId()).getComments().add(comment);
+        }
+    }
+
+    public void delete(Comment comment) {
+        if (commentDao.deleteById(comment.getId())) {
+            activityDao.insert(new Activity(comment.getUserId(), "Deleted a comment", LocalDateTime.now()));
+            quizDao.findById(comment.getQuizId()).getComments().remove(comment);
+        }
     }
 }

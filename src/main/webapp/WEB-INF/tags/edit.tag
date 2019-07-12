@@ -8,7 +8,7 @@
 
 <c:set var="target" value="edit${entityName}Modal${hiddenParameterValue}"/>
 
-<button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+<button class="mini ui blue button" data-toggle="modal"
         data-target="#${target}">
     <i class="fa fa-edit"></i> Edit
 </button>
@@ -42,9 +42,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel
-                    </button>
-                    <input type="submit" class="btn btn-primary" value="Update"/>
+                    <div class="ui buttons">
+                        <button class="ui button" data-dismiss="modal">Cancel</button>
+                        <div class="or"></div>
+                        <button type="submit" class="ui positive button">Update</button>
+                    </div>
                     <input type="text" hidden name="${hiddenParameterName}"
                            value="${hiddenParameterValue}">
                 </div>
