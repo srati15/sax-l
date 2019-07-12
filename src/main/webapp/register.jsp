@@ -49,7 +49,7 @@
                     <h2>Register Page</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Registration Form</li>
                         </ol>
                     </nav>
@@ -86,9 +86,6 @@
                 <i class="fa fa-sign-in"></i> Register
             </button>
         </form>
-        <script>
-            ${"#signUpForm"}.validate();
-        </script>
     </div>
 </section>
 <!-- ***** Login Area End ***** -->

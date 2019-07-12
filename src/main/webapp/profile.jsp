@@ -420,14 +420,15 @@
 <!-- Active js -->
 <script src="js/active.js"></script>
 <script src="js/jquery.validate.js"></script>
+<script type="text/javascript" src="js/datatables.min.js"></script>
 
 <script src="js/toastr.js"></script>
 <jsp:include page="components/notifications.jsp"/>
-<script type="text/javascript" src="js/datatables.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#friendRequestTable').DataTable();
         $('#friendsTable').DataTable();
+        $('#historyTable').DataTable();
         $('.dataTables_length').addClass('bs-select');
         $('[data-toggle="tooltip"]').tooltip();
     });

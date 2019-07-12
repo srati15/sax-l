@@ -75,10 +75,10 @@
 </div>
 
 <section class="mosh-aboutUs-area">
-    <div class="container">
+    <div class="container"  >
         <h3 class="mb-30">All Activities</h3>
 
-        <table id="myTable" class="table table-striped table-bordered table-sm">
+        <table id="myTable" class="table table-striped table-bordered table-sm" style="display: inline-table">
             <thead>
             <tr>
                 <th>#</th>
