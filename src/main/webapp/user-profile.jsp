@@ -1,5 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="dao.FriendRequestDao" %>
+<%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.user.User" %>
+<%@ page import="enums.DaoType" %>
 <%@ page import="enums.RequestStatus" %>
+<%@ page import="manager.DaoManager" %>
+<%@ page import="dao.TextMessageDao" %>
+<%@ page import="java.util.List" %>
+<%@ page import="datatypes.messages.TextMessage" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <!DOCTYPE html>
@@ -30,6 +38,20 @@
 
 <body>
 
+<%
+    DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
+    FriendRequestDao friendRequestDao = manager.getDao(DaoType.FriendRequest);
+    UserDao userDao = manager.getDao(DaoType.User);
+    User user = (User) request.getSession().getAttribute("user");
+    int id = Integer.parseInt(request.getParameter("userid"));
+    if (user.getId() == id) request.getRequestDispatcher("profile").forward(request, response);
+    User profileUser = userDao.findById(id);
+    TextMessageDao textMessageDao = manager.getDao(DaoType.TextMessage);
+    List<TextMessage> messages = textMessageDao.getTextMessagesOfGivenUsers(user.getId(), id);
+    pageContext.setAttribute("request1", friendRequestDao.findBySenderReceiverId(user.getId(), id));
+    pageContext.setAttribute("request2", friendRequestDao.findBySenderReceiverId(id, user.getId()));
+    pageContext.setAttribute("mess", messages);
+%>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
     <div class="mosh-preloader"></div>
@@ -47,11 +69,11 @@
         <div class="row h-100 align-items-center">
             <div class="col-12">
                 <div class="bradcumbContent">
-                    <h2>${requestScope.profileUser.userName}'s Profile</h2>
+                    <h2><%=profileUser.getUserName()%>'s Profile</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">${requestScope.profileUser.userName}'s
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><%=profileUser.getUserName()%>'s
                                 profile
                             </li>
                         </ol>
@@ -67,46 +89,46 @@
         <div class="ui link cards">
             <div class="card">
                 <div class="content">
-                    <div class="header">${requestScope.profileUser.userName}
+                    <div class="header"><%=profileUser.getUserName()%>
                     </div>
                     <div class="description">
-                        Name: ${requestScope.profileUser.firstName}<br>
-                        Last Name: ${requestScope.profileUser.lastName}<br>
-                        Achievements: ${requestScope.profileUser.achievements.size()}<br>
-                        Friends: ${requestScope.profileUser.friends.size()}<br>
+                        Name: <%=profileUser.getFirstName()%><br>
+                        Last Name: <%=profileUser.getLastName()%><br>
+                        Achievements: <%=profileUser.getAchievements().size()%><br>
+                        Friends: <%=profileUser.getFriends().size()%><br>
                     </div>
                 </div>
                 <div class="extra content">
                     <span class="right floated">
                         <c:choose>
-                            <c:when test="${requestScope.request1 == null && requestScope.request2 == null}">
+                            <c:when test="${request1 == null && request2 == null}">
                 <div style="margin: -5px 2px 0 10px">
                     <form action="FriendRequestSenderServlet" method="post">
                         <input type="submit" class="btn btn-success btn-sm"
                                value="Send Friend Request"/>
-                        <input type="text" hidden name="receiverId" value="${requestScope.profileUser.id}"/>
+                        <input type="text" hidden name="receiverId" value="<%=id%>"/>
                     </form>
                 </div>
                             </c:when>
                             <c:otherwise>
                                 <c:choose>
-                                    <c:when test="${requestScope.request1!=null && requestScope.request1.status == RequestStatus.Pending}">
+                                    <c:when test="${request1!=null && request1.status == RequestStatus.Pending}">
                         <div style="margin: -5px 2px 0 10px">
                             <form action="FriendRequestDeleteServlet" method="post">
                                 <input type="submit" class="btn btn-warning btn-sm"
                                        value="Cancel Friend Request"/>
-                                <input type="text" hidden name="receiverId" value="${requestScope.profileUser.id}"/>
+                                <input type="text" hidden name="receiverId" value="<%=id%>"/>
                             </form>
                         </div>
                                     </c:when>
                                     <c:otherwise>
                                         <c:choose>
-                                            <c:when test="${(requestScope.request1!=null && requestScope.request1.status == RequestStatus.Accepted) || (requestScope.request2 !=null && requestScope.request2.status==RequestStatus.Accepted)}">
+                                            <c:when test="${(request1!=null && request1.status == RequestStatus.Accepted) || (request2 !=null && request2.status==RequestStatus.Accepted)}">
                                 <div style="margin: -5px 2px 0 10px">
                                     <form action="FriendRequestDeleteServlet" method="post">
                                         <input type="submit" class="btn btn-warning btn-sm"
                                                value="Remove Friend"/>
-                                        <input type="text" hidden name="receiverId" value="${requestScope.profileUser.id}"/>
+                                        <input type="text" hidden name="receiverId" value="<%=id%>"/>
                                     </form>
                                 </div>
                                             </c:when>
@@ -130,26 +152,30 @@
 <div class="chat-popup" id="myForm">
     <form action="TextMessageServlet" method="post" class="form-container">
         <div style="overflow-y: scroll; max-height:300px;">
-            <c:forEach var="curr" items="${requestScope.mess}">
-                <c:choose>
-                    <c:when test="${curr.senderId == requestScope.profileUser.id}">
-                        <div class="my-user darker">
-                            <p>${curr.textMessage}</p>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="my-user">
-                            <p>${curr.textMessage}</p>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </c:forEach>
+            <%
+                for (int i = 0; i < messages.size(); i++) {
+                    TextMessage curr = messages.get(i);
+                    if (curr.getSenderId() == user.getId()) {
+            %>
+            <div class="my-user darker">
+                <p><%=curr.getTextMessage()%>
+                </p>
+            </div>
+            <%} else {%>
+            <div class="my-user">
+                <p><%=curr.getTextMessage()%>
+                </p>
+            </div>
+            <%
+                    }
+                }
+            %>
         </div>
         <label>
             <textarea placeholder="Type message.." name="msg" required></textarea>
         </label>
         <label>
-            <input type="text" hidden name="receiverId" value="${requestScope.profileUser.id}"/>
+            <input type="text" hidden name="receiverId" value="<%=id%>"/>
         </label>
         <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-paper-plane"></i> Send</button>
         <button type="button" class="btn btn-warning btn-sm" onclick="closeForm()">Close</button>

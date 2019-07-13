@@ -1,4 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="dao.AnnouncementDao" %>
+<%@ page import="dao.QuizDao" %>
+<%@ page import="dao.QuizResultDao" %>
+<%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.quiz.QuizResult" %>
+<%@ page import="datatypes.user.User" %>
+<%@ page import="enums.DaoType" %>
+<%@ page import="manager.DaoManager" %>
+<%@ page import="java.util.*" %>
+<%@ page import="java.util.stream.Collectors" %>
+<%@ page import="java.time.LocalDate" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <!DOCTYPE html>
@@ -27,6 +38,26 @@
 
 <body>
 
+<%
+    DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
+    UserDao userDao = manager.getDao(DaoType.User);
+    QuizDao quizDao = manager.getDao(DaoType.Quiz);
+    QuizResultDao quizResultDao = manager.getDao(DaoType.QuizResult);
+    int quizId = Integer.valueOf(request.getParameter("quizId"));
+    Map<Integer, List<QuizResult>> quizResultMap = new HashMap<>();
+    quizResultDao.findAll().stream().filter(s -> s.getQuizId() == quizId).collect(Collectors.toList()).forEach(s -> {
+        quizResultMap.putIfAbsent(s.getUserId(), new ArrayList<>());
+        quizResultMap.get(s.getUserId()).add(s);
+    });
+    List<QuizResult> topPerformers = quizResultDao.findAll().stream().sorted(Comparator.comparing(QuizResult::getScore).reversed().thenComparing(QuizResult::getTimeSpent)).limit(3).collect(Collectors.toList());
+    List<QuizResult> topPerformersToday = quizResultDao.findAll().stream().filter(q -> q.getTimestamp().toLocalDate().equals(LocalDate.now())).sorted(Comparator.comparing(QuizResult::getScore).reversed().thenComparing(QuizResult::getTimeSpent)).limit(3).collect(Collectors.toList());
+    pageContext.setAttribute("topPerformersToday", topPerformersToday);
+    pageContext.setAttribute("quizResults", quizResultMap);
+    pageContext.setAttribute("topPerformers", topPerformers);
+    pageContext.setAttribute("userDao", userDao);
+    User user = (User) request.getSession().getAttribute("user");
+    pageContext.setAttribute("user", user);
+%>
 
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -56,6 +87,7 @@
     </div>
 </div>
 
+<c:set var="quiz" value="<%=quizDao.findById(quizId)%>"/>
 <section class="mosh-aboutUs-area">
     <div class="container">
         <div class="row">
@@ -65,21 +97,21 @@
                     <div class="ui divided items">
                         <div class="item">
                             <div class="image">
-                                <img src="${requestScope.quiz.quizImageURL}">
+                                <img src="${quiz.quizImageURL}">
                             </div>
                             <div class="content">
-                                <a class="header">${requestScope.quiz.quizName}</a>
+                                <a class="header">${quiz.quizName}</a>
                                 <div class="meta">
                                     <span class="cinema">
                                         By <a
-                                            href="user-profile?userid=${requestScope.userDao.findById(requestScope.quiz.authorId).id}">${userDao.findById(quiz.authorId).userName},</a>${quiz.dateCreated.toLocalDate()}
+                                            href="user-profile?userid=${userDao.findById(quiz.authorId).id}">${userDao.findById(quiz.authorId).userName},</a>${quiz.dateCreated.toLocalDate()}
                                     </span>
                                 </div>
                                 <div class="description">
-                                    <p>${requestScope.quiz.description}</p>
+                                    <p>${quiz.description}</p>
                                 </div>
                                 <div class="extra" style="float:right">
-                                    <h:start quiz="${requestScope.quiz}" buttonClass="btn mosh-btn" styled="false"/>
+                                    <h:start quiz="${quiz}" buttonClass="btn mosh-btn" styled="false"/>
                                 </div>
                             </div>
                         </div>
@@ -87,40 +119,40 @@
 
                     <div class="ui comments blue segments">
                         <h3 class="ui top attached header">Comments</h3>
-                        <c:forEach var="comment" items="${requestScope.quiz.comments}">
-                            <h:comments userDao="${requestScope.userDao}" comment="${comment}"/>
+                        <c:forEach var="comment" items="${quiz.comments}">
+                            <h:comments userDao="${userDao}" comment="${comment}"/>
                         </c:forEach>
                         <form class="ui reply form" action="AddCommentServlet" method="post">
                             <textarea class="form-control" name="commentText"></textarea>
-                            <input hidden name="quizId" value="${requestScope.quiz.id}"/>
+                            <input hidden name="quizId" value="${quiz.id}"/>
                             <button class="ui blue button" type="submit">
                                 <i class="fa fa-reply"></i> Add Reply
                             </button>
                         </form>
                     </div>
                     <div class="row ui horizontal segments">
-                        <c:if test="${requestScope.topPerformers.size() > 0}">
+                        <c:if test="${topPerformers.size() > 0}">
                             <div class="col-sm">
-                                <h:performer userDao="${requestScope.userDao}" title="Top Performers"
-                                             quizResults="${requestScope.topPerformers}"/>
+                                <h:performer userDao="${userDao}" title="Top Performers"
+                                             quizResults="${topPerformers}"/>
                             </div>
                         </c:if>
-                        <c:if test="${requestScope.topPerformersToday.size() > 0}">
+                        <c:if test="${topPerformersToday.size() > 0}">
                             <div class="col-sm">
-                                <h:performer userDao="${requestScope.userDao}" title="Top Performers Today"
-                                             quizResults="${requestScope.topPerformersToday}"/>
+                                <h:performer userDao="${userDao}" title="Top Performers Today"
+                                             quizResults="${topPerformersToday}"/>
                             </div>
                         </c:if>
-                        <c:if test="${requestScope.quizResults.size() > 0}">
+                        <c:if test="${quizResults.size() > 0}">
                             <div class="col-sm">
                                 <div class="ui segment">
                                     <h2 class="text-center">All Performers</h2>
                                     <div class="card-deck">
-                                        <c:forEach var="entry" items="${requestScope.quizResults}">
+                                        <c:forEach var="entry" items="${quizResults}">
                                             <div class="team-meta-info">
                                                 <div class="card" style="width: 18rem;">
                                                     <h5 class="card-title">User: <b><a
-                                                            href="user-profile?userid=${requestScope.userDao.findById(entry.key).id}">${userDao.findById(entry.key).userName}</a></b>
+                                                            href="user-profile?userid=${userDao.findById(entry.key).id}">${userDao.findById(entry.key).userName}</a></b>
                                                     </h5>
                                                     <div class="card-body">
                                                         <c:forEach var="quizRes" items="${entry.value}">

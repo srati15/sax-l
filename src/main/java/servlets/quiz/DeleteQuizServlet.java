@@ -21,6 +21,6 @@ public class DeleteQuizServlet extends HttpServlet {
         Quiz quiz = quizDao.findById(quizId);
         manager.delete(quiz);
         request.setAttribute("warn", "Quiz removing request is being processed...");
-        request.getRequestDispatcher("/quiz").forward(request, response);
+        request.getRequestDispatcher("quiz").forward(request, response);
     }
 }

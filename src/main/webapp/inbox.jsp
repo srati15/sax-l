@@ -1,4 +1,16 @@
+<%@ page import="dao.ActivityDao" %>
+<%@ page import="dao.UserDao" %>
+<%@ page import="datatypes.server.Activity" %>
+<%@ page import="datatypes.user.User" %>
+<%@ page import="enums.DaoType" %>
+<%@ page import="manager.DaoManager" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Comparator" %>
+<%@ page import="java.util.List" %>
+<%@ page import="datatypes.messages.AdminMessage" %>
+<%@ page import="dao.AdminMessageDao" %>
+<%@ page import="java.util.stream.Collectors" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>

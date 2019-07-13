@@ -54,9 +54,4 @@ public class ProfileServlet extends HttpServlet {
         request.setAttribute("user", user);
         request.getRequestDispatcher("/profile.jsp").forward(request, response);
     }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req,resp);
-    }
 }

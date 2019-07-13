@@ -65,308 +65,306 @@
 </div>
 <!-- ***** Breadcumb Area End ***** -->
 <section class="mosh-aboutUs-area">
-    <div class="ui segment">
-        <div class="container">
-            <ul class="nav nav-tabs nav-fill">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#requests">Friend Requests<span
-                            class="badge badge-info">${requestScope.requestList.size()}</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#people">Friends<span
-                            class="badge badge-info">${requestScope.friendsIds.size()}</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#messages">Messages</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#achievements">Achievements
-                        <span class="badge badge-info">${sessionScope.user.achievements.size()}</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#challenges">Quiz Challenges
-                        <span class="badge badge-info">${sessionScope.user.quizChallenges.size()}</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#history">History</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#edit">Edit Profile</a>
-                </li>
-            </ul>
-            <div id="myTabContent" class="tab-content">
+    <div class="container">
+        <ul class="nav nav-tabs nav-fill">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#requests">Friend Requests<span
+                        class="badge badge-info">${requestScope.requestList.size()}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#people">Friends<span
+                        class="badge badge-info">${requestScope.friendsIds.size()}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#messages">Messages</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#achievements">Achievements
+                    <span class="badge badge-info">${sessionScope.user.achievements.size()}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#challenges">Quiz Challenges
+                    <span class="badge badge-info">${sessionScope.user.quizChallenges.size()}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#history">History</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#edit">Edit Profile</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
 
-                <div class="tab-pane fade active show" id="requests">
-                    <table id="friendRequestTable" class="table table-striped table-bordered table-sm">
-                        <thead>
+            <div class="tab-pane fade active show" id="requests">
+                <table id="friendRequestTable" class="table table-striped table-bordered table-sm">
+                    <thead>
+                    <tr>
+                        <th>Friend Request</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${requestScope.requestList}" var="friendRequest">
                         <tr>
-                            <th>Friend Request</th>
-                            <th>Action</th>
+                            <td>
+                                <a href="user-profile?userid=${friendRequest.id}">
+                                        ${friendRequest.userName} sent you a friend request
+                                </a>
+                            </td>
+                            <td>
+                                <form action="FriendRequestAcceptServlet" method="post" style="float:left">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        Accept
+                                    </button>
+                                    <input type="text" hidden name="receiverId" value="${friendRequest.id}"/>
+                                </form>
+                                <form action="FriendRequestDeleteServlet" method="post" style="float:left">
+                                    <button type="submit" class="btn btn-warning btn-sm">
+                                        Reject
+                                    </button>
+                                    <input type="text" hidden name="receiverId" value="${friendRequest.id}"/>
+                                    <input type="text" hidden name="callingPage" value="profile">
+                                </form>
+                                <br>
+                            </td>
                         </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${requestScope.requestList}" var="friendRequest">
-                            <tr>
-                                <td>
-                                    <a href="user-profile?userid=${friendRequest.id}">
-                                            ${friendRequest.userName} sent you a friend request
-                                    </a>
-                                </td>
-                                <td>
-                                    <form action="FriendRequestAcceptServlet" method="post" style="float:left">
-                                        <button type="submit" class="btn btn-success btn-sm">
-                                            Accept
-                                        </button>
-                                        <input type="text" hidden name="receiverId" value="${friendRequest.id}"/>
-                                    </form>
-                                    <form action="FriendRequestDeleteServlet" method="post" style="float:left">
-                                        <button type="submit" class="btn btn-warning btn-sm">
-                                            Reject
-                                        </button>
-                                        <input type="text" hidden name="receiverId" value="${friendRequest.id}"/>
-                                        <input type="text" hidden name="callingPage" value="profile">
-                                    </form>
-                                    <br>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                        <tfoot>
+                    </c:forEach>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Friend Request</th>
+                        <th>Action</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="people">
+                <table id="friendsTable" class="table table-striped table-bordered table-sm">
+                    <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Achievements</th>
+                        <th>Completed Quizzes</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${requestScope.friendsIds}" var="friend">
                         <tr>
-                            <th>Friend Request</th>
-                            <th>Action</th>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div class="tab-pane fade" id="people">
-                    <table id="friendsTable" class="table table-striped table-bordered table-sm">
-                        <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Achievements</th>
-                            <th>Completed Quizzes</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${requestScope.friendsIds}" var="friend">
-                            <tr>
-                                <td>
+                            <td>
 
-                                    <a href="user-profile?userid=${friend.id}">${friend.userName}
-                                        <c:if test="${applicationScope.onlineUsers.containsValue(friend)}">
-                                            <span class="badge badge-success">Online</span>
-                                        </c:if>
-                                    </a>
-                                </td>
-                                <td>
-                                        ${friend.firstName}
-                                </td>
-                                <td>
-                                        ${friend.lastName}
-                                </td>
-                                <td>${sessionScope.user.achievements.size()}</td>
-                                <td>${sessionScope.user.quizResults.size()}</td>
-                                <td>
-                                    <!--  ************ challenge modal **********-->
-                                    <h:challenge
-                                            receiverId="${friend.id}"
-                                            receiverName="${friend.userName}"
-                                            actionServlet="ChallengeSenderServlet">
-                                    </h:challenge>
+                                <a href="user-profile?userid=${friend.id}">${friend.userName}
+                                    <c:if test="${applicationScope.onlineUsers.containsValue(friend)}">
+                                        <span class="badge badge-success">Online</span>
+                                    </c:if>
+                                </a>
+                            </td>
+                            <td>
+                                    ${friend.firstName}
+                            </td>
+                            <td>
+                                    ${friend.lastName}
+                            </td>
+                            <td>${sessionScope.user.achievements.size()}</td>
+                            <td>${sessionScope.user.quizResults.size()}</td>
+                            <td>
+                                <!--  ************ challenge modal **********-->
+                                <h:challenge
+                                        receiverId="${friend.id}"
+                                        receiverName="${friend.userName}"
+                                        actionServlet="ChallengeSenderServlet">
+                                </h:challenge>
 
-                                    <form action="FriendRequestDeleteServlet" method="post" style="float: left;">
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fa fa-trash"></i> Unfriend
-                                        </button>
-                                        <input type="text" hidden name="receiverId" value="${friend.id}"/>
-                                        <input type="text" hidden name="callingPage" value="profile">
-                                    </form>
-                                </td>
+                                <form action="FriendRequestDeleteServlet" method="post" style="float: left;">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-trash"></i> Unfriend
+                                    </button>
+                                    <input type="text" hidden name="receiverId" value="${friend.id}"/>
+                                    <input type="text" hidden name="callingPage" value="profile">
+                                </form>
+                            </td>
 
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <th>Username</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Achievements</th>
-                            <th>Completed Quizzes</th>
-                            <th>Action</th>
                         </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div class="tab-pane fade" id="messages">
-                    <c:forEach var="textMessage" items="${requestScope.textMessages}">
-                        <c:set var="sender" value="${requestScope.userDao.findById(textMessage.senderId)}"/>
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <div class="card">
-                                    <h5 class="card-header"><a
-                                            href="user-profile?userid=${sender.id}">${sender.userName}
-                                    </a></h5>
-                                    <div class="card-body">
-                                        <h6 class="lead" style=" float: left">
-                                                ${textMessage.textMessage}
-                                        </h6>
-                                        <h6 class="card-text" style="float: right">${textMessage.timestamp}
-                                        </h6>
-                                    </div>
+                    </c:forEach>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Achievements</th>
+                        <th>Completed Quizzes</th>
+                        <th>Action</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="messages">
+                <c:forEach var="textMessage" items="${requestScope.textMessages}">
+                    <c:set var="sender" value="${requestScope.userDao.findById(textMessage.senderId)}"/>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="card">
+                                <h5 class="card-header"><a
+                                        href="user-profile?userid=${sender.id}">${sender.userName}
+                                </a></h5>
+                                <div class="card-body">
+                                    <h6 class="lead" style=" float: left">
+                                        ${textMessage.textMessage}
+                                    </h6>
+                                    <h6 class="card-text" style="float: right">${textMessage.timestamp}
+                                    </h6>
                                 </div>
-                            </li>
-                        </ul>
+                            </div>
+                        </li>
+                    </ul>
+
+                </c:forEach>
+            </div>
+
+            <div class="tab-pane fade" id="achievements">
+                <ul class="list-group">
+                    <p class="text-primary"></p>
+                    <c:forEach var="achievement" items="${sessionScope.user.achievements}">
+                        <li class="list-group-item">
+                            <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true"
+                                    data-placement="top"
+                                    title="${achievement.achievement.achievementName}, <p class='text-success'>${achievement.achievement.achievementCriteria}</p>">
+                                <img src="img/core-img/medal.png"
+                                     alt="${achievement.achievement.achievementName}">
+                            </button>
+                        </li>
 
                     </c:forEach>
-                </div>
 
-                <div class="tab-pane fade" id="achievements">
-                    <ul class="list-group">
-                        <p class="text-primary"></p>
-                        <c:forEach var="achievement" items="${sessionScope.user.achievements}">
-                            <li class="list-group-item">
-                                <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true"
-                                        data-placement="top"
-                                        title="${achievement.achievement.achievementName}, <p class='text-success'>${achievement.achievement.achievementCriteria}</p>">
-                                    <img src="img/core-img/medal.png"
-                                         alt="${achievement.achievement.achievementName}">
+                </ul>
+            </div>
+
+            <div class="tab-pane fade" id="challenges">
+                <table id="challengesTable" class="table table-striped table-bordered table-sm">
+                    <thead>
+                    <tr>
+                        <th>Challenger</th>
+                        <th>Quiz</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="challenge" items="${sessionScope.user.quizChallenges}">
+                        <td>
+                            <a href="user-profile?userid=${challenge.senderId}">${sessionScope.userDao.findById(challenge.senderId).userName}</a>
+                        </td>
+                        <td>
+                                ${requestScope.quizDao.findById(challenge.quizId).quizName}
+                        </td>
+                        <td>
+                            <form action="AcceptChallengeServlet" method="post">
+                                <input type="hidden" name="challengeId" value="${challenge.id}">
+                                <button type="submit" class="btn btn-info btn-sm" style="float:left">
+                                    <i class="fa fa-hourglass-start"></i> Start
                                 </button>
-                            </li>
+                            </form>
+                            <form action="RejectChallengeServlet" method="post">
+                                <input type="hidden" name="challengeId" value="${challenge.id}">
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-trash"></i> Reject
+                                </button>
+                            </form>
 
-                        </c:forEach>
-
-                    </ul>
-                </div>
-
-                <div class="tab-pane fade" id="challenges">
-                    <table id="challengesTable" class="table table-striped table-bordered table-sm">
-                        <thead>
-                        <tr>
-                            <th>Challenger</th>
-                            <th>Quiz</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var="challenge" items="${sessionScope.user.quizChallenges}">
-                            <td>
-                                <a href="user-profile?userid=${challenge.senderId}">${sessionScope.userDao.findById(challenge.senderId).userName}</a>
-                            </td>
-                            <td>
-                                    ${requestScope.quizDao.findById(challenge.quizId).quizName}
-                            </td>
-                            <td>
-                                <form action="AcceptChallengeServlet" method="post">
-                                    <input type="hidden" name="challengeId" value="${challenge.id}">
-                                    <button type="submit" class="btn btn-info btn-sm" style="float:left">
-                                        <i class="fa fa-hourglass-start"></i> Start
-                                    </button>
-                                </form>
-                                <form action="RejectChallengeServlet" method="post">
-                                    <input type="hidden" name="challengeId" value="${challenge.id}">
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa fa-trash"></i> Reject
-                                    </button>
-                                </form>
-
-                            </td>
-                        </c:forEach>
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <th>Challenger</th>
-                            <th>Quiz</th>
-                            <th>Action</th>
-                        </tr>
-                        </tfoot>
-                    </table>
-
-                </div>
-
-                <div class="tab-pane fade" id="edit">
-                    <form action="UpdateUserServlet" method="post" id="editForm">
-                        <center>
-                            <label>
-                                <input type="text" disabled value="${sessionScope.user.userName}" name="username" required
-                                       minlength="4">
-                            </label>
-                            <br>
-                            <label>
-                                <input type="password" placeholder="Password" name="password" required minlength="4">
-                            </label>
-                            <br>
-                            <label>
-                                <input type="password" placeholder="Confirm password" name="confirmpassword" required
-                                       minlength="4">
-                            </label>
-                            <br>
-
-                            <label>
-                                <input type="email" disabled placeholder="${sessionScope.user.mail}" name="mail" required>
-                            </label>
-                            <br>
-
-                            <label>
-                                <input type="text" value="${sessionScope.user.firstName}" name="firstname">
-                            </label>
-                            <br>
-
-                            <label>
-                                <input type="text" value="${sessionScope.user.lastName}" name="lastname">
-                            </label>
-                            <br>
-                            <button type="submit" class="btn btn-outline-info btn-sm"
-                                    style="display: block; margin: 0 auto;">
-                                <i class="fa fa-sign-in"></i> Update
-                            </button>
-                            <br>
-
-                            <input type="text" hidden name="hiddenId" value="${sessionScope.user.id}">
-                            <input type="text" hidden name="calledFrom" value="profile">
-                        </center>
-                    </form>
-                </div>
-                <div class="tab-pane fade" id="history">
-                    <table id="historyTable" class="table table-striped table-bordered table-sm">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Action</th>
-                            <th>Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:set var="i" value="0" scope="page"/>
-                        <c:forEach items="${requestScope.activities}" var="activity">
-                            <tr>
-                                <td>${i+1}</td>
-                                <td>
-                                        ${activity.activityName}
-                                </td>
-                                <td>
-                                        ${DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy").format(activity.dateTime)}
-                                </td>
-                            </tr>
-                            <c:set var="i" value="${i + 1}" scope="page"/>
-                        </c:forEach>
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <th>#</th>
-                            <th>Action</th>
-                            <th>Date</th>
-                        </tr>
-                        </tfoot>
-                    </table>
-
-                </div>
+                        </td>
+                    </c:forEach>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Challenger</th>
+                        <th>Quiz</th>
+                        <th>Action</th>
+                    </tr>
+                    </tfoot>
+                </table>
 
             </div>
+
+            <div class="tab-pane fade" id="edit">
+                <form action="UpdateUserServlet" method="post" id="editForm">
+                    <center>
+                        <label>
+                            <input type="text" disabled value="${sessionScope.user.userName}" name="username" required
+                                   minlength="4">
+                        </label>
+                        <br>
+                        <label>
+                            <input type="password" placeholder="Password" name="password" required minlength="4">
+                        </label>
+                        <br>
+                        <label>
+                            <input type="password" placeholder="Confirm password" name="confirmpassword" required
+                                   minlength="4">
+                        </label>
+                        <br>
+
+                        <label>
+                            <input type="email" disabled placeholder="${sessionScope.user.mail}" name="mail" required>
+                        </label>
+                        <br>
+
+                        <label>
+                            <input type="text" value="${sessionScope.user.firstName}" name="firstname">
+                        </label>
+                        <br>
+
+                        <label>
+                            <input type="text" value="${sessionScope.user.lastName}" name="lastname">
+                        </label>
+                        <br>
+                        <button type="submit" class="btn btn-outline-info btn-sm"
+                                style="display: block; margin: 0 auto;">
+                            <i class="fa fa-sign-in"></i> Update
+                        </button>
+                        <br>
+
+                        <input type="text" hidden name="hiddenId" value="${sessionScope.user.id}">
+                        <input type="text" hidden name="calledFrom" value="profile">
+                    </center>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="history">
+                <table id="historyTable" class="table table-striped table-bordered table-sm">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Action</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:set var="i" value="0" scope="page"/>
+                    <c:forEach items="${requestScope.activities}" var="activity">
+                        <tr>
+                            <td>${i+1}</td>
+                            <td>
+                                    ${activity.activityName}
+                            </td>
+                            <td>
+                                    ${DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy").format(activity.dateTime)}
+                            </td>
+                        </tr>
+                        <c:set var="i" value="${i + 1}" scope="page"/>
+                    </c:forEach>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>#</th>
+                        <th>Action</th>
+                        <th>Date</th>
+                    </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+
         </div>
     </div>
 </section>

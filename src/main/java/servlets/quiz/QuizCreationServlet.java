@@ -46,11 +46,7 @@ public class QuizCreationServlet extends HttpServlet {
         manager.insert(quiz);
         request.setAttribute("info", "Quiz creation request is being processed.. thank you "+user.getUserName());
 
-        request.getRequestDispatcher("/quiz.jsp").forward(request, response);
+        request.getRequestDispatcher("quiz").forward(request, response);
     }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-    }
 }

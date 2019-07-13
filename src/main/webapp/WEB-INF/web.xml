@@ -20,6 +20,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>UserProfile</servlet-name>
+        <jsp-file>/user-profile.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserProfile</servlet-name>
+        <url-pattern>/user-profile</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>UsersList</servlet-name>
         <jsp-file>/users-list.jsp</jsp-file>
     </servlet>
@@ -47,6 +56,16 @@
         <url-pattern>/admin</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>Quiz</servlet-name>
+        <jsp-file>/quiz.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Quiz</servlet-name>
+        <url-pattern>/quiz</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>QuizResult</servlet-name>
         <jsp-file>/quiz-result.jsp</jsp-file>
@@ -56,6 +75,14 @@
         <url-pattern>/quiz-result</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Activities</servlet-name>
+        <jsp-file>/activities.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Activities</servlet-name>
+        <url-pattern>/activities</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>top-quizzes</servlet-name>
@@ -65,6 +92,16 @@
         <servlet-name>top-quizzes</servlet-name>
         <url-pattern>/top-quizzes</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>quizDetails</servlet-name>
+        <jsp-file>/quiz-details.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>quizDetails</servlet-name>
+        <url-pattern>/quiz-details</url-pattern>
+    </servlet-mapping>
+
 
     <servlet>
         <servlet-name>contact</servlet-name>
