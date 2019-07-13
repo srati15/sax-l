@@ -1,7 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="dao.AnnouncementDao" %>
-<%@ page import="enums.DaoType" %>
-<%@ page import="manager.DaoManager" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,11 +26,6 @@
 
 <body>
 
-<%
-    DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-    AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
-
-%>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
     <div class="mosh-preloader"></div>

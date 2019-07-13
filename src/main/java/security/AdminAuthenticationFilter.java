@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(filterName = "AdminAuthenticationFilter", urlPatterns = {"/admin", "/announcements", "/server-logs", "/activities", "/statistics", "/inbox"})
+@WebFilter(filterName = "AdminAuthenticationFilter", urlPatterns = {"/admin", "/announcements", "/admin-logs", "/activities", "/statistics", "/inbox"})
 public class AdminAuthenticationFilter implements Filter {
     public void destroy() {
     }

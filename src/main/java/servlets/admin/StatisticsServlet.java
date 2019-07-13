@@ -1,11 +1,7 @@
-package servlets.server;
+package servlets.admin;
 
 import dao.*;
-import datatypes.quiz.QuizResult;
-import datatypes.server.ServerLog;
-import datatypes.user.Achievement;
 import enums.DaoType;
-import enums.Level;
 import manager.DaoManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,9 +11,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 

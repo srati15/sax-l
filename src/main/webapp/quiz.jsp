@@ -1,12 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="dao.AnnouncementDao" %>
-<%@ page import="dao.QuizDao" %>
-<%@ page import="dao.UserDao" %>
-<%@ page import="datatypes.user.User" %>
-<%@ page import="enums.DaoType" %>
 <%@ page import="enums.UserType" %>
-<%@ page import="manager.DaoManager" %>
-<%@ page import="dao.QuizResultDao" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,16 +28,6 @@
 
 <body>
 
-<%
-    DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-    UserDao userDao = manager.getDao(DaoType.User);
-    QuizDao quizDao = manager.getDao(DaoType.Quiz);
-    QuizResultDao quizResultDao = manager.getDao(DaoType.QuizResult);
-    pageContext.setAttribute("userDao", userDao);
-    pageContext.setAttribute("quizResultDao", quizResultDao);
-    User user = (User) request.getSession().getAttribute("user");
-    pageContext.setAttribute("user", user);
-%>
 
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
@@ -94,19 +77,19 @@
                 </thead>
                 <tbody>
                 <c:set var="i" value="0" scope="page"/>
-                <c:forEach items="<%=quizDao.findAll()%>" var="quiz">
+                <c:forEach items="${requestScope.quizDao.findAll()}" var="quiz">
                     <tr>
                         <td>${i+1}
                         </td>
                         <td><a href="quiz-details?quizId=${quiz.id}">${quiz.quizName}</a>
                         </td>
                         <td>
-                            <a href="user-profile?userid=${userDao.findById(quiz.authorId).id}">${userDao.findById(quiz.authorId).userName}</a>
+                            <a href="user-profile?userid=${requestScope.userDao.findById(quiz.authorId).id}">${requestScope.userDao.findById(quiz.authorId).userName}</a>
                         </td>
                         <td>
 
                             <h:start quiz="${quiz}" buttonClass="mini ui primary button" styled="true"/>
-                            <c:if test="${user.userType == UserType.Admin}">
+                            <c:if test="${sessionScope.user.userType == UserType.Admin}">
                                 <h:delete entityName="Quiz" actionServlet="DeleteQuizServlet"
                                           hiddenParameterName="deleteQuizId" hiddenParameterValue="${quiz.id}"/>
                                 <c:if test="${quiz.timesDone != 0}">

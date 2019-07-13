@@ -110,7 +110,7 @@ public class AnswerDao implements Dao<Integer, Answer> {
 
     public void deleteAll(Collection<Answer> values) {
         CountDownLatch latch = new CountDownLatch(values.size());
-        values.forEach(answer -> executor.execute(new InsertTask(answer, latch)));
+        values.forEach(answer -> executor.execute(new DeleteTask(answer, latch)));
         try {
             latch.await();
             logger.info("All answers deleted successfully!");

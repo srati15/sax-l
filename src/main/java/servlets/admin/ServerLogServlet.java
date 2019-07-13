@@ -1,4 +1,4 @@
-package servlets.server;
+package servlets.admin;
 
 import datatypes.server.ServerLog;
 import enums.Level;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@WebServlet("/server-logs")
+@WebServlet("/admin-logs")
 public class ServerLogServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(ServerLogServlet.class);
 
@@ -44,7 +44,7 @@ public class ServerLogServlet extends HttpServlet {
         catch(IOException ex) {
             logger.error("Error reading file '{}'", fileName);
         }
-        request.getRequestDispatcher("/server-logs.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin-logs.jsp").forward(request, response);
     }
 
 }
