@@ -8,13 +8,13 @@
 <%@ page import="com.sun.xml.internal.ws.util.StringUtils" %>
 <%@ page import="java.util.stream.Collectors" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="userDao" value="${applicationScope.manager.getDao(DaoType.User)}"/>
-<c:set var="announcementDao" value="${applicationScope.manager.getDao(DaoType.Announcement)}"/>
 <%
     DaoManager manager = (DaoManager) application.getAttribute("manager");
     User user = (User) session.getAttribute("user");
     UserDao userDao = manager.getDao(DaoType.User);
     AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
+    pageContext.setAttribute("announcementDao", announcementDao);
+    pageContext.setAttribute("userDao", userDao);
 %>
 
 <script>
