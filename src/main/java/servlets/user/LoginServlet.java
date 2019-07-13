@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-@WebServlet("/LoginServlet")
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(LoginServlet.class);
 
@@ -50,5 +50,10 @@ public class LoginServlet extends HttpServlet {
         activityDao.insert(new Activity(user.getId(), "logged in", LocalDateTime.now()));
         RequestDispatcher dispatcher = request.getRequestDispatcher("");
         dispatcher.forward(request, response);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/login.jsp").forward(req, resp);
     }
 }

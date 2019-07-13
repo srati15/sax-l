@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-@WebServlet("/RegisterServlet")
+@WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(RegisterServlet.class);
 
@@ -55,5 +55,10 @@ public class RegisterServlet extends HttpServlet {
 
         request.getSession().setAttribute("user", userRepository.findByUserName(userName));
         request.getRequestDispatcher("").forward(request, response);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/register.jsp").forward(req, resp);
     }
 }

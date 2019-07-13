@@ -65,7 +65,7 @@
 <section class="mosh-aboutUs-area">
     <div class="login">
 
-        <form action="LoginServlet" method="post" id="loginSection">
+        <form action="login" method="post" id="loginSection">
             <input type="text" placeholder="Username" minlength="4" required name="username">
             <input type="password" placeholder="password" minlength="4" required name="password">
             <br>

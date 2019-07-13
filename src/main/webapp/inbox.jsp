@@ -41,15 +41,6 @@
 </head>
 <body>
 
-<%
-    DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
-    AdminMessageDao adminMessageDao = daoManager.getDao(DaoType.AdminMessage);
-    List<AdminMessage> notSeen = adminMessageDao.findAll().stream().filter(s->!s.isSeen()).collect(Collectors.toList());
-    List<AdminMessage> seen = adminMessageDao.findAll().stream().filter(s->s.isSeen()).collect(Collectors.toList());
-
-    notSeen.sort(Comparator.comparing(AdminMessage::getTime).reversed());
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy");
-%>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
     <div class="mosh-preloader"></div>
@@ -80,83 +71,91 @@
 
 <section class="mosh-aboutUs-area">
     <div class="container">
-        <h3 class="mb-30">Unanswered Messages</h3>
-        <table id="newMessage" class="table table-striped table-bordered table-sm">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Mail</th>
-                <th>Subject</th>
-                <th>Date</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:set var="i" value="0" scope="page"/>
-            <c:forEach items="<%=notSeen%>" var="message">
+        <div class="ui segment">
+            <a class="huge ui black ribbon label">
+                New Messages
+            </a>
+            <table id="newMessage" class="table table-striped table-bordered table-sm">
+                <thead>
                 <tr>
-                    <td>${i+1}</td>
-                    <td>${message.name}</td>
-                    <td>${message.mail}</td>
-                    <td>${message.subject}</td>
-                    <td>${DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy").format(message.time)}</td>
-                    <td>
-                        <h:mail message="${message}"/>
-                        <h:delete entityName="Message" actionServlet="DeleteInboxMessageServlet" hiddenParameterName="messageId" hiddenParameterValue="${message.id}"/>
-                    </td>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Mail</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Action</th>
                 </tr>
-                <c:set var="i" value="${i + 1}" scope="page"/>
-            </c:forEach>
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Mail</th>
-                <th>Subject</th>
-                <th>Date</th>
-                <th>Action</th>
-            </tr>
-            </tfoot>
-        </table>
-        <h3 class="mb-30">Answered Messages</h3>
-        <table id="oldMessage" class="table table-striped table-bordered table-sm">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Mail</th>
-                <th>Subject</th>
-                <th>Date</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:set var="i" value="0" scope="page"/>
-            <c:forEach items="<%=seen%>" var="message">
+                </thead>
+                <tbody>
+                <c:set var="i" value="0" scope="page"/>
+                <c:forEach items="${requestScope.notSeen}" var="message">
+                    <tr>
+                        <td>${i+1}</td>
+                        <td>${message.name}</td>
+                        <td>${message.mail}</td>
+                        <td>${message.subject}</td>
+                        <td>${DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy").format(message.time)}</td>
+                        <td>
+                            <h:mail message="${message}"/>
+                            <h:delete entityName="Message" actionServlet="DeleteInboxMessageServlet" hiddenParameterName="messageId" hiddenParameterValue="${message.id}"/>
+                        </td>
+                    </tr>
+                    <c:set var="i" value="${i + 1}" scope="page"/>
+                </c:forEach>
+                </tbody>
+                <tfoot>
                 <tr>
-                    <td>${i+1}</td>
-                    <td>${message.name}</td>
-                    <td>${message.mail}</td>
-                    <td>${message.subject}</td>
-                    <td>${DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy").format(message.time)}</td>
-                    <td><h:delete entityName="Message" actionServlet="DeleteInboxMessageServlet" hiddenParameterName="messageId" hiddenParameterValue="${message.id}"/></td>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Mail</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Action</th>
                 </tr>
-                <c:set var="i" value="${i + 1}" scope="page"/>
-            </c:forEach>
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Mail</th>
-                <th>Subject</th>
-                <th>Date</th>
-                <th>Action</th>
-            </tr>
-            </tfoot>
-        </table>
+                </tfoot>
+            </table>
+        </div>
+        <div class="ui segment">
+            <a class="huge ui black ribbon label">
+                Old Messages
+            </a>
+            <table id="oldMessage" class="table table-striped table-bordered table-sm">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Mail</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:set var="i" value="0" scope="page"/>
+                <c:forEach items="${requestScope.seen}" var="message">
+                    <tr>
+                        <td>${i+1}</td>
+                        <td>${message.name}</td>
+                        <td>${message.mail}</td>
+                        <td>${message.subject}</td>
+                        <td>${DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy").format(message.time)}</td>
+                        <td><h:delete entityName="Message" actionServlet="DeleteInboxMessageServlet" hiddenParameterName="messageId" hiddenParameterValue="${message.id}"/></td>
+                    </tr>
+                    <c:set var="i" value="${i + 1}" scope="page"/>
+                </c:forEach>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Mail</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 </section>
 
@@ -180,7 +179,7 @@
 <script type="text/javascript" src="js/datatables.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#myTable').DataTable();
+        $('.table').DataTable();
         $('.dataTables_length').addClass('bs-select');
     });
 </script>

@@ -1,18 +1,4 @@
-<%@ page import="dao.ActivityDao" %>
-<%@ page import="dao.QuizDao" %>
-<%@ page import="dao.UserDao" %>
-<%@ page import="datatypes.messages.Message" %>
-<%@ page import="datatypes.messages.TextMessage" %>
-<%@ page import="datatypes.server.Activity" %>
-<%@ page import="datatypes.user.User" %>
-<%@ page import="datatypes.user.UserAchievement" %>
-<%@ page import="enums.DaoType" %>
-<%@ page import="manager.DaoManager" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Comparator" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.stream.Collectors" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -46,21 +32,7 @@
 
 <body>
 
-<%
-    DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
-    User user = (User) request.getSession().getAttribute("user");
-    UserDao userDao = manager.getDao(DaoType.User);
-    QuizDao quizDao = manager.getDao(DaoType.Quiz);
-    ActivityDao activityDao = manager.getDao(DaoType.Activity);
-    List<Activity> userActivities = activityDao.findAll().stream().filter(s -> s.getUserId() == user.getId()).collect(Collectors.toList());
-    userActivities.sort(Comparator.comparing(Activity::getDateTime).reversed());
-    pageContext.setAttribute("activities", userActivities);
-    pageContext.setAttribute("friendsIds", user.getFriends());
-    pageContext.setAttribute("requestList", user.getPendingFriendRequests());
-    pageContext.setAttribute("userDao", userDao);
-    pageContext.setAttribute("quizDao", quizDao);
-    pageContext.setAttribute("user", user);
-%>
+
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
     <div class="mosh-preloader"></div>
@@ -78,11 +50,11 @@
         <div class="row h-100 align-items-center">
             <div class="col-12">
                 <div class="bradcumbContent">
-                    <h2><%=user.getUserName()%>'s Profile</h2>
+                    <h2>${sessionScope.user.userName}'s Profile</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><%=user.getUserName()%>'s profile
+                            <li class="breadcrumb-item active" aria-current="page">${sessionScope.user.userName}'s profile
                             </li>
                         </ol>
                     </nav>
@@ -97,22 +69,22 @@
         <ul class="nav nav-tabs nav-fill">
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" href="#requests">Friend Requests<span
-                        class="badge badge-info">${requestList.size()}</span></a>
+                        class="badge badge-info">${requestScope.requestList.size()}</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#people">Friends<span
-                        class="badge badge-info">${friendsIds.size()}</span></a>
+                        class="badge badge-info">${requestScope.friendsIds.size()}</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#messages">Messages</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#achievements">Achievements
-                    <span class="badge badge-info">${user.achievements.size()}</span></a>
+                    <span class="badge badge-info">${sessionScope.user.achievements.size()}</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#challenges">Quiz Challenges
-                    <span class="badge badge-info">${user.quizChallenges.size()}</span></a>
+                    <span class="badge badge-info">${sessionScope.user.quizChallenges.size()}</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" href="#history">History</a>
@@ -132,7 +104,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${requestList}" var="friendRequest">
+                    <c:forEach items="${requestScope.requestList}" var="friendRequest">
                         <tr>
                             <td>
                                 <a href="user-profile?userid=${friendRequest.id}">
@@ -179,7 +151,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${friendsIds}" var="friend">
+                    <c:forEach items="${requestScope.friendsIds}" var="friend">
                         <tr>
                             <td>
 
@@ -195,8 +167,8 @@
                             <td>
                                     ${friend.lastName}
                             </td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td>${sessionScope.user.achievements.size()}</td>
+                            <td>${sessionScope.user.quizResults.size()}</td>
                             <td>
                                 <!--  ************ challenge modal **********-->
                                 <h:challenge
@@ -230,49 +202,43 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="messages">
-                <%
-                    List<TextMessage> textMessages = new ArrayList<>();
-                    for (List<TextMessage> messages : user.getTextMessages().values()) {
-                        for (TextMessage message : messages) {
-                            if (message.getSenderId() != user.getId()) textMessages.add(message);
-                        }
-                    }
-                    textMessages.sort(Comparator.comparing(Message::getTimestamp).reversed());
-                    for (int i = 0; i < textMessages.size(); i++) {
-                        User sender = userDao.findById(textMessages.get(i).getSenderId());
-                %>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <div class="card">
-                            <h5 class="card-header"><a
-                                    href="user-profile?userid=<%=sender.getId()%>"><%=userDao.findById(textMessages.get(i).getSenderId()).getUserName()%>
-                            </a></h5>
-                            <div class="card-body">
-                                <h6 class="lead" style=" float: left">
-                                    <%=textMessages.get(i).getTextMessage()%>
-                                </h6>
-                                <h6 class="card-text" style="float: right"><%=textMessages.get(i).getTimestamp()%>
-                                </h6>
+                <c:forEach var="textMessage" items="${requestScope.textMessages}">
+                    <c:set var="sender" value="${requestScope.userDao.findById(textMessage.senderId)}"/>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="card">
+                                <h5 class="card-header"><a
+                                        href="user-profile?userid=${sender.id}">${sender.userName}
+                                </a></h5>
+                                <div class="card-body">
+                                    <h6 class="lead" style=" float: left">
+                                        ${textMessage.textMessage}
+                                    </h6>
+                                    <h6 class="card-text" style="float: right">${textMessage.timestamp}
+                                    </h6>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                </ul>
-                <%}%>
+                        </li>
+                    </ul>
+
+                </c:forEach>
             </div>
 
             <div class="tab-pane fade" id="achievements">
                 <ul class="list-group">
                     <p class="text-primary"></p>
-                    <%for (UserAchievement achievement : user.getAchievements()) {%>
-                    <li class="list-group-item">
-                        <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true"
-                                data-placement="top"
-                                title="<%=achievement.getAchievement().getAchievementName()%>, <p class='text-success'><%=achievement.getAchievement().getAchievementCriteria()%></p>">
-                            <img src="img/core-img/medal.png"
-                                 alt="<%=achievement.getAchievement().getAchievementName()%>">
-                        </button>
-                    </li>
-                    <%}%>
+                    <c:forEach var="achievement" items="${sessionScope.user.achievements}">
+                        <li class="list-group-item">
+                            <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true"
+                                    data-placement="top"
+                                    title="${achievement.achievement.achievementName}, <p class='text-success'>${achievement.achievement.achievementCriteria}</p>">
+                                <img src="img/core-img/medal.png"
+                                     alt="${achievement.achievement.achievementName}">
+                            </button>
+                        </li>
+
+                    </c:forEach>
+
                 </ul>
             </div>
 
@@ -288,10 +254,10 @@
                     <tbody>
                     <c:forEach var="challenge" items="${sessionScope.user.quizChallenges}">
                         <td>
-                            <a href="user-profile?userid=${challenge.senderId}">${userDao.findById(challenge.senderId).userName}</a>
+                            <a href="user-profile?userid=${challenge.senderId}">${sessionScope.userDao.findById(challenge.senderId).userName}</a>
                         </td>
                         <td>
-                                ${quizDao.findById(challenge.quizId).quizName}
+                                ${requestScope.quizDao.findById(challenge.quizId).quizName}
                         </td>
                         <td>
                             <form action="AcceptChallengeServlet" method="post">
@@ -325,7 +291,7 @@
                 <form action="UpdateUserServlet" method="post" id="editForm">
                     <center>
                         <label>
-                            <input type="text" disabled value="<%=user.getUserName()%>" name="username" required
+                            <input type="text" disabled value="${sessionScope.user.userName}" name="username" required
                                    minlength="4">
                         </label>
                         <br>
@@ -340,17 +306,17 @@
                         <br>
 
                         <label>
-                            <input type="email" disabled placeholder="<%=user.getMail()%>" name="mail" required>
+                            <input type="email" disabled placeholder="${sessionScope.user.mail}" name="mail" required>
                         </label>
                         <br>
 
                         <label>
-                            <input type="text" value="<%=user.getFirstName()%>" name="firstname">
+                            <input type="text" value="${sessionScope.user.firstName}" name="firstname">
                         </label>
                         <br>
 
                         <label>
-                            <input type="text" value="<%=user.getLastName()%>" name="lastname">
+                            <input type="text" value="${sessionScope.user.lastName}" name="lastname">
                         </label>
                         <br>
                         <button type="submit" class="btn btn-outline-info btn-sm"
@@ -359,7 +325,7 @@
                         </button>
                         <br>
 
-                        <input type="text" hidden name="hiddenId" value="<%=user.getId()%>">
+                        <input type="text" hidden name="hiddenId" value="${sessionScope.user.id}">
                         <input type="text" hidden name="calledFrom" value="profile">
                     </center>
                 </form>
@@ -375,7 +341,7 @@
                     </thead>
                     <tbody>
                     <c:set var="i" value="0" scope="page"/>
-                    <c:forEach items="${activities}" var="activity">
+                    <c:forEach items="${requestScope.activities}" var="activity">
                         <tr>
                             <td>${i+1}</td>
                             <td>

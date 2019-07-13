@@ -62,7 +62,7 @@
 <!-- ***** Login Area Start ***** -->
 <section class="mosh-aboutUs-area">
     <div class="login">
-        <form action="RegisterServlet" method="post" id="signUpForm">
+        <form action="register" method="post" id="signUpForm">
             <label>
                 <input type="text" placeholder="Username" name="username" required minlength="4">
             </label>
