@@ -296,11 +296,10 @@ public class DaoManager {
     }
 
     public void insert(TextMessage mes) {
-        executor.execute(() -> {
-            if (textMessageDao.insert(mes)){
-                setMessages(mes);
-            }
-        });
+        if (textMessageDao.insert(mes)){
+            activityDao.insert(new Activity(mes.getSenderId(), "sent message to "+userDao.findById(mes.getReceiverId()), LocalDateTime.now()));
+            setMessages(mes);
+        }
     }
 
     private void setMessages(TextMessage mes) {
@@ -417,14 +416,15 @@ public class DaoManager {
     }
 
     public boolean insert(AdminReply adminReply) {
-        if (adminReplyMessageDao.insert(adminReply)){
-            ReplySender.send(adminMessageDao.findById(adminReply.getMessageId()), adminReply.getReplyText());
-            AdminMessage message = adminMessageDao.findById(adminReply.getMessageId());
-            message.setSeen(true);
-            adminMessageDao.update(message);
-            return true;
-        }
-        return false;
+        executor.execute(()->{
+            if (adminReplyMessageDao.insert(adminReply)){
+                ReplySender.send(adminMessageDao.findById(adminReply.getMessageId()), adminReply.getReplyText());
+                AdminMessage message = adminMessageDao.findById(adminReply.getMessageId());
+                message.setSeen(true);
+                adminMessageDao.update(message);
+            }
+        });
+        return true;
     }
 
     public void insert(Comment comment) {

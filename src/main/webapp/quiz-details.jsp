@@ -91,8 +91,6 @@
 <section class="mosh-aboutUs-area">
     <div class="container">
         <div class="row">
-
-            <!-- Single Blog Start -->
             <div class="col-12">
 
                 <div class="single-blog wow fadeInUp" data-wow-delay="0.2s">
@@ -176,7 +174,6 @@
 
             </div>
         </div>
-    </div>
     </div>
 </section>
 <!-- ***** Welcome Area End ***** -->

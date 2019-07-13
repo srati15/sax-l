@@ -76,57 +76,60 @@
 
 <section class="mosh-aboutUs-area">
     <div class="container"  >
-        <h3 class="mb-30">All Activities</h3>
-
-        <table id="myTable" class="table table-striped table-bordered table-sm" style="display: inline-table">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>User</th>
-                <th>Action</th>
-                <th>Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:set var="i" value="0" scope="page"/>
-            <c:forEach items="<%=activities%>" var="activity">
+        <div class="ui segment">
+            <div class="huge ui black ribbon label">
+                All Activities
+            </div>
+            <table id="myTable" class="table table-striped table-bordered table-sm" style="display: inline-table">
+                <thead>
                 <tr>
-                    <%
-                        Activity activity = (Activity) pageContext.getAttribute("activity");
-                        User user = userDao.findById(activity.getUserId());
-                    %>
-                    <td>${i+1}</td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${sessionScope.user.id != activity.userId}">
-                                <a href="user-profile?userid=${activity.userId}"><%=user.getUserName()%>
-                                </a>
-                            </c:when>
-                            <c:otherwise>
-                                <a href="profile"><%=user.getUserName()%>
-                                </a>
-                            </c:otherwise>
-                        </c:choose>
-                    </td>
-                    <td>
-                            ${activity.activityName}
-                    </td>
-                    <td>
-                        <%=formatter.format(activity.getDateTime())%>
-                    </td>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Date</th>
                 </tr>
-                <c:set var="i" value="${i + 1}" scope="page"/>
-            </c:forEach>
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>#</th>
-                <th>User</th>
-                <th>Action</th>
-                <th>Date</th>
-            </tr>
-            </tfoot>
-        </table>
+                </thead>
+                <tbody>
+                <c:set var="i" value="0" scope="page"/>
+                <c:forEach items="<%=activities%>" var="activity">
+                    <tr>
+                        <%
+                            Activity activity = (Activity) pageContext.getAttribute("activity");
+                            User user = userDao.findById(activity.getUserId());
+                        %>
+                        <td>${i+1}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${sessionScope.user.id != activity.userId}">
+                                    <a href="user-profile?userid=${activity.userId}"><%=user.getUserName()%>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="profile"><%=user.getUserName()%>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>
+                                ${activity.activityName}
+                        </td>
+                        <td>
+                            <%=formatter.format(activity.getDateTime())%>
+                        </td>
+                    </tr>
+                    <c:set var="i" value="${i + 1}" scope="page"/>
+                </c:forEach>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Date</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 </section>
 <!-- ***** Users list Area End ***** -->

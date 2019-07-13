@@ -43,11 +43,11 @@
         <div class="row h-100 align-items-center">
             <div class="col-12">
                 <div class="bradcumbContent">
-                    <h2>Activity logs</h2>
+                    <h2>Server logs</h2>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Activities</li>
+                            <li class="breadcrumb-item active" aria-current="page">Server logs</li>
                         </ol>
                     </nav>
                 </div>
@@ -58,51 +58,54 @@
 
 <section class="mosh-aboutUs-area">
     <div class="container">
-        <h3 class="mb-30">All Activities</h3>
-
-        <table id="myTable" class="table table-striped table-bordered table-sm">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Date</th>
-                <th>Message</th>
-                <th>Level</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:set var="i" value="0" scope="page"/>
-            <c:forEach items="${requestScope.logs}" var="log">
+        <div class="ui segment">
+            <div class="huge ui black ribbon label">
+                Server logs
+            </div>
+            <table id="myTable" class="table table-striped table-bordered table-sm">
+                <thead>
                 <tr>
-                    <td style="width: 2%">${i+1}</td>
-                    <td style="width: 20%"><samp>${log.date}</samp></td>
-                    <td style="width: 70%"><samp>${log.message}</samp></td>
-                    <td style="width: 8%">
-                        <c:choose>
-                            <c:when test="${log.level eq 'INFO'}">
-                                <p class="text-success">${log.level}</p>
-                            </c:when>
-                            <c:when test="${log.level eq 'ERROR'}">
-                                <p class="text-danger">${log.level}</p>
-                            </c:when>
-                            <c:when test="${log.level eq 'DEBUG'}">
-                                <p class="text-warning">${log.level}</p>
-                            </c:when>
-                        </c:choose>
-                    </td>
-
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Message</th>
+                    <th>Level</th>
                 </tr>
-                <c:set var="i" value="${i + 1}" scope="page"/>
-            </c:forEach>
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>#</th>
-                <th>User</th>
-                <th>Action</th>
-                <th>Date</th>
-            </tr>
-            </tfoot>
-        </table>
+                </thead>
+                <tbody>
+                <c:set var="i" value="0" scope="page"/>
+                <c:forEach items="${requestScope.logs}" var="log">
+                    <tr>
+                        <td style="width: 2%">${i+1}</td>
+                        <td style="width: 20%"><samp>${log.date}</samp></td>
+                        <td style="width: 70%"><samp>${log.message}</samp></td>
+                        <td style="width: 8%">
+                            <c:choose>
+                                <c:when test="${log.level eq 'INFO'}">
+                                    <p class="text-success">${log.level}</p>
+                                </c:when>
+                                <c:when test="${log.level eq 'ERROR'}">
+                                    <p class="text-danger">${log.level}</p>
+                                </c:when>
+                                <c:when test="${log.level eq 'DEBUG'}">
+                                    <p class="text-warning">${log.level}</p>
+                                </c:when>
+                            </c:choose>
+                        </td>
+
+                    </tr>
+                    <c:set var="i" value="${i + 1}" scope="page"/>
+                </c:forEach>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Date</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 </section>
 <!-- ***** Users list Area End ***** -->
