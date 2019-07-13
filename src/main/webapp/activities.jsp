@@ -38,14 +38,6 @@
 </head>
 <body>
 
-<%
-    DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
-    ActivityDao activityDao = daoManager.getDao(DaoType.Activity);
-    UserDao userDao = daoManager.getDao(DaoType.User);
-    List<Activity> activities = new ArrayList<>(activityDao.findAll());
-    activities.sort(Comparator.comparing(Activity::getDateTime).reversed());
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss MMM dd, yyyy");
-%>
 <!-- ***** Preloader Start ***** -->
 <div id="preloader">
     <div class="mosh-preloader"></div>
@@ -91,21 +83,18 @@
                 </thead>
                 <tbody>
                 <c:set var="i" value="0" scope="page"/>
-                <c:forEach items="<%=activities%>" var="activity">
+                <c:forEach items="${requestScope.activities}" var="activity">
                     <tr>
-                        <%
-                            Activity activity = (Activity) pageContext.getAttribute("activity");
-                            User user = userDao.findById(activity.getUserId());
-                        %>
+                        <c:set var="user" value="${requestScope.userDao.findById(activity.userId)}"/>
                         <td>${i+1}</td>
                         <td>
                             <c:choose>
                                 <c:when test="${sessionScope.user.id != activity.userId}">
-                                    <a href="user-profile?userid=${activity.userId}"><%=user.getUserName()%>
+                                    <a href="user-profile?userid=${activity.userId}">${user.userName}
                                     </a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="profile"><%=user.getUserName()%>
+                                    <a href="profile">${user.userName}
                                     </a>
                                 </c:otherwise>
                             </c:choose>
@@ -114,7 +103,7 @@
                                 ${activity.activityName}
                         </td>
                         <td>
-                            <%=formatter.format(activity.getDateTime())%>
+                            ${requestScope.formatter.format(activity.dateTime)}
                         </td>
                     </tr>
                     <c:set var="i" value="${i + 1}" scope="page"/>

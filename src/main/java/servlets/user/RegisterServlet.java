@@ -35,13 +35,13 @@ public class RegisterServlet extends HttpServlet {
         if (!passwordHash.equals(confirmPasswordHash)) {
             request.setAttribute("error", "Passwords don't match");
             logger.error("Passwords don't match");
-            request.getRequestDispatcher("register").forward(request, response);
+            request.getRequestDispatcher("/register.jsp").forward(request, response);
             return;
         }
         if (userRepository.findByUserName(userName) != null) {
             request.setAttribute("error", "Username is already taken");
             logger.error("Username is already taken, {}", userName);
-            request.getRequestDispatcher("register").forward(request, response);
+            request.getRequestDispatcher("/register.jsp").forward(request, response);
             return;
         }
 

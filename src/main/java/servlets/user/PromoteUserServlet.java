@@ -30,7 +30,7 @@ public class PromoteUserServlet extends HttpServlet {
         }else {
             logger.error("Error promoting {}", promotable.getUserName());
         }
-        request.getRequestDispatcher("users-list").forward(request, response);
+        request.getRequestDispatcher("/users-list").forward(request, response);
     }
 
 }

@@ -33,13 +33,13 @@ public class LoginServlet extends HttpServlet {
         if (user == null) {
             request.setAttribute("error", "Wrong login credentials");
             logger.error("User with username {} deosn't exist", userName);
-            request.getRequestDispatcher("login").forward(request, response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }
         if (!user.getPassword().equals(passwordHash)) {
             request.setAttribute("error", "Wrong login credentials");
             logger.debug("Wrong login credentials");
-            request.getRequestDispatcher("login").forward(request, response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }
         request.getSession().setAttribute("user", user);
