@@ -20,13 +20,11 @@
     });
     if (quizMap.size() > 0) {
 %>
+<div class="ui blue segment">
+
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-10">
-                <div class="section-heading text-center">
-                    <h2>My Quiz Activities</h2>
-                </div>
-            </div>
+        <div class="huge ui blue ribbon label">
+            My Quiz Activities
         </div>
 
         <div class="row">
@@ -44,7 +42,8 @@
                         </div>
                         <!-- Meta Info -->
                         <div class="team-meta-info">
-                            <h4><a href="quiz-details?quizId=<%=quiz.getId()%>"><%=quiz.getQuizName()%></a>
+                            <h4><a href="quiz-details?quizId=<%=quiz.getId()%>"><%=quiz.getQuizName()%>
+                            </a>
                             </h4>
                             <span>Date created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDate())%></span>
                             <span>Results</span>
@@ -66,5 +65,5 @@
             </div>
         </div>
     </div>
-
+</div>
 <%}%>

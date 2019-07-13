@@ -207,24 +207,25 @@ public class DaoManager {
     }
 
     public void delete(User deleteUser) {
-        if (userDao.deleteById(deleteUser.getId())){
-            activityDao.insert(new Activity(deleteUser.getId(), "'s account is being removed",LocalDateTime.now()));
-            deleteUser.getAchievements().forEach(achievement -> userAchievementDao.deleteById(achievement.getId()));
-            deleteUser.getQuizzes().forEach(quiz -> {
-                quizDao.deleteById(quiz.getId());
-                answerDao.deleteAll(quiz.getQuestionAnswerMap().values());
-                questionDao.deleteAll(quiz.getQuestionAnswerMap().keySet());
-            });
-            friendRequestDao.findAllForUser(deleteUser.getId()).forEach(friendRequest -> friendRequestDao.deleteById(friendRequest.getId()));
-            deleteUser.getQuizResults().forEach(s->quizResultDao.deleteById(s.getId()));
-            deleteUser.getTextMessages().values().forEach(textMessages -> textMessages.forEach(textMessage -> textMessageDao.deleteById(textMessage.getId())));
-            activityDao.findAll().stream().filter(activity -> activity.getUserId() == deleteUser.getId()).forEach(activity -> activityDao.deleteById(activity.getId()));
-            quizChallengeDao.findAll().stream().filter(quizChallenge -> quizChallenge.getReceiverId() == deleteUser.getId() || quizChallenge.getSenderId() == deleteUser.getId()).
-                    forEach(quizChallenge -> quizChallengeDao.deleteById(quizChallenge.getId()));
-        }else {
-            logger.error("Unable to delete user, {}", deleteUser);
-        }
-
+        executor.execute(()->{
+            if (userDao.deleteById(deleteUser.getId())){
+                activityDao.insert(new Activity(deleteUser.getId(), "'s account is being removed",LocalDateTime.now()));
+                deleteUser.getAchievements().forEach(achievement -> userAchievementDao.deleteById(achievement.getId()));
+                deleteUser.getQuizzes().forEach(quiz -> {
+                    quizDao.deleteById(quiz.getId());
+                    answerDao.deleteAll(quiz.getQuestionAnswerMap().values());
+                    questionDao.deleteAll(quiz.getQuestionAnswerMap().keySet());
+                });
+                friendRequestDao.findAllForUser(deleteUser.getId()).forEach(friendRequest -> friendRequestDao.deleteById(friendRequest.getId()));
+                deleteUser.getQuizResults().forEach(s->quizResultDao.deleteById(s.getId()));
+                deleteUser.getTextMessages().values().forEach(textMessages -> textMessages.forEach(textMessage -> textMessageDao.deleteById(textMessage.getId())));
+                activityDao.findAll().stream().filter(activity -> activity.getUserId() == deleteUser.getId()).forEach(activity -> activityDao.deleteById(activity.getId()));
+                quizChallengeDao.findAll().stream().filter(quizChallenge -> quizChallenge.getReceiverId() == deleteUser.getId() || quizChallenge.getSenderId() == deleteUser.getId()).
+                        forEach(quizChallenge -> quizChallengeDao.deleteById(quizChallenge.getId()));
+            }else {
+                logger.error("Unable to delete user, {}", deleteUser);
+            }
+        });
     }
 
     private void insert(UserAchievement userAchievement) {

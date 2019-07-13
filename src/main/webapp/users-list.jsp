@@ -89,117 +89,124 @@
 
 <section class="mosh-aboutUs-area">
     <div class="container">
-        <h3 class="mb-30">Users List</h3>
-        <c:if test="${sessionScope.user!=null && sessionScope.user.userType == UserType.Admin}">
-            <h:create entityName="User" selectFields="<%=createSelectField%>" actionServlet="CreateUserServlet"
-                      formFields="<%=formFields%>" formId="createUserForm"/>
-        </c:if>
-        <table id="myTable" class="table table-striped table-bordered table-sm">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Username</th>
-                <th>Status</th>
-                <th>Completed Quizes</th>
-                <th>Created Quizes</th>
-                <th>Achievements</th>
-                <c:choose>
-                    <c:when test="${sessionScope.user!=null && sessionScope.user.userType==UserType.Admin}">
-                        <th>Action</th>
-                    </c:when>
-                </c:choose>
-            </tr>
-            </thead>
-            <tbody>
-            <c:set var="i" value="0" scope="page"/>
-            <c:forEach items="<%=userDao.findAll()%>" var="currentUser">
+        <div class="ui segment">
+            <div class="huge ui black ribbon label">
+                Users
+            </div>
+
+            <c:if test="${sessionScope.user!=null && sessionScope.user.userType == UserType.Admin}">
+                <div style="float:right">
+                    <h:create entityName="User" selectFields="<%=createSelectField%>" actionServlet="CreateUserServlet"
+                              formFields="<%=formFields%>" formId="createUserForm"/>
+                </div>
+            </c:if>
+            <table id="myTable" class="table table-striped table-bordered table-sm">
+                <thead>
                 <tr>
-                    <td>${i+1}
-                    </td>
-                    <c:choose>
-                        <c:when test="${currentUser.id == sessionScope.user.id}">
-                            <td>
-                                <a href="profile">${currentUser.userName}
-                                    <c:if test="${applicationScope.onlineUsers.containsValue(currentUser)}">
-                                        <span class="badge badge-success">Online</span>
-                                    </c:if>
-                                </a>
-                            </td>
-                        </c:when>
-                        <c:when test="${currentUser.id != sessionScope.user.id}">
-                            <td>
-                                <a href="user-profile?userid=${currentUser.id}">${currentUser.userName}
-                                    <c:if test="${applicationScope.onlineUsers.containsValue(currentUser)}">
-                                        <span class="badge badge-success">Online</span>
-                                    </c:if>
-                                </a>
-                            </td>
-                        </c:when>
-                    </c:choose>
-                    <td>${currentUser.userType}</td>
-                    <td>${currentUser.quizResults.size()}</td>
-                    <td>${currentUser.quizzes.size()}</td>
-                    <td>${currentUser.achievements.size()}</td>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Status</th>
+                    <th>Completed Quizes</th>
+                    <th>Created Quizes</th>
+                    <th>Achievements</th>
                     <c:choose>
                         <c:when test="${sessionScope.user!=null && sessionScope.user.userType==UserType.Admin}">
-                            <td>
-                                <%
-                                    User user1 = (User) pageContext.getAttribute("currentUser");
-                                    List<EditFormField> editFormFields = new ArrayList<>();
-                                    editFormFields.add(new EditFormField("Username", FormFields.username.getValue(), InputType.text, true, 4, user1.getUserName(), true));
-                                    editFormFields.add(new EditFormField("Password", FormFields.password.getValue(), InputType.password, true, 4, "", false));
-                                    editFormFields.add(new EditFormField("Confirm Password", FormFields.confirmpassword.getValue(), InputType.password, true, 4, "", false));
-                                    editFormFields.add(new EditFormField("Mail", FormFields.mail.getValue(), InputType.email, true, 4, user1.getMail(), true));
-                                    editFormFields.add(new EditFormField("First Name", FormFields.firstname.getValue(), InputType.text, true, 0, user1.getFirstName(), false));
-                                    editFormFields.add(new EditFormField("Last Name", FormFields.lastname.getValue(), InputType.text, true, 0, user1.getLastName(), false));
-                                    SelectField editSelectField = new SelectField("User Type", "usertype", Arrays.asList("admin", "user"));
-                                %>
-                                <!-- ***** delete user modal ***** -->
-                                <h:delete entityName="User"
-                                          actionServlet="DeleteUserServlet"
-                                          hiddenParameterName="deleteUserId"
-                                          hiddenParameterValue="${currentUser.id}">
-                                </h:delete>
-                                <!-- ***** update user modal ***** -->
-                                <h:edit entityName="User"
-                                        actionServlet="EditUserServletFromAdmin"
-                                        hiddenParameterName="hiddenId"
-                                        hiddenParameterValue="${currentUser.id}"
-                                        formFields="<%=editFormFields%>"
-                                        selectFields="<%=editSelectField%>">
-                                </h:edit>
-                                <c:if test="${currentUser.userType==UserType.User}">
-                                    <form action="PromoteUserServlet" method="post" style="float:right">
-                                        <button type="submit"  class="mini ui green button">
-                                            <i class="fa fa-coffee"></i> Promote
-                                        </button>
-                                        <input type="hidden" name="promotableUserId" value="${currentUser.id}">
-                                    </form>
-                                </c:if>
-                            </td>
+                            <th>Action</th>
                         </c:when>
                     </c:choose>
                 </tr>
-                <c:set var="i" value="${i + 1}" scope="page"/>
-            </c:forEach>
+                </thead>
+                <tbody>
+                <c:set var="i" value="0" scope="page"/>
+                <c:forEach items="<%=userDao.findAll()%>" var="currentUser">
+                    <tr>
+                        <td>${i+1}
+                        </td>
+                        <c:choose>
+                            <c:when test="${currentUser.id == sessionScope.user.id}">
+                                <td>
+                                    <a href="profile">${currentUser.userName}
+                                        <c:if test="${applicationScope.onlineUsers.containsValue(currentUser)}">
+                                            <span class="badge badge-success">Online</span>
+                                        </c:if>
+                                    </a>
+                                </td>
+                            </c:when>
+                            <c:when test="${currentUser.id != sessionScope.user.id}">
+                                <td>
+                                    <a href="user-profile?userid=${currentUser.id}">${currentUser.userName}
+                                        <c:if test="${applicationScope.onlineUsers.containsValue(currentUser)}">
+                                            <span class="badge badge-success">Online</span>
+                                        </c:if>
+                                    </a>
+                                </td>
+                            </c:when>
+                        </c:choose>
+                        <td>${currentUser.userType}</td>
+                        <td>${currentUser.quizResults.size()}</td>
+                        <td>${currentUser.quizzes.size()}</td>
+                        <td>${currentUser.achievements.size()}</td>
+                        <c:choose>
+                            <c:when test="${sessionScope.user!=null && sessionScope.user.userType==UserType.Admin}">
+                                <td>
+                                    <%
+                                        User user1 = (User) pageContext.getAttribute("currentUser");
+                                        List<EditFormField> editFormFields = new ArrayList<>();
+                                        editFormFields.add(new EditFormField("Username", FormFields.username.getValue(), InputType.text, true, 4, user1.getUserName(), true));
+                                        editFormFields.add(new EditFormField("Password", FormFields.password.getValue(), InputType.password, true, 4, "", false));
+                                        editFormFields.add(new EditFormField("Confirm Password", FormFields.confirmpassword.getValue(), InputType.password, true, 4, "", false));
+                                        editFormFields.add(new EditFormField("Mail", FormFields.mail.getValue(), InputType.email, true, 4, user1.getMail(), true));
+                                        editFormFields.add(new EditFormField("First Name", FormFields.firstname.getValue(), InputType.text, true, 0, user1.getFirstName(), false));
+                                        editFormFields.add(new EditFormField("Last Name", FormFields.lastname.getValue(), InputType.text, true, 0, user1.getLastName(), false));
+                                        SelectField editSelectField = new SelectField("User Type", "usertype", Arrays.asList("admin", "user"));
+                                    %>
+                                    <!-- ***** delete user modal ***** -->
+                                    <h:delete entityName="User"
+                                              actionServlet="DeleteUserServlet"
+                                              hiddenParameterName="deleteUserId"
+                                              hiddenParameterValue="${currentUser.id}">
+                                    </h:delete>
+                                    <!-- ***** update user modal ***** -->
+                                    <h:edit entityName="User"
+                                            actionServlet="EditUserServletFromAdmin"
+                                            hiddenParameterName="hiddenId"
+                                            hiddenParameterValue="${currentUser.id}"
+                                            formFields="<%=editFormFields%>"
+                                            selectFields="<%=editSelectField%>">
+                                    </h:edit>
+                                    <c:if test="${currentUser.userType==UserType.User}">
+                                        <form action="PromoteUserServlet" method="post" style="float:right">
+                                            <button type="submit"  class="mini ui green button">
+                                                <i class="fa fa-coffee"></i> Promote
+                                            </button>
+                                            <input type="hidden" name="promotableUserId" value="${currentUser.id}">
+                                        </form>
+                                    </c:if>
+                                </td>
+                            </c:when>
+                        </c:choose>
+                    </tr>
+                    <c:set var="i" value="${i + 1}" scope="page"/>
+                </c:forEach>
 
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>#</th>
-                <th>Username</th>
-                <th>Status</th>
-                <th>Completed Quizes</th>
-                <th>Created Quizes</th>
-                <th>Achievements</th>
-                <c:choose>
-                    <c:when test="${sessionScope.user!=null && sessionScope.user.userType==UserType.Admin}">
-                        <th>Action</th>
-                    </c:when>
-                </c:choose>
-            </tr>
-            </tfoot>
-        </table>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Status</th>
+                    <th>Completed Quizes</th>
+                    <th>Created Quizes</th>
+                    <th>Achievements</th>
+                    <c:choose>
+                        <c:when test="${sessionScope.user!=null && sessionScope.user.userType==UserType.Admin}">
+                            <th>Action</th>
+                        </c:when>
+                    </c:choose>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 </section>
 <!-- ***** Users list Area End ***** -->

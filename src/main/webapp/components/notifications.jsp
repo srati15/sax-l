@@ -6,6 +6,7 @@
 <%@ page import="datatypes.messages.QuizChallenge" %>
 <%@ page import="datatypes.user.Person" %>
 <%@ page import="com.sun.xml.internal.ws.util.StringUtils" %>
+<%@ page import="java.util.stream.Collectors" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="userDao" value="${applicationScope.manager.getDao(DaoType.User)}"/>
 <c:set var="announcementDao" value="${applicationScope.manager.getDao(DaoType.Announcement)}"/>
@@ -20,7 +21,7 @@
     $(document).ready(function () {
         toastr.options.timeOut = 10000;
         toastr.options.position = "toast-bottom-right";
-        <c:forEach items="<%=announcementDao.findAll()%>" var="announcement">
+        <c:forEach items="<%=announcementDao.findAll().stream().filter(s->s.isActive()).collect(Collectors.toList())%>" var="announcement">
         toastr.info("${announcement.announcementText}", "Announcement");
         </c:forEach>
         <c:if test="${sessionScope.user!= null}">

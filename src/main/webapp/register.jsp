@@ -82,7 +82,7 @@
                 <input type="text" placeholder="Last Name" name="lastname">
             </label>
             <br>
-            <button type="submit" class="btn btn-info btn-sm" style="display: block; margin: 0 auto;">
+            <button type="submit" class="ui primary button" style="display: block; margin: 0 auto;">
                 <i class="fa fa-sign-in"></i> Register
             </button>
         </form>

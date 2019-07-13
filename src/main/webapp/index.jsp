@@ -67,26 +67,14 @@
 <!-- ***** Top quizzes Area Start ***** -->
 <c:if test="${sessionScope.user !=null}">
     <div class="ui blue segments">
-        <div class="ui blue segment">
-            <p>
-                <jsp:include page="components/top-quizzes.jsp"/>
-            </p>
-        </div>
-        <div class="ui blue segment">
-            <p>
-                <jsp:include page="components/recent-quizzes.jsp"/>
-            </p>
-        </div>
-        <div class="ui blue segment">
-            <p>
-                <jsp:include page="components/my-quizzes.jsp"/>
-            </p>
-        </div>
-        <div class="ui blue segment">
-            <p>
-                <jsp:include page="components/quiz-activities.jsp"/>
-            </p>
-        </div>
+
+        <jsp:include page="components/top-quizzes.jsp"/>
+
+        <jsp:include page="components/recent-quizzes.jsp"/>
+
+        <jsp:include page="components/my-quizzes.jsp"/>
+
+        <jsp:include page="components/quiz-activities.jsp"/>
     </div>
 </c:if>
 

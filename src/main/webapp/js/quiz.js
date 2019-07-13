@@ -76,6 +76,9 @@ $(document).ready(function () {
     });
 
     function checker() {
+        toastr.options.timeOut = 10000;
+        toastr.success("Question added");
+        $('.input').attr('value','');
         if (questionsList.length <= 10) {
             $("#progressLabel").attr("aria-valuenow", questionsList.length * 10)
                 .css("width", questionsList.length * 10 + "%")

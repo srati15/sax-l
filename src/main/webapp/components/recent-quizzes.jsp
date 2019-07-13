@@ -15,13 +15,11 @@
     quizzes.sort(Comparator.comparing(Quiz::getDateCreated).reversed());
     if (quizzes.size() > 0) {
 %>
+<div class="ui blue segment">
+
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-10">
-                <div class="section-heading text-center">
-                    <h2>Recent Quizzes</h2>
-                </div>
-            </div>
+        <div class="huge ui blue ribbon label">
+            Recent Quizzes
         </div>
         <div class="row">
             <div class="col-12">
@@ -41,7 +39,8 @@
                         </div>
                         <!-- Meta Info -->
                         <div class="team-meta-info">
-                            <h4><a href="quiz-details?quizId=<%=quiz.getId()%>"><%=quiz.getQuizName()%></a>
+                            <h4><a href="quiz-details?quizId=<%=quiz.getId()%>"><%=quiz.getQuizName()%>
+                            </a>
                             </h4>
                             <span>Date created: <%=DateTimeFormatter.ofPattern("MMM dd yyyy").format(quiz.getDateCreated().toLocalDate())%></span>
                             <span>Done <%=quiz.getTimesDone()%> times</span>
@@ -56,4 +55,5 @@
         </div>
 
     </div>
+</div>
 <%}%>
