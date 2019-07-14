@@ -330,7 +330,7 @@ public class DaoManager {
             sender.getFriends().remove(receiver);
             receiver.getFriends().remove(sender);
             receiver.getPendingFriendRequests().remove(sender);
-            activityDao.insert(new Activity(receiver.getId(), "rejected friendship with "+receiver.getUserName(), LocalDateTime.now()));
+            activityDao.insert(new Activity(receiver.getId(), "rejected friendship with "+sender.getUserName(), LocalDateTime.now()));
         }
     }
 

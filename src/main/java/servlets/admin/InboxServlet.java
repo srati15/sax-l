@@ -36,4 +36,8 @@ public class InboxServlet extends HttpServlet {
         request.getRequestDispatcher("/inbox.jsp").forward(request, response);
     }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+    }
 }

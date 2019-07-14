@@ -170,3 +170,8 @@ create table users
 create index user_id_index
     on users (id);
 
+insert into achievements (achievement_name, achievement_criteria) VALUES ('Amateur Author', 'Gained for creating 1 quiz');
+insert into achievements (achievement_name, achievement_criteria) VALUES ('Prolific Author', 'Gained for creating 5 quizzes');
+insert into achievements (achievement_name, achievement_criteria) VALUES ('Prodigious Author', 'Gained for creating 10 quizzes');
+insert into achievements (achievement_name, achievement_criteria) VALUES ('Quiz Machine', 'Gained for taking 10 quizzes');
+insert into achievements (achievement_name, achievement_criteria) VALUES ('I Am The Greatest', 'Gained for getting highest score in a quiz');

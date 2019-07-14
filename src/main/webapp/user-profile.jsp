@@ -83,7 +83,7 @@
                 <div style="margin: -5px 2px 0 10px">
                     <form action="FriendRequestSenderServlet" method="post">
                         <input type="submit" class="btn btn-success btn-sm"
-                               value="Send Friend Request"/>
+                               value="Send Friend Request" style="float:left"/>
                         <input type="text" hidden name="receiverId" value="${requestScope.profileUser.id}"/>
                     </form>
                 </div>
@@ -93,7 +93,7 @@
                                     <c:when test="${requestScope.request1!=null && requestScope.request1.status == RequestStatus.Pending}">
                         <div style="margin: -5px 2px 0 10px">
                             <form action="FriendRequestDeleteServlet" method="post">
-                                <input type="submit" class="btn btn-warning btn-sm"
+                                <input type="submit" style="float:left" class="btn btn-warning btn-sm"
                                        value="Cancel Friend Request"/>
                                 <input type="text" hidden name="receiverId" value="${requestScope.profileUser.id}"/>
                             </form>
@@ -104,7 +104,7 @@
                                             <c:when test="${(requestScope.request1!=null && requestScope.request1.status == RequestStatus.Accepted) || (requestScope.request2 !=null && requestScope.request2.status==RequestStatus.Accepted)}">
                                 <div style="margin: -5px 2px 0 10px">
                                     <form action="FriendRequestDeleteServlet" method="post">
-                                        <input type="submit" class="btn btn-warning btn-sm"
+                                        <input type="submit" style="float:left" class="btn btn-warning btn-sm"
                                                value="Remove Friend"/>
                                         <input type="text" hidden name="receiverId" value="${requestScope.profileUser.id}"/>
                                     </form>
@@ -118,7 +118,7 @@
                     </span>
                     <span>
                         <div style="margin: -5px 2px 0 0">
-            <button class="btn btn-success btn-sm" onclick="openForm()"><i class="fa fa-paper-plane"></i> Send Message
+            <button class="btn btn-success btn-sm" onclick="openForm()" style="float:left"><i class="fa fa-paper-plane"></i> Send Message
             </button>
         </div>
                     </span>

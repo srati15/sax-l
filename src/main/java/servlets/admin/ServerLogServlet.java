@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@WebServlet("/admin-logs")
+@WebServlet("/server-logs")
 public class ServerLogServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(ServerLogServlet.class);
 
@@ -44,7 +44,7 @@ public class ServerLogServlet extends HttpServlet {
         catch(IOException ex) {
             logger.error("Error reading file '{}'", fileName);
         }
-        request.getRequestDispatcher("/admin-logs.jsp").forward(request, response);
+        request.getRequestDispatcher("/server-logs.jsp").forward(request, response);
     }
 
 }
