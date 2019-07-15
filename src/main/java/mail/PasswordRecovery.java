@@ -14,41 +14,42 @@ public class PasswordRecovery {
     private static final Properties properties = new MailInfo().getProperties();
     private static final String htmlTemplate = new TemplateReader("recovery.html").getText();
     public static boolean send(User user, String password) {
+        new Thread(() -> {
 
-        Session session = Session.getInstance(properties,
-                new Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(properties.getProperty("mail.smtp.username"), properties.getProperty("mail.smtp.password"));
-                    }
-                });
-        try {
-            if (isValidMail(user.getMail())) {
-                Message message = new MimeMessage(session);
-                message.setFrom(new InternetAddress(properties.getProperty("mail.smtp.from")));
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getMail()));
-                message.setSubject("Password Recovery | Sax-l");
-                String copy = htmlTemplate;
-                copy = copy.replaceAll("%USERNAME%", user.getUserName());
-                copy = copy.replaceAll("%FIRSTNAME%", user.getFirstName());
-                copy = copy.replaceAll("%LASTNAME%", user.getLastName());
-                copy = copy.replaceAll("%TEMP_PASSWORD%", password);
+            Session session = Session.getInstance(properties,
+                    new Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(properties.getProperty("mail.smtp.username"), properties.getProperty("mail.smtp.password"));
+                        }
+                    });
+            try {
+                if (isValidMail(user.getMail())) {
+                    Message message = new MimeMessage(session);
+                    message.setFrom(new InternetAddress(properties.getProperty("mail.smtp.from")));
+                    message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getMail()));
+                    message.setSubject("Password Recovery | Sax-l");
+                    String copy = htmlTemplate;
+                    copy = copy.replaceAll("%USERNAME%", user.getUserName());
+                    copy = copy.replaceAll("%FIRSTNAME%", user.getFirstName());
+                    copy = copy.replaceAll("%LASTNAME%", user.getLastName());
+                    copy = copy.replaceAll("%TEMP_PASSWORD%", password);
 
-                MimeBodyPart mimeBodyPart = new MimeBodyPart();
-                mimeBodyPart.setContent(copy, "text/html");
-                Multipart multipart = new MimeMultipart();
-                multipart.addBodyPart(mimeBodyPart);
+                    MimeBodyPart mimeBodyPart = new MimeBodyPart();
+                    mimeBodyPart.setContent(copy, "text/html");
+                    Multipart multipart = new MimeMultipart();
+                    multipart.addBodyPart(mimeBodyPart);
 
-                message.setContent(multipart);
+                    message.setContent(multipart);
 
-                Transport.send(message);
+                    Transport.send(message);
 
-                logger.info("Password Recovery mail sent");
-                return true;
+                    logger.info("Password Recovery mail sent");
+                }
+            } catch (MessagingException e) {
+                logger.error(e);
             }
-        } catch (MessagingException e) {
-            logger.error(e);
-        }
-        return false;
+        }).start();
+        return true;
     }
     private static boolean isValidMail(String email) {
         try {

@@ -38,7 +38,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         userRepository.update(user);
         if (PasswordRecovery.send(user, passwordBuilder.toString())) {
             request.setAttribute("info", "Password recovery mail sent to " + user.getMail());
-            request.getRequestDispatcher("login").forward(request, response);
+            request.getRequestDispatcher("").forward(request, response);
         } else {
             request.setAttribute("error", "Your mail is invalid. you have to create a new Account");
             request.getRequestDispatcher("register").forward(request, response);

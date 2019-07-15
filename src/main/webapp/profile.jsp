@@ -168,8 +168,8 @@
                                 <td>
                                         ${friend.lastName}
                                 </td>
-                                <td>${sessionScope.user.achievements.size()}</td>
-                                <td>${sessionScope.user.quizResults.size()}</td>
+                                <td>${friend.achievements.size()}</td>
+                                <td>${friend.quizResults.size()}</td>
                                 <td>
                                     <!--  ************ challenge modal **********-->
                                     <h:challenge
@@ -255,7 +255,7 @@
                         <tbody>
                         <c:forEach var="challenge" items="${sessionScope.user.quizChallenges}">
                             <td>
-                                <a href="user-profile?userid=${challenge.senderId}">${sessionScope.userDao.findById(challenge.senderId).userName}</a>
+                                <a href="user-profile?userid=${challenge.senderId}">${requestScope.userDao.findById(challenge.senderId).userName}</a>
                             </td>
                             <td>
                                     ${requestScope.quizDao.findById(challenge.quizId).quizName}

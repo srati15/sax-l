@@ -1,10 +1,12 @@
 package servlets.quiz;
 
+import dao.ActivityDao;
 import dao.QuizDao;
 import dao.UserAchievementDao;
 import datatypes.quiz.Quiz;
 import datatypes.quiz.QuizResult;
 import datatypes.quiz.question.Question;
+import datatypes.server.Activity;
 import datatypes.user.Achievement;
 import datatypes.user.User;
 import datatypes.user.UserAchievement;
@@ -47,7 +49,7 @@ public class CompleteQuizServlet extends HttpServlet {
 
 
         QuizResult quizResult = new QuizResult(quiz.getId(), user.getId(), result, seconds, LocalDateTime.now());
-        if (!request.getParameter("practice").equals("true")){
+        if (request.getParameter("practice")==null){
             manager.insert(quizResult);
         }else {
             boolean found = false;
@@ -62,6 +64,8 @@ public class CompleteQuizServlet extends HttpServlet {
                 UserAchievementDao achievementDao = manager.getDao(DaoType.UserAchievement);
                 achievementDao.insert(achievement);
                 user.getAchievements().add(achievement);
+                ActivityDao activityDao = manager.getDao(DaoType.Activity);
+                activityDao.insert(new Activity(user.getId(), "practiced in a quiz", LocalDateTime.now()));
             }
         }
         request.setAttribute("results", quizResults);
