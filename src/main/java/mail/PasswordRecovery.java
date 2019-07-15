@@ -15,7 +15,6 @@ public class PasswordRecovery {
     private static final String htmlTemplate = new TemplateReader("recovery.html").getText();
     public static boolean send(User user, String password) {
         new Thread(() -> {
-
             Session session = Session.getInstance(properties,
                     new Authenticator() {
                         protected PasswordAuthentication getPasswordAuthentication() {
