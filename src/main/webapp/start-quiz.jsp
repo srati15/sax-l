@@ -89,6 +89,9 @@
             <button type="submit" class="btn btn-success" id="clear"><i class="fa fa-hourglass-end"></i> Finish
                 <input type="text" hidden name="quizId" value="<%=quiz.getId()%>">
             </button>
+            <c:if test="${param.practice==true}">
+                <input hidden name="practice" value="true">
+            </c:if>
         </form>
     </div>
 </section>

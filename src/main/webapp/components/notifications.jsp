@@ -1,13 +1,13 @@
-<%@ page import="manager.DaoManager" %>
-<%@ page import="datatypes.user.User" %>
-<%@ page import="enums.DaoType" %>
-<%@ page import="dao.UserDao" %>
 <%@ page import="dao.AnnouncementDao" %>
+<%@ page import="dao.UserDao" %>
 <%@ page import="datatypes.messages.QuizChallenge" %>
 <%@ page import="datatypes.user.Person" %>
-<%@ page import="com.sun.xml.internal.ws.util.StringUtils" %>
+<%@ page import="datatypes.user.User" %>
+<%@ page import="enums.DaoType" %>
+<%@ page import="manager.DaoManager" %>
 <%@ page import="java.util.stream.Collectors" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%
     DaoManager manager = (DaoManager) application.getAttribute("manager");
     User user = (User) session.getAttribute("user");
@@ -29,7 +29,7 @@
         toastr.options.position = "toast-bottom-right";
         <c:forEach var="challenge" items="<%=user.getQuizChallenges()%>">
         <% QuizChallenge challenge = (QuizChallenge) pageContext.getAttribute("challenge");%>
-        toastr.success("sent you a challenge" + '\n' + "<%=challenge.getTimestamp()%>", "<%=StringUtils.capitalize(userDao.findById(challenge.getSenderId()).getUserName())%>");
+        toastr.success("sent you a challenge" + '\n' + "<%=challenge.getTimestamp()%>", "<%=userDao.findById(challenge.getSenderId()).getUserName()%>");
         </c:forEach>
         <c:forEach var="person" items="<%=user.getPendingFriendRequests()%>">
         <% Person person = (Person) pageContext.getAttribute("person");%>

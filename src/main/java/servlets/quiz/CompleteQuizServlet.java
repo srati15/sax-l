@@ -1,10 +1,13 @@
 package servlets.quiz;
 
 import dao.QuizDao;
+import dao.UserAchievementDao;
 import datatypes.quiz.Quiz;
 import datatypes.quiz.QuizResult;
 import datatypes.quiz.question.Question;
+import datatypes.user.Achievement;
 import datatypes.user.User;
+import datatypes.user.UserAchievement;
 import enums.DaoType;
 import manager.DaoManager;
 
@@ -44,7 +47,23 @@ public class CompleteQuizServlet extends HttpServlet {
 
 
         QuizResult quizResult = new QuizResult(quiz.getId(), user.getId(), result, seconds, LocalDateTime.now());
-        manager.insert(quizResult);
+        if (!request.getParameter("practice").equals("true")){
+            manager.insert(quizResult);
+        }else {
+            boolean found = false;
+            for (UserAchievement userAchievement: user.getAchievements()) {
+                if (userAchievement.getAchievement().getAchievementName().equals("Practice makes perfect")){
+                     found = true;
+                     break;
+                }
+            }
+            if (!found) {
+                UserAchievement achievement = new UserAchievement(user.getId(), new Achievement("Practice makes perfect", "gained for practicing quiz"));
+                UserAchievementDao achievementDao = manager.getDao(DaoType.UserAchievement);
+                achievementDao.insert(achievement);
+                user.getAchievements().add(achievement);
+            }
+        }
         request.setAttribute("results", quizResults);
         request.setAttribute("userAnswers", questionAnswers);
         request.setAttribute("score", result);

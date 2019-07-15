@@ -18,4 +18,13 @@
             </button>
         </a>
     </c:otherwise>
+
 </c:choose>
+<c:if test="${quiz.allowedPracticemode}">
+    <a href="start-quiz?quizId=${quiz.id}&practice=true">
+        <button type="button" class="${buttonClass}"  <c:if test="${styled}">style="float:left"</c:if>>
+            <i class="fa fa-hourglass-start"></i> Practice
+        </button>
+        <input hidden name="practice" value="true">
+    </a>
+</c:if>
