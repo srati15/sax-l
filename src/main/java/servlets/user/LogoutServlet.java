@@ -17,17 +17,14 @@ import java.util.Map;
 
 @WebServlet("/LogoutServlet")
 public class LogoutServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         User user = (User) request.getSession().getAttribute("user");
         request.getSession().removeAttribute("user");
-        DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
-        ActivityDao activityDao = manager.getDao(DaoType.Activity);
-        activityDao.insert(new Activity(user.getId(), "logged out", LocalDateTime.now()));
         Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");
         userMap.remove(user.getId());
         request.getSession().invalidate();
         request.setAttribute("info", "Bye, "+user.getUserName());
-        request.getRequestDispatcher("").forward(request, response);
+        response.sendRedirect("/");
     }
 }
 

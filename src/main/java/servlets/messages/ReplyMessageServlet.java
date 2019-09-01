@@ -23,7 +23,7 @@ public class ReplyMessageServlet extends HttpServlet {
         }else {
             request.setAttribute("error", "Error sending mail");
         }
-        request.getRequestDispatcher("/inbox").forward(request, response);
+        response.sendRedirect("inbox");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {

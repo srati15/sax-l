@@ -26,7 +26,7 @@ public class TextMessageServlet extends HttpServlet {
         TextMessage mes = new TextMessage(user.getId(), receiverId, dateSent.toLocalDateTime(), message);
         manager.insert(mes);
         request.setAttribute("info", "Message sent");
-        request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
+        response.sendRedirect("user-profile?userid=" + receiverId);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {

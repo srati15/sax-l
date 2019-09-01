@@ -1,82 +1,50 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="enums.RequestStatus" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <title>Sax-L Quiz Website</title>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="css/segment.css">
+    <link rel="stylesheet" href="css/label.min.css">
+    <link rel="stylesheet" href="css/button.min.css">
+    <link rel="stylesheet" href="css/card.min.css">
 
-    <!-- Title -->
-    <title>Sax-L - Quiz Website | User profile</title>
-
-    <!-- Favicon -->
-    <link rel="icon" href="img/core-img/favicon.ico">
-
-    <!-- Core Stylesheet -->
-    <link href="style.css" rel="stylesheet">
-
-    <!-- Responsive CSS -->
-    <link href="css/responsive.css" rel="stylesheet">
-
-    <link href="css/toastr.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap4.min.css"/>
 
 </head>
 
 <body>
 
-<!-- ***** Preloader Start ***** -->
-<div id="preloader">
-    <div class="mosh-preloader"></div>
-</div>
-
-<!-- ***** Header Area Start ***** -->
-<header class="header_area clearfix">
-    <jsp:include page="components/header.jsp"/>
-</header>
-<!-- ***** Header Area End ***** -->
-
-<!-- ***** Breadcumb Area Start ***** -->
-<div class="mosh-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
-    <div class="container h-100">
-        <div class="row h-100 align-items-center">
-            <div class="col-12">
-                <div class="bradcumbContent">
-                    <h2>${requestScope.profileUser.userName}'s Profile</h2>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">${requestScope.profileUser.userName}'s
-                                profile
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- ***** Breadcumb Area End ***** -->
-<section class="mosh-aboutUs-area">
-    <div class="container">
-        <div class="ui link cards">
-            <div class="card">
-                <div class="content">
-                    <div class="header">${requestScope.profileUser.userName}
+<div class="wrapper">
+    <!-- Sidebar Holder -->
+    <jsp:include page="components/sidebar.jsp"/>
+    <!-- Page Content Holder -->
+    <div id="content">
+        <jsp:include page="components/topbar.jsp"/>
+        <div class="container">
+            <div class="ui link cards">
+                <div class="card">
+                    <div class="content">
+                        <div class="header">${requestScope.profileUser.userName}
+                        </div>
+                        <div class="description">
+                            Name: ${requestScope.profileUser.firstName}<br>
+                            Last Name: ${requestScope.profileUser.lastName}<br>
+                            Achievements: ${requestScope.profileUser.achievements.size()}<br>
+                            Friends: ${requestScope.profileUser.friends.size()}<br>
+                        </div>
                     </div>
-                    <div class="description">
-                        Name: ${requestScope.profileUser.firstName}<br>
-                        Last Name: ${requestScope.profileUser.lastName}<br>
-                        Achievements: ${requestScope.profileUser.achievements.size()}<br>
-                        Friends: ${requestScope.profileUser.friends.size()}<br>
-                    </div>
-                </div>
-                <div class="extra content">
+                    <div class="extra content">
                     <span class="right floated">
                         <c:choose>
                             <c:when test="${requestScope.request1 == null && requestScope.request2 == null}">
@@ -116,142 +84,48 @@
                             </c:otherwise>
                         </c:choose>
                     </span>
-                    <span>
+                        <span>
                         <div style="margin: -5px 2px 0 0">
             <button class="btn btn-success btn-sm" onclick="openForm()" style="float:left"><i class="fa fa-paper-plane"></i> Send Message
             </button>
         </div>
                     </span>
+                    </div>
                 </div>
             </div>
         </div>
+        <jsp:include page="components/notifications.jsp"/>
+
     </div>
-</section>
-<div class="chat-popup" id="myForm">
-    <form action="TextMessageServlet" method="post" class="form-container">
-        <div style="overflow-y: scroll; max-height:300px;">
-            <c:forEach var="curr" items="${requestScope.mess}">
-                <c:choose>
-                    <c:when test="${curr.senderId == requestScope.profileUser.id}">
-                        <div class="my-user darker">
-                            <p>${curr.textMessage}</p>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="my-user">
-                            <p>${curr.textMessage}</p>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </c:forEach>
-        </div>
-        <label>
-            <textarea placeholder="Type message.." name="msg" required></textarea>
-        </label>
-        <label>
-            <input type="text" hidden name="receiverId" value="${requestScope.profileUser.id}"/>
-        </label>
-        <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-paper-plane"></i> Send</button>
-        <button type="button" class="btn btn-warning btn-sm" onclick="closeForm()">Close</button>
-    </form>
 </div>
 
+<script src="js/solid.js"></script>
+<script src="js/fontawesome.js"></script>
 
-<!-- ***** Footer Area Start ***** -->
-<footer class="footer-area clearfix">
-    <jsp:include page="components/footer.jsp"/>
-</footer>
-<!-- ***** Footer Area End ***** -->
-
-<!-- jQuery-2.2.4 js -->
-<script src="js/jquery-2.2.4.min.js"></script>
-<!-- Popper js -->
+<script src="js/jquery.min.js"></script>
+<!-- Popper.JS -->
 <script src="js/popper.min.js"></script>
-<!-- Bootstrap js -->
+<!-- Bootstrap JS -->
 <script src="js/bootstrap.min.js"></script>
-<!-- All Plugins js -->
-<script src="js/plugins.js"></script>
-<!-- Active js -->
-<script src="js/active.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/jquery.dataTables.min.js"></script>
 
-<script src="js/toastr.js"></script>
+<script src="js/dataTables.bootstrap4.min.js"></script>
 
-<jsp:include page="components/notifications.jsp"/>
-
-<script>
-    function openForm() {
-        document.getElementById("myForm").style.display = "block";
-    }
-
-    function closeForm() {
-        document.getElementById("myForm").style.display = "none";
-    }
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+        });
+        $('.table').DataTable();
+        $('.modal').appendTo("body");
+        $('.toast').appendTo("body");
+    });
 </script>
 
-<style>
-    /* The popup chat - hidden by default */
-    .chat-popup {
-        display: none;
-        position: fixed;
-        bottom: 0;
-        right: 15px;
-        max-width: 400px;
-        border: 3px solid #f1f1f1;
-        z-index: 9;
-    }
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 
-    /* Add styles to the form container */
-    .form-container {
-        min-width: 300px;
-        padding: 10px;
-        background-color: #78c4ff;
-    }
-
-    /* Full-width textarea */
-    .form-container textarea {
-        width: 100%;
-        padding: 15px;
-        margin: 5px 0 22px 0;
-        border: none;
-        background: #f1f1f1;
-        resize: none;
-        max-height: 200px;
-    }
-
-    /* When the textarea gets focus, do something */
-    .form-container textarea:focus {
-        background-color: #ddd;
-        outline: none;
-    }
-
-    .my-user {
-        border: 2px solid #dee0e0;
-        background-color: #f1f1f1;
-        padding: 10px;
-        margin: 5px 0;
-        height: auto;
-    }
-
-    .darker {
-        border-color: #ccc;
-        background-color: #c8cee1;
-        text-align: right;
-    }
-
-    .darker p {
-        color: #383f83;
-    }
-
-    p {
-        word-wrap: break-word;
-    }
-
-    .my-user::after {
-        content: "";
-        clear: both;
-        display: table;
-    }
-</style>
 </body>
 
 </html>

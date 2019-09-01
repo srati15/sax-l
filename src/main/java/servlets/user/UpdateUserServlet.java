@@ -28,7 +28,7 @@ public class UpdateUserServlet extends HttpServlet {
         if (!password.equals(confirmPassword)) {
             logger.debug("Passwords don't match, {} {}", password, confirmPassword);
             request.setAttribute("error", "Passwords don't match");
-            request.getRequestDispatcher("/profile.jsp").forward(request, response);
+            response.sendRedirect("/");
             return;
         }
         user.setPassword(Cracker.code(password));
@@ -36,7 +36,7 @@ public class UpdateUserServlet extends HttpServlet {
         user.setLastName(lastName);
         manager.update(user);
         request.setAttribute("info", "Profile updated successfully");
-        request.getRequestDispatcher("/profile.jsp").forward(request, response);
+        response.sendRedirect("/");
     }
 
 }

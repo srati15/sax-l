@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
@@ -27,6 +28,8 @@ public class ActivityDao implements Dao<Integer, Activity> {
     private static final String ACTIVITY_NAME = "activity_name";
     private static final String DATE_TIME = "date_happened";
     private static final String TABLE_NAME = "activity";
+
+    private static final String DELETE_QUERY = "delete from "+TABLE_NAME +" where "+USER_ID+"=?";
 
     private final DBRowMapper<Activity> mapper = new ActivityMapper();
     private final Cao<Integer, Activity> cao = new Cao<>();
@@ -61,8 +64,7 @@ public class ActivityDao implements Dao<Integer, Activity> {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
-            String query = getDeleteQuery(TABLE_NAME, ACTIVITY_ID);
-            statement = connection.prepareStatement(query);
+            statement = connection.prepareStatement(DELETE_QUERY);
             statement.setInt(1, id);
             logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
@@ -155,6 +157,13 @@ public class ActivityDao implements Dao<Integer, Activity> {
             Thread.currentThread().interrupt();
         }
     }
+
+    public Collection<Activity> findAllForUser(Integer id) {
+
+        if (!isCached.get()) cache();
+        return cao.findAll().stream().filter(s->s.getUserId() == id).collect(Collectors.toList());
+    }
+
     private class ActivityMapper implements DBRowMapper<Activity> {
 
         @Override

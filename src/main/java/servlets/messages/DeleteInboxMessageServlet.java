@@ -24,7 +24,7 @@ public class DeleteInboxMessageServlet extends HttpServlet {
         }else {
             request.setAttribute("error", "Error deleting Message.");
         }
-        request.getRequestDispatcher("inbox").forward(request, response);
+        response.sendRedirect("inbox");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {

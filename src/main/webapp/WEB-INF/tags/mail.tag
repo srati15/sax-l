@@ -1,7 +1,7 @@
 <%@ attribute name="message" required="true" type="datatypes.messages.AdminMessage" %>
 
-<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#viewMail">
-    <i class="fa fa-mail-reply"></i> Open
+<button type="button" class="mini positive ui  button" data-toggle="modal" data-target="#viewMail">
+    <i class="fas fa-reply"></i> Open
 </button>
 
 <!-- Modal -->

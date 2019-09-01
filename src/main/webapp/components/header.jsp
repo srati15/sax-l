@@ -47,11 +47,9 @@
                     </div>
                     </c:when>
                     <c:otherwise>
-                    <form action="LogoutServlet" method="post">
-                        <button type="submit" class="mini red ui button">
-                            <i class="fa fa-sign-out"></i> Sign out
-                        </button>
-                    </form>
+                    <a href="LogoutServlet">
+                        <i class="fa fa-sign-out"></i> Sign out
+                    </a>
                     <a href="profile">
                         <button type="submit" class="mini teal ui button">
                             <i class="fa fa-user"></i> Profile

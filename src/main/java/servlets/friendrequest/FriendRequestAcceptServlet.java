@@ -29,7 +29,7 @@ public class FriendRequestAcceptServlet extends HttpServlet {
         } else if (request2 != null) {
             removeFromNotifications(manager, request2);
         };
-        request.getRequestDispatcher("profile").forward(request, response);
+        response.sendRedirect("profile");
     }
 
     private void removeFromNotifications(DaoManager manager, FriendRequest request2) {

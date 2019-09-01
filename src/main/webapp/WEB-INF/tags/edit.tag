@@ -8,7 +8,7 @@
 
 <c:set var="target" value="edit${entityName}Modal${hiddenParameterValue}"/>
 
-<button class="mini ui blue button" data-toggle="modal"
+<button class="mini ui positive button" data-toggle="modal"
         data-target="#${target}">
     <i class="fa fa-edit"></i> Edit
 </button>

@@ -35,13 +35,13 @@ public class RegisterServlet extends HttpServlet {
         if (!passwordHash.equals(confirmPasswordHash)) {
             request.setAttribute("error", "Passwords don't match");
             logger.error("Passwords don't match");
-            request.getRequestDispatcher("/register.jsp").forward(request, response);
+            response.sendRedirect("/");
             return;
         }
         if (userRepository.findByUserName(userName) != null) {
             request.setAttribute("error", "Username is already taken");
             logger.error("Username is already taken, {}", userName);
-            request.getRequestDispatcher("/register.jsp").forward(request, response);
+            request.getRequestDispatcher("/").forward(request, response);
             return;
         }
 
@@ -54,11 +54,11 @@ public class RegisterServlet extends HttpServlet {
         userMap.put(user.getId(), user);
 
         request.getSession().setAttribute("user", userRepository.findByUserName(userName));
-        request.getRequestDispatcher("").forward(request, response);
+        request.getRequestDispatcher("/").forward(request, response);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/register.jsp").forward(req, resp);
+        req.getRequestDispatcher("/").forward(req, resp);
     }
 }

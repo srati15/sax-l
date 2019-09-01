@@ -24,6 +24,6 @@ public class FriendRequestReceiverServlet extends HttpServlet {
         Timestamp dateSent = Timestamp.valueOf(LocalDateTime.now());
         FriendRequest friendRequest = new FriendRequest(user.getId(), receiverId, RequestStatus.Pending, dateSent.toLocalDateTime() );
         manager.insert(friendRequest);
-        request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
+        response.sendRedirect("user-profile?userid=" + receiverId);
     }
 }

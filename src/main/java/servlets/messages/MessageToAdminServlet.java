@@ -21,7 +21,7 @@ public class MessageToAdminServlet extends HttpServlet {
         String subject = request.getParameter("subject");
         manager.insert(new AdminMessage(name, mail, subject, messageText, LocalDateTime.now(), false));
         request.setAttribute("info", "Message received. We will reply shortly");
-        request.getRequestDispatcher("contact").forward(request, response);
+        response.sendRedirect("contact");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {

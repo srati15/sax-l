@@ -1,97 +1,66 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <title>Sax-L Quiz Website</title>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="css/segment.css">
+    <link rel="stylesheet" href="css/label.min.css">
+    <link rel="stylesheet" href="css/button.min.css">
 
-    <!-- Title -->
-    <title>Sax-L - Quiz Website | Home</title>
-
-
-    <!-- Favicon -->
-    <link rel="icon" href="img/core-img/favicon.ico">
-    <!-- Core Stylesheet -->
-    <link href="style.css" rel="stylesheet">
-    <!-- Responsive CSS -->
-    <link href="css/responsive.css" rel="stylesheet">
-    <link href="css/toastr.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap4.min.css"/>
 
 </head>
 
 <body>
 
-<!-- ***** Preloader Start ***** -->
-<div id="preloader">
-    <div class="mosh-preloader"></div>
-</div>
+<div class="wrapper">
+    <!-- Sidebar Holder -->
+    <jsp:include page="components/sidebar.jsp"/>
+    <!-- Page Content Holder -->
+    <div id="content">
+        <jsp:include page="components/topbar.jsp"/>
+        <jsp:include page="components/timeline.jsp"/>
+        <jsp:include page="components/notifications.jsp"/>
 
-<!-- ***** Header Area Start ***** -->
-<header class="header_area clearfix">
-    <jsp:include page="components/header.jsp"/>
-</header>
-<!-- ***** Header Area End ***** -->
-
-<!-- ***** Welcome Area Start ***** -->
-
-<div class="mosh-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
-    <div class="container h-100">
-        <div class="row h-100 align-items-center">
-            <div class="col-12">
-                <div class="bradcumbContent">
-                    <h2>Main Page</h2>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active"><a href="${pageContext.request.contextPath}/">Home</a>
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
-<!-- ***** Top quizzes Area Start ***** -->
-<c:if test="${sessionScope.user !=null}">
-    <div class="ui blue segments">
+<script src="js/solid.js"></script>
+<script src="js/fontawesome.js"></script>
 
-        <jsp:include page="components/top-quizzes.jsp"/>
-
-        <jsp:include page="components/recent-quizzes.jsp"/>
-
-        <jsp:include page="components/my-quizzes.jsp"/>
-
-        <jsp:include page="components/quiz-activities.jsp"/>
-    </div>
-</c:if>
-
-<!-- ***** Footer Area Start ***** -->
-<footer class="footer-area clearfix">
-    <jsp:include page="components/footer.jsp"/>
-</footer>
-<!-- ***** Footer Area End ***** -->
-
-<!-- jQuery-2.2.4 js -->
-<script src="js/jquery-2.2.4.min.js"></script>
-<!-- Popper js -->
+<script src="js/jquery.min.js"></script>
+<!-- Popper.JS -->
 <script src="js/popper.min.js"></script>
-<!-- Bootstrap js -->
+<!-- Bootstrap JS -->
 <script src="js/bootstrap.min.js"></script>
-<!-- All Plugins js -->
-<script src="js/plugins.js"></script>
-<!-- Active js -->
-<script src="js/active.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/jquery.dataTables.min.js"></script>
 
-<script src="js/toastr.js"></script>
+<script src="js/dataTables.bootstrap4.min.js"></script>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+        });
+        $('.table').DataTable();
+        $('.modal').appendTo("body");
+        $('.toast').appendTo("body");
+    });
+</script>
 
-<jsp:include page="components/notifications.jsp"/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 
 </body>
 

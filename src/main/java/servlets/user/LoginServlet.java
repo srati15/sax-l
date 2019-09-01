@@ -18,7 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -33,13 +37,13 @@ public class LoginServlet extends HttpServlet {
         if (user == null) {
             request.setAttribute("error", "Wrong login credentials");
             logger.error("User with username {} deosn't exist", userName);
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            response.sendRedirect("/");
             return;
         }
         if (!user.getPassword().equals(passwordHash)) {
             request.setAttribute("error", "Wrong login credentials");
             logger.debug("Wrong login credentials");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            response.sendRedirect("/");
             return;
         }
         request.getSession().setAttribute("user", user);
@@ -47,13 +51,15 @@ public class LoginServlet extends HttpServlet {
         Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");
         userMap.put(user.getId(), user);
         ActivityDao activityDao = manager.getDao(DaoType.Activity);
-        activityDao.insert(new Activity(user.getId(), "logged in", LocalDateTime.now()));
-        RequestDispatcher dispatcher = request.getRequestDispatcher("");
-        dispatcher.forward(request, response);
+        List<Activity> friendsActivities = new ArrayList<>();
+        user.getFriends().forEach(friend->friendsActivities.addAll(activityDao.findAllForUser(friend.getId())));
+
+        List<Activity> userActivities = activityDao.findAll().stream().filter(s -> s.getUserId() == user.getId()).
+                sorted(Comparator.comparing(Activity::getDateTime).reversed()).collect(Collectors.toList());
+        request.getSession().setAttribute("activities", userActivities);
+        request.getSession().setAttribute("friendsIds", user.getFriends());
+
+        response.sendRedirect("/");
     }
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/login.jsp").forward(req, resp);
-    }
 }

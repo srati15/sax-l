@@ -74,7 +74,7 @@ public class User extends Person {
     public void setPendingFriendRequests(List<Person> pendingFriendRequests) {
         this.pendingFriendRequests = pendingFriendRequests;
     }
-
+    
     public void setQuizChallenges(List<QuizChallenge> quizChallenges) {
         this.quizChallenges = quizChallenges;
     }
@@ -136,9 +136,7 @@ public class User extends Person {
         return password.equals(user.password) &&
                 userType == user.userType &&
                 mail.equals(user.mail) &&
-                friends.equals(user.friends) &&
                 quizzes.equals(user.quizzes) &&
-                pendingFriendRequests.equals(user.pendingFriendRequests) &&
                 quizResults.equals(user.quizResults) &&
                 textMessages.equals(user.textMessages) &&
                 achievements.equals(user.achievements);

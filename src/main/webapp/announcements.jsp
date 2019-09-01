@@ -1,9 +1,7 @@
-<%@ page import="dao.AnnouncementDao" %>
-<%@ page import="datatypes.*" %>
-<%@ page import="enums.DaoType" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 <%@ page import="enums.FormFields" %>
 <%@ page import="enums.InputType" %>
-<%@ page import="manager.DaoManager" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.List" %>
@@ -11,159 +9,138 @@
 <%@ page import="datatypes.formfields.SelectField" %>
 <%@ page import="datatypes.formfields.FormField" %>
 <%@ page import="datatypes.announcement.Announcement" %>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <title>Sax-L Quiz Website</title>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="css/segment.css">
+    <link rel="stylesheet" href="css/label.min.css">
+    <link rel="stylesheet" href="css/button.min.css">
 
-    <title>Sax-L - Quiz Website | Announcements</title>
-
-    <!-- Favicon -->
-    <link rel="icon" href="img/core-img/favicon.ico">
-    <link href="style.css" rel="stylesheet">
-    <link href="css/responsive.css" rel="stylesheet">
-
-    <link href="css/datatables.min.css" rel="stylesheet">
-
-    <link href="css/toastr.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap4.min.css"/>
 
 </head>
+
 <body>
-<%
-    DaoManager daoManager = (DaoManager) request.getServletContext().getAttribute("manager");
-    AnnouncementDao announcementDao = daoManager.getDao(DaoType.Announcement);
-%>
-<!-- ***** Preloader Start ***** -->
-<div id="preloader">
-    <div class="mosh-preloader"></div>
-</div>
-<!-- ***** Header Area Start ***** -->
-<header class="header_area clearfix">
-    <jsp:include page="components/header.jsp"/>
-</header>
-<!-- ***** Header Area End ***** -->
-<!-- ***** Breadcumb Area Start ***** -->
-<div class="mosh-breadcumb-area" style="background-image: url(img/core-img/breadcumb.png);">
-    <div class="container h-100">
-        <div class="row h-100 align-items-center">
-            <div class="col-12">
-                <div class="bradcumbContent">
-                    <h2>Announcements List</h2>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Announcements</li>
-                        </ol>
-                    </nav>
-                </div>
+
+<div class="wrapper">
+    <!-- Sidebar Holder -->
+    <jsp:include page="components/sidebar.jsp"/>
+    <!-- Page Content Holder -->
+    <div id="content">
+        <jsp:include page="components/topbar.jsp"/>
+        <%
+            SelectField field = new SelectField("Status",FormFields.activeOrNot.getValue(), Arrays.asList("Active", "Inactive"));
+            List<FormField> formFields = new ArrayList<>();
+            formFields.add(new FormField("Announcement Text", FormFields.announcementText.getValue(),  InputType.text, true, 1));
+            formFields.add(new FormField("Hyperlink", FormFields.hyperlink.getValue(),  InputType.text, true, 1));
+        %>
+        <section class="mosh-aboutUs-area">
+            <div class="container">
+                <h3 class="mb-30">All Announcements</h3>
+                <!-- ***** create announcement modal ***** -->
+                <h:create entityName="Announcement" selectFields="<%=field%>" actionServlet="CreateAnnouncementServlet" formFields="<%=formFields%>" formId="createAnnouncementForm"/>
+
+                <table id="myTable" class="table table-striped table-bordered table-sm">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Text</th>
+                        <th>Active</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:set var="i" value="0" scope="page"/>
+                    <c:forEach items="${requestScope.allAnnouncements}" var="announcement">
+                        <tr>
+                            <td>${i+1}
+                            </td>
+                            <td>
+                                <a href="${announcement.hyperLink}">${announcement.announcementText}
+                                </a>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${announcement.active}">
+                                        <i class="fas fa-check"></i> Active
+                                    </c:when>
+                                    <c:when test="${!announcement.active}">
+                                        <i class="fas fa-ban"></i> Inactive</i>
+                                    </c:when>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <%
+                                    SelectField editSelectField = new SelectField("Status",FormFields.activeOrNot.getValue(), Arrays.asList("Active", "Inactive"));
+                                    List<EditFormField> editFormFields = new ArrayList<>();
+                                    editFormFields.add(new EditFormField("AnnouncementText", FormFields.announcementText.getValue(),  InputType.text, true, 0, ((Announcement) pageContext.getAttribute("announcement")).getAnnouncementText(), false));
+                                    editFormFields.add(new EditFormField("Hyperlink", FormFields.hyperlink.getValue(),  InputType.text, true, 0, ((Announcement) pageContext.getAttribute("announcement")).getHyperLink(), false));
+                                %>
+                                <div class="ui mini buttons">
+                                    <h:delete entityName="Announcement" actionServlet="DeleteAnnouncementServlet" hiddenParameterName="announcementId" hiddenParameterValue="${announcement.id}"/>
+                                    <div class="or" data-text="or"></div>
+                                    <h:edit entityName="Announcement" actionServlet="EditAnnouncementServlet" hiddenParameterName="editAnnouncementId" hiddenParameterValue="${announcement.id}" formFields="<%=editFormFields%>" selectFields="<%=editSelectField%>"/>
+                                </div>
+                                <!-- Update  Modal -->
+                            </td>
+                        </tr>
+                        <c:set var="i" value="${i + 1}" scope="page"/>
+                    </c:forEach>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>#</th>
+                        <th>Text</th>
+                        <th>Active</th>
+                        <th>Action</th>
+                    </tr>
+                    </tfoot>
+                </table>
             </div>
-        </div>
+        </section>
+        <jsp:include page="components/notifications.jsp"/>
     </div>
 </div>
-<!-- ***** Breadcumb Area End ***** -->
-<!-- ***** Users list Area Start ***** -->
-<%
-    SelectField field = new SelectField("Status",FormFields.activeOrNot.getValue(), Arrays.asList("Active", "Inactive"));
-    List<FormField> formFields = new ArrayList<>();
-    formFields.add(new FormField("Announcement Text", FormFields.announcementText.getValue(),  InputType.text, true, 1));
-    formFields.add(new FormField("Hyperlink", FormFields.hyperlink.getValue(),  InputType.text, true, 1));
-%>
-<section class="mosh-aboutUs-area">
-    <div class="container">
-        <h3 class="mb-30">All Announcements</h3>
-        <!-- ***** create announcement modal ***** -->
-        <h:create entityName="Announcement" selectFields="<%=field%>" actionServlet="CreateAnnouncementServlet" formFields="<%=formFields%>" formId="createAnnouncementForm"/>
 
-        <table id="myTable" class="table table-striped table-bordered table-sm">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Text</th>
-                <th>Active</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:set var="i" value="0" scope="page"/>
-            <c:forEach items="<%=announcementDao.findAll()%>" var="announcement">
-                <tr>
-                    <td>${i+1}
-                    </td>
-                    <td>
-                        <a href="${announcement.hyperLink}">${announcement.announcementText}
-                        </a>
-                    </td>
-                    <td>
-                        <c:choose>
-                            <c:when test="${announcement.active}">
-                                <i class="fa fa-check"> Active</i>
-                            </c:when>
-                            <c:when test="${!announcement.active}">
-                                <i class="fa fa-close"> Inactive</i>
-                            </c:when>
-                        </c:choose>
-                    </td>
-                    <td>
-                        <h:delete entityName="Announcement" actionServlet="DeleteAnnouncementServlet" hiddenParameterName="announcementId" hiddenParameterValue="${announcement.id}"/>
-                        <%
-                            SelectField editSelectField = new SelectField("Status",FormFields.activeOrNot.getValue(), Arrays.asList("Active", "Inactive"));
-                            List<EditFormField> editFormFields = new ArrayList<>();
-                            editFormFields.add(new EditFormField("AnnouncementText", FormFields.announcementText.getValue(),  InputType.text, true, 0, ((Announcement) pageContext.getAttribute("announcement")).getAnnouncementText(), false));
-                            editFormFields.add(new EditFormField("Hyperlink", FormFields.hyperlink.getValue(),  InputType.text, true, 0, ((Announcement) pageContext.getAttribute("announcement")).getHyperLink(), false));
-                        %>
-                        <!-- Update  Modal -->
-                        <h:edit entityName="Announcement" actionServlet="EditAnnouncementServlet" hiddenParameterName="editAnnouncementId" hiddenParameterValue="${announcement.id}" formFields="<%=editFormFields%>" selectFields="<%=editSelectField%>"/>
-                    </td>
-                </tr>
-                <c:set var="i" value="${i + 1}" scope="page"/>
-            </c:forEach>
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>#</th>
-                <th>Text</th>
-                <th>Active</th>
-                <th>Action</th>
-            </tr>
-            </tfoot>
-        </table>
-    </div>
-</section>
-<!-- ***** Users list Area End ***** -->
-<footer class="footer-area clearfix">
-    <jsp:include page="components/footer.jsp"/>
-</footer>
+<script src="js/solid.js"></script>
+<script src="js/fontawesome.js"></script>
 
-<!-- jQuery-2.2.4 js -->
-<script src="js/jquery-2.2.4.min.js"></script>
-<!-- Popper js -->
+<script src="js/jquery.min.js"></script>
+<!-- Popper.JS -->
 <script src="js/popper.min.js"></script>
-<!-- Bootstrap js -->
+<!-- Bootstrap JS -->
 <script src="js/bootstrap.min.js"></script>
-<!-- All Plugins js -->
-<script src="js/plugins.js"></script>
-<!-- Active js -->
-<script src="js/active.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/jquery.dataTables.min.js"></script>
 
-<!---table scroll -->
-<script type="text/javascript" src="js/datatables.min.js"></script>
-<script>
+<script src="js/dataTables.bootstrap4.min.js"></script>
+
+<script type="text/javascript">
     $(document).ready(function () {
-        $('#myTable').DataTable();
-        $('.dataTables_length').addClass('bs-select');
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+        });
+        $('.table').DataTable();
+        $('.modal').appendTo("body");
+        $('.toast').appendTo("body");
     });
 </script>
-<script src="js/toastr.js"></script>
 
-<jsp:include page="components/notifications.jsp"/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 
 </body>
+
 </html>

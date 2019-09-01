@@ -32,9 +32,9 @@ public class FriendRequestDeleteServlet extends HttpServlet {
         String callingPage = request.getParameter("callingPage");
 
         if (callingPage != null && callingPage.equals("profile")) {
-            request.getRequestDispatcher("profile").forward(request, response);
+            response.sendRedirect("profile");
         } else
-            request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
+            response.sendRedirect("user-profile?userid=" + receiverId);
     }
 
     private void removeFromNotifications(DaoManager manager, FriendRequest request2) {

@@ -26,7 +26,7 @@
                         <div class="form-group">
                             <label for="${formField.name}">${formField.displayName}</label>
                             <input type="${formField.inputType.value}" class="form-control" name="${formField.name}"
-                                   id="${formField.name}" placeholder="${formField.displayName}" ${formField.required} minlength="${formField.minLength}">
+                                   placeholder="${formField.displayName}" ${formField.required} minlength="${formField.minLength}">
                         </div>
                     </c:forEach>
 

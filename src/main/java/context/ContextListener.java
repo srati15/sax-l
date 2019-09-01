@@ -30,7 +30,6 @@ public class ContextListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent sce) {
         logger.info("Server is shutting down...");
         ActivityDao activityDao = manager.getDao(DaoType.Activity);
-        onlineUsers.values().forEach(user -> activityDao.insert(new Activity(user.getId(), "logged out", LocalDateTime.now())) );
         sce.getServletContext().removeAttribute("manager");
         sce.getServletContext().removeAttribute("onlineUsers");
         manager.shutDown();

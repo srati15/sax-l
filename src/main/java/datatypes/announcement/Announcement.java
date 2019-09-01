@@ -1,7 +1,6 @@
 package datatypes.announcement;
 
 import datatypes.Domain;
-
 public class Announcement extends Domain<Integer> {
     private final int userId;
     private final String announcementText;

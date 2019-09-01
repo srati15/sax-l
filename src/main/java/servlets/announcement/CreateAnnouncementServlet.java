@@ -23,7 +23,7 @@ public class CreateAnnouncementServlet extends HttpServlet {
         Announcement announcement = new Announcement(user.getId(), announcementText, hyperlink, active);
         manager.insert(announcement);
         request.setAttribute("info", "Announcement created successfully");
-        request.getRequestDispatcher("announcements").forward(request, response);
+        response.sendRedirect("announcements");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {

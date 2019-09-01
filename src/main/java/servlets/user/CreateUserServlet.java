@@ -34,13 +34,13 @@ public class CreateUserServlet extends HttpServlet {
         if (!password.equals(confirmPassword)) {
             request.setAttribute("error", "Passwords don't match");
             logger.error("Passwords don't match");
-            request.getRequestDispatcher("users-list").forward(request, response);
+            response.sendRedirect("users-list");
             return;
         }
         if (userRepository.findByUserName(userName) != null) {
             request.setAttribute("error", "Username is already taken");
             logger.error("Username is already taken, {}", userName);
-            request.getRequestDispatcher("users-list").forward(request, response);
+            response.sendRedirect("users-list");
             return;
         }
 
@@ -48,6 +48,6 @@ public class CreateUserServlet extends HttpServlet {
         user.setUserType(userType);
         if (manager.insert(user)) request.setAttribute("info", "Registration is successful");
 
-        request.getRequestDispatcher("users-list").forward(request, response);
+        response.sendRedirect("users-list");
     }
 }

@@ -16,42 +16,16 @@
     pageContext.setAttribute("announcementDao", announcementDao);
     pageContext.setAttribute("userDao", userDao);
 %>
-
-<script>
-    $(document).ready(function () {
-        toastr.options.timeOut = 10000;
-        toastr.options.position = "toast-bottom-right";
-        <c:forEach items="<%=announcementDao.findAll().stream().filter(s->s.isActive()).collect(Collectors.toList())%>" var="announcement">
-        toastr.info("${announcement.announcementText}", "Announcement");
-        </c:forEach>
-        <c:if test="${sessionScope.user!= null}">
-        toastr.options.timeOut = 10000;
-        toastr.options.position = "toast-bottom-right";
-        <c:forEach var="challenge" items="<%=user.getQuizChallenges()%>">
-        <% QuizChallenge challenge = (QuizChallenge) pageContext.getAttribute("challenge");%>
-        toastr.success("sent you a challenge" + '\n' + "<%=challenge.getTimestamp()%>", "<%=userDao.findById(challenge.getSenderId()).getUserName()%>");
-        </c:forEach>
-        <c:forEach var="person" items="<%=user.getPendingFriendRequests()%>">
-        <% Person person = (Person) pageContext.getAttribute("person");%>
-        toastr.success("<%=person.getUserName()%> sent you a Friend Request");
-        </c:forEach>
-        </c:if>
-        <c:if test="${requestScope.error !=null}">
-        toastr.options.position = "toast-bottom-right";
-        toastr.error("${requestScope.error}");
-        ${requestScope.remove("error")}
-        </c:if>
-        <c:if test="${requestScope.info !=null}">
-        toastr.options.position = "toast-bottom-right";
-        toastr.success("${requestScope.info}");
-        ${requestScope.remove("info")}
-        </c:if>
-        <c:if test="${requestScope.warn !=null}">
-        toastr.options.position = "toast-bottom-right";
-
-        toastr.warning("${requestScope.warn}");
-        ${requestScope.remove("warn")}
-        </c:if>
-    });
-
-</script>
+<c:forEach items="<%=announcementDao.findAll().stream().filter(s->s.isActive()).collect(Collectors.toList())%>" var="announcement">
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="mr-auto">Notification</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+                ${announcement.announcementText}
+        </div>
+    </div>
+</c:forEach>
