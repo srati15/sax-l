@@ -8,7 +8,6 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Achievements</th>
-                <th>Completed Quizzes</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -30,15 +29,7 @@
                             ${friend.lastName}
                     </td>
                     <td>${friend.achievements.size()}</td>
-                    <td>${friend.quizResults.size()}</td>
                     <td>
-                        <!--  ************ challenge modal **********-->
-                        <h:challenge
-                                receiverId="${friend.id}"
-                                receiverName="${friend.userName}"
-                                actionServlet="ChallengeSenderServlet">
-                        </h:challenge>
-
                         <form action="FriendRequestDeleteServlet" method="post" style="float: left;">
                             <button type="submit" class="btn btn-danger btn-sm">
                                 <i class="fa fa-trash"></i> Unfriend
@@ -57,7 +48,6 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Achievements</th>
-                <th>Completed Quizzes</th>
                 <th>Action</th>
             </tr>
             </tfoot>

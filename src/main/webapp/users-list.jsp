@@ -24,7 +24,9 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="css/segment.css">
+    <link rel="stylesheet" href="css/label.min.css">
+    <link rel="stylesheet" href="css/button.min.css">
     <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap4.min.css"/>
 
 </head>
@@ -66,8 +68,6 @@
                         <th>#</th>
                         <th>Username</th>
                         <th>Status</th>
-                        <th>Completed Quizes</th>
-                        <th>Created Quizes</th>
                         <th>Achievements</th>
                         <c:choose>
                             <c:when test="${sessionScope.user!=null && sessionScope.user.userType==UserType.Admin}">
@@ -103,8 +103,6 @@
                                 </c:when>
                             </c:choose>
                             <td>${currentUser.userType}</td>
-                            <td>${currentUser.quizResults.size()}</td>
-                            <td>${currentUser.quizzes.size()}</td>
                             <td>${currentUser.achievements.size()}</td>
                             <c:choose>
                                 <c:when test="${sessionScope.user!=null && sessionScope.user.userType==UserType.Admin}">
@@ -155,8 +153,6 @@
                         <th>#</th>
                         <th>Username</th>
                         <th>Status</th>
-                        <th>Completed Quizes</th>
-                        <th>Created Quizes</th>
                         <th>Achievements</th>
                         <c:choose>
                             <c:when test="${sessionScope.user!=null && sessionScope.user.userType==UserType.Admin}">
@@ -168,7 +164,6 @@
                 </table>
             </div>
         </div>
-        <jsp:include page="components/notifications.jsp"/>
 
     </div>
 </div>

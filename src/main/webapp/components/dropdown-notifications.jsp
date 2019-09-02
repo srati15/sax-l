@@ -3,7 +3,7 @@
     <div class="dropdown">
         <button class="btn btn-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-bell"></i>
-            <span class="badge badge-primary">${sessionScope.user.pendingFriendRequests.size()+sessionScope.user.quizChallenges.size()}</span>
+            <span class="badge badge-primary">${sessionScope.user.pendingFriendRequests.size()}</span>
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item">
@@ -25,33 +25,6 @@
                             </div>
                             <div class="modal-body">
                                 <jsp:include page="profile/friend-request-table.jsp"/>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            <a class="dropdown-item">
-                <button type="button" class="btn btn-light" data-toggle="modal" data-target="#quizChallengesModal">
-                    <p class="ui red circular label">
-                            ${sessionScope.user.quizChallenges.size()}
-                    </p> Quiz Challenges
-                </button>
-
-                <!-- Modal -->
-                <div class="modal fade" id="quizChallengesModal" tabindex="-1" role="dialog" aria-labelledby="QuizChallengesModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="QuizChallengesModalLabel">New Quiz Challenges</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <jsp:include page="profile/quiz-challenges-table.jsp"/>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -1,9 +1,7 @@
 package datatypes.user;
 
-import datatypes.messages.QuizChallenge;
 import datatypes.messages.TextMessage;
-import datatypes.quiz.Quiz;
-import datatypes.quiz.QuizResult;
+import datatypes.toast.Toast;
 import enums.UserType;
 
 import java.util.ArrayList;
@@ -17,12 +15,11 @@ public class User extends Person {
     private UserType userType;
     private final String mail;
     private List<Person> friends = new ArrayList<>();
-    private List<Quiz> quizzes = new ArrayList<>();
     private List<Person> pendingFriendRequests = new ArrayList<>();
-    private List<QuizResult> quizResults = new ArrayList<>();
     private Map<String, List<TextMessage>> textMessages = new HashMap<>();
     private List<UserAchievement> achievements = new ArrayList<>();
-    private List<QuizChallenge> quizChallenges = new ArrayList<>();
+    private List<Toast> toasts = new ArrayList<>();
+
     public User(String userName, String password, String firstName, String lastName, String mail) {
         super(userName, firstName, lastName);
         this.password = password;
@@ -33,6 +30,14 @@ public class User extends Person {
     public User(int id, String userName, String password, String firstName, String lastName, String mail) {
         this(userName, password, firstName, lastName, mail);
         this.id = id;
+    }
+
+    public List<Toast> getToasts() {
+        return toasts;
+    }
+
+    public void setToasts(List<Toast> toasts) {
+        this.toasts = toasts;
     }
 
     public String getPassword() {
@@ -59,13 +64,6 @@ public class User extends Person {
         return friends;
     }
 
-    public List<Quiz> getQuizzes() {
-        return quizzes;
-    }
-
-    public void setQuizzes(List<Quiz> quizzes) {
-        this.quizzes = quizzes;
-    }
 
     public void setFriends(List<Person> people) {
         this.friends = people;
@@ -73,14 +71,6 @@ public class User extends Person {
 
     public void setPendingFriendRequests(List<Person> pendingFriendRequests) {
         this.pendingFriendRequests = pendingFriendRequests;
-    }
-    
-    public void setQuizChallenges(List<QuizChallenge> quizChallenges) {
-        this.quizChallenges = quizChallenges;
-    }
-
-    public List<QuizChallenge> getQuizChallenges() {
-        return quizChallenges;
     }
 
     public List<UserAchievement> getAchievements() {
@@ -103,13 +93,6 @@ public class User extends Person {
         this.textMessages = textMessages;
     }
 
-    public void setQuizResults(List<QuizResult> quizResults) {
-        this.quizResults = quizResults;
-    }
-
-    public List<QuizResult> getQuizResults() {
-        return quizResults;
-    }
 
     @Override
     public String toString() {
@@ -119,9 +102,7 @@ public class User extends Person {
                 ", userType=" + userType +
                 ", mail='" + mail + '\'' +
                 ", friends=" + currentFriends +
-                ", quizzes=" + quizzes +
                 ", pendingFriendRequests=" + requests +
-                ", quizResults=" + quizResults +
                 ", textMessages=" + textMessages +
                 ", achievements=" + achievements +
                 ", id=" + id +
@@ -136,8 +117,6 @@ public class User extends Person {
         return password.equals(user.password) &&
                 userType == user.userType &&
                 mail.equals(user.mail) &&
-                quizzes.equals(user.quizzes) &&
-                quizResults.equals(user.quizResults) &&
                 textMessages.equals(user.textMessages) &&
                 achievements.equals(user.achievements);
     }

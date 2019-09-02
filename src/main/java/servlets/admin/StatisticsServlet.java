@@ -1,6 +1,8 @@
 package servlets.admin;
 
-import dao.*;
+import dao.AnnouncementDao;
+import dao.UserAchievementDao;
+import dao.UserDao;
 import enums.DaoType;
 import manager.DaoManager;
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/statistics")
 public class StatisticsServlet extends HttpServlet {
@@ -25,17 +28,8 @@ public class StatisticsServlet extends HttpServlet {
         UserDao userDao = manager.getDao(DaoType.User);
         stats.put("Users", userDao.findAll().size());
 
-        QuizDao quizDao = manager.getDao(DaoType.Quiz);
-        stats.put("Quizzes", quizDao.findAll().size());
-
-        QuizResultDao quizResultDao = manager.getDao(DaoType.QuizResult);
-        stats.put("Completed Quizzes", quizResultDao.findAll().size());
-
         AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
         stats.put("Announcements", announcementDao.findAll().size());
-
-        CommentDao commentDao = manager.getDao(DaoType.Comment);
-        stats.put("Comments", commentDao.findAll().size());
 
         UserAchievementDao achievementDao = manager.getDao(DaoType.UserAchievement);
         stats.put("Achievements", achievementDao.findAll().size());

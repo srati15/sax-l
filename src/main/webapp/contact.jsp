@@ -29,7 +29,6 @@
     <div id="content">
         <jsp:include page="components/topbar.jsp"/>
         <jsp:include page="components/contact-form.jsp"/>
-        <jsp:include page="components/notifications.jsp"/>
 
     </div>
 </div>

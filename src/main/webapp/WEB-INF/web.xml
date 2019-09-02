@@ -38,25 +38,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>QuizResult</servlet-name>
-        <jsp-file>/quiz-result.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>QuizResult</servlet-name>
-        <url-pattern>/quiz-result</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
-        <servlet-name>top-quizzes</servlet-name>
-        <jsp-file>/top-quizzes.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>top-quizzes</servlet-name>
-        <url-pattern>/top-quizzes</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>contact</servlet-name>
         <jsp-file>/contact.jsp</jsp-file>
     </servlet>

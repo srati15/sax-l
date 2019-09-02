@@ -7,13 +7,15 @@
 
     <ul class="list-unstyled components">
         <p>Navigation</p>
-        <li class="active">
+        <li>
             <a href="${pageContext.request.contextPath}/"><i class="fas fa-home"></i> Home</a>
+        </li>
+        <li>
+            <a href="${pageContext.request.contextPath}/toasts.jsp"><i class="fas fa-ambulance"></i> Toasts</a>
         </li>
         <c:if test="${sessionScope.user !=null}">
             <li><a href="profile"><i class="fas fa-id-badge"></i> Profile</a></li>
             <li><a href="users-list"><i class="fas fa-users"></i> Users</a></li>
-            <li><a href="quiz"><i class="fas fa-dice-d20"></i> Quizzes</a></li>
             <li>
                 <jsp:include page="menu-modals/edit-profile.jsp"/>
             </li>

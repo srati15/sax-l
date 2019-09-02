@@ -50,10 +50,7 @@
                         <a class="nav-link" data-toggle="tab" href="#achievements">Achievements
                             <span class="badge badge-info">${sessionScope.user.achievements.size()}</span></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#challenges">Quiz Challenges
-                            <span class="badge badge-info">${sessionScope.user.quizChallenges.size()}</span></a>
-                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#history">History</a>
                     </li>
@@ -136,15 +133,7 @@
                                             ${friend.lastName}
                                     </td>
                                     <td>${friend.achievements.size()}</td>
-                                    <td>${friend.quizResults.size()}</td>
                                     <td>
-                                        <!--  ************ challenge modal **********-->
-                                        <h:challenge
-                                                receiverId="${friend.id}"
-                                                receiverName="${friend.userName}"
-                                                actionServlet="ChallengeSenderServlet">
-                                        </h:challenge>
-
                                         <form action="FriendRequestDeleteServlet" method="post" style="float: left;">
                                             <button type="submit" class="btn btn-danger btn-sm">
                                                 <i class="fa fa-trash"></i> Unfriend
@@ -294,7 +283,6 @@
                 </div>
             </div>
         </div>
-        <jsp:include page="components/notifications.jsp"/>
 
     </div>
 </div>
@@ -318,9 +306,8 @@
             $('#sidebar').toggleClass('active');
             $(this).toggleClass('active');
         });
-        $('.table').DataTable();
         $('.modal').appendTo("body");
-        $('.toast').appendTo("body");
+        $('.table').DataTable();
     });
 </script>
 

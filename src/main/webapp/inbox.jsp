@@ -122,7 +122,6 @@
                 </table>
             </div>
         </div>
-        <jsp:include page="components/notifications.jsp"/>
 
     </div>
 </div>

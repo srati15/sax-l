@@ -87,7 +87,6 @@
 <script src="js/jquery.validate.js"></script>
 
 <script src="js/toastr.js"></script>
-<jsp:include page="components/notifications.jsp"/>
 
 </body>
 </html>

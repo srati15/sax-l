@@ -1,14 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="h" %>
+<%@ page import="datatypes.announcement.Announcement" %>
+<%@ page import="datatypes.formfields.EditFormField" %>
+<%@ page import="datatypes.formfields.FormField" %>
+<%@ page import="datatypes.formfields.SelectField" %>
 <%@ page import="enums.FormFields" %>
 <%@ page import="enums.InputType" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.List" %>
-<%@ page import="datatypes.formfields.EditFormField" %>
-<%@ page import="datatypes.formfields.SelectField" %>
-<%@ page import="datatypes.formfields.FormField" %>
-<%@ page import="datatypes.announcement.Announcement" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
@@ -110,7 +110,6 @@
                 </table>
             </div>
         </section>
-        <jsp:include page="components/notifications.jsp"/>
     </div>
 </div>
 

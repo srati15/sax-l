@@ -2,19 +2,13 @@ package enums;
 
 public enum DaoType {
     User(1),
-    Quiz(2),
     FriendRequest(3),
     Announcement(4),
     TextMessage(5),
-    Answer(6),
-    Question(7),
-    QuizResult(8),
     UserAchievement(9),
-    QuizChallenge(10),
     Activity(11),
     AdminMessage(12),
-    AdminReply(13),
-    Comment(14);
+    AdminReply(13);
     private final int value;
     DaoType(int value) {
         this.value = value;
