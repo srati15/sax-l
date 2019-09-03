@@ -27,7 +27,7 @@ public class UpdateUserServlet extends HttpServlet {
         String lastName = request.getParameter(FormFields.lastname.getValue());
         if (!password.equals(confirmPassword)) {
             logger.debug("Passwords don't match, {} {}", password, confirmPassword);
-            request.setAttribute("error", "Passwords don't match");
+            request.getSession().setAttribute("error", "Passwords don't match");
             response.sendRedirect("/");
             return;
         }
@@ -35,7 +35,7 @@ public class UpdateUserServlet extends HttpServlet {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         manager.update(user);
-        request.setAttribute("info", "Profile updated successfully");
+        request.getSession().setAttribute("info", "Profile updated successfully");
         response.sendRedirect("/");
     }
 

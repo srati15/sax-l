@@ -6,7 +6,9 @@
             <span class="badge badge-primary">${sessionScope.user.pendingFriendRequests.size()}</span>
         </button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+
             <a class="dropdown-item">
+
                 <button type="button" class="btn btn-light" data-toggle="modal" data-target="#friendRequestsModal">
                     <p class="ui red circular label">
                         ${sessionScope.user.pendingFriendRequests.size()}

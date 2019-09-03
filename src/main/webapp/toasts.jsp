@@ -31,16 +31,19 @@
     <div id="content">
         <jsp:include page="components/topbar.jsp"/>
             <div class="ui red segment">
-                <h2><i class="fas fa-rss"></i> News Feed</h2>
+                <h2><i class="fas fa-rss"></i> Add Toast</h2>
                 <form action="createToast" method="post">
-                    <div class="form-group">
-                        <label for="editor">Toast Text</label>
-                        <textarea rows="5" name="content" id="editor">This is some sample content.</textarea>
+                    <div class="row">
+                        <div class="col-12 form-group">
+                            <input type="text" class="form-control" required name="toastTitle" id="title"
+                                   placeholder="Toast Title">
+                        </div>
+                        <div class="col-12 form-group">
+                                <textarea class="form-control" required name="content" id="message"
+                                          cols="30" rows="10" placeholder="Toast Text"></textarea>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Add</button>
                     </div>
-                    <button type="submit" class="btn btn-success" data-toggle="modal"
-                            data-target="#createModal">
-                        <i class="fa fa-plus"></i> Add Toast
-                    </button>
                 </form>
             </div>
     </div>
@@ -58,7 +61,6 @@
 <script src="js/jquery.dataTables.min.js"></script>
 
 <script src="js/dataTables.bootstrap4.min.js"></script>
-<script src="js/ckeditor.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {

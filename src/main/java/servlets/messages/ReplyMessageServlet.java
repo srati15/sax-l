@@ -19,9 +19,9 @@ public class ReplyMessageServlet extends HttpServlet {
         int messageId = Integer.parseInt(request.getParameter("messageId"));
         String messageText = request.getParameter("replyText");
         if (manager.insert(new AdminReply(messageId, messageText, LocalDateTime.now()))){
-            request.setAttribute("info", "Message sent.");
+            request.getSession().setAttribute("info", "Message sent.");
         }else {
-            request.setAttribute("error", "Error sending mail");
+            request.getSession().setAttribute("error", "Error sending mail");
         }
         response.sendRedirect("inbox");
     }

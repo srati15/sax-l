@@ -23,7 +23,7 @@ public class LogoutServlet extends HttpServlet {
         Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");
         userMap.remove(user.getId());
         request.getSession().invalidate();
-        request.setAttribute("info", "Bye, "+user.getUserName());
+        request.getSession().setAttribute("info", "Bye, "+user.getUserName());
         response.sendRedirect("/");
     }
 }

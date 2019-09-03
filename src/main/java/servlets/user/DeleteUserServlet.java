@@ -22,13 +22,13 @@ public class DeleteUserServlet extends HttpServlet {
         User deleteUser = userDao.findById(deleteUserId);
 
         if (user.getId() == deleteUserId) {
-            request.setAttribute("error", "You can't delete yourself");
+            request.getSession().setAttribute("error", "You can't delete yourself");
             request.getRequestDispatcher("users-list").forward(request, response);
             return;
         }
         if (user.getId() != deleteUserId)  {
             manager.delete(deleteUser);
-            request.setAttribute("warn", deleteUser.getUserName()+"'s account is being removed");
+            request.getSession().setAttribute("warn", deleteUser.getUserName()+"'s account is being removed");
         }
         request.getRequestDispatcher("users-list").forward(request, response);
     }

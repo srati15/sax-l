@@ -7,24 +7,27 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Toast extends Domain<Integer> {
-    private Person author;
+    private int authorId;
+    private String title;
     private String toastText;
     private LocalDateTime dateCreated;
 
-    public Toast(Person author, String toastText, LocalDateTime dateCreated) {
-        this.author = author;
+    public Toast(int authorId, String title, String toastText, LocalDateTime dateCreated) {
+        this.authorId = authorId;
+        this.title = title;
         this.toastText = toastText;
         this.dateCreated = dateCreated;
     }
-    public Toast(int id, Person author, String toastText, LocalDateTime dateCreated) {
+    public Toast(int id, int authorId, String title, String toastText, LocalDateTime dateCreated) {
         this.id = id;
-        this.author = author;
+        this.authorId = authorId;
+        this.title = title;
         this.toastText = toastText;
         this.dateCreated = dateCreated;
     }
 
-    public Person getAuthor() {
-        return author;
+    public int getAuthorId() {
+        return authorId;
     }
 
     public String getToastText() {
@@ -35,25 +38,31 @@ public class Toast extends Domain<Integer> {
         return dateCreated;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Toast toast = (Toast) o;
-        return Objects.equals(author, toast.author) &&
+        return Objects.equals(authorId, toast.authorId) &&
                 Objects.equals(toastText, toast.toastText) &&
                 Objects.equals(dateCreated, toast.dateCreated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(author, toastText, dateCreated);
+        return Objects.hash(authorId, toastText, dateCreated);
     }
 
     @Override
     public String toString() {
         return "Toast{" +
-                "author=" + author.getUserName() +
+                "authorId=" + authorId +
+                ", title='" + title + '\'' +
                 ", toastText='" + toastText + '\'' +
                 ", dateCreated=" + dateCreated +
                 ", id=" + id +

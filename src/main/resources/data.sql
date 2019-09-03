@@ -10,11 +10,11 @@ create table toast
 (
     id           int auto_increment
         primary key,
-    user_id      int       null,
-    toast_text   text      null,
-    date_created timestamp null
+    user_id      int          null,
+    title        varchar(255) null,
+    toast_text   text         null,
+    date_created timestamp    null
 );
-
 
 create table activity
 (

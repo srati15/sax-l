@@ -8,6 +8,7 @@ import datatypes.messages.AdminReply;
 import datatypes.messages.FriendRequest;
 import datatypes.messages.TextMessage;
 import datatypes.server.Activity;
+import datatypes.toast.Toast;
 import datatypes.user.Person;
 import datatypes.user.User;
 import datatypes.user.UserAchievement;
@@ -33,19 +34,21 @@ public class DaoManager {
     private final UserAchievementDao userAchievementDao = new UserAchievementDao();
     private final AdminMessageDao adminMessageDao = new AdminMessageDao();
     private final AdminReplyMessageDao adminReplyMessageDao = new AdminReplyMessageDao();
+    private final ToastDao toastDao = new ToastDao();
     private final ActivityDao activityDao = new ActivityDao((ThreadPoolExecutor) Executors.newFixedThreadPool(4));
     private CountDownLatch latch;
 
     public DaoManager() {
         map = new HashMap<>();
-        map.put(DaoType.Announcement, announcementDao);
-        map.put(DaoType.User, userDao);
-        map.put(DaoType.FriendRequest, friendRequestDao);
-        map.put(DaoType.TextMessage, textMessageDao);
-        map.put(DaoType.UserAchievement, userAchievementDao);
-        map.put(DaoType.Activity, activityDao);
-        map.put(DaoType.AdminMessage, adminMessageDao);
-        map.put(DaoType.AdminReply, adminReplyMessageDao);
+        map.put(announcementDao.getDaoType(), announcementDao);
+        map.put(userDao.getDaoType(), userDao);
+        map.put(friendRequestDao.getDaoType(), friendRequestDao);
+        map.put(textMessageDao.getDaoType(), textMessageDao);
+        map.put(userAchievementDao.getDaoType(), userAchievementDao);
+        map.put(activityDao.getDaoType(), activityDao);
+        map.put(adminMessageDao.getDaoType(), adminMessageDao);
+        map.put(adminReplyMessageDao.getDaoType(), adminReplyMessageDao);
+        map.put(toastDao.getDaoType(), toastDao);
         latch = new CountDownLatch(map.size());
         map.values().forEach(dao -> {
             executor.execute(() -> {
@@ -254,4 +257,7 @@ public class DaoManager {
         return true;
     }
 
+    public boolean insert(Toast toast) {
+        return toastDao.insert(toast);
+    }
 }

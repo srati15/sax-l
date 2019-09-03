@@ -17,10 +17,14 @@ public class CreateToastServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
         User user = (User) request.getSession().getAttribute("user");
+        String title = request.getParameter("toastTitle");
         String toastText = request.getParameter("content");
-        Toast toast = new Toast(user, toastText, LocalDateTime.now());
-
-        request.setAttribute("info", "Toast created successfully");
+        Toast toast = new Toast(user.getId(), title, toastText, LocalDateTime.now());
+        if (manager.insert(toast)) {
+            request.getSession().setAttribute("info", "Toast created successfully");
+        }else {
+            request.getSession().setAttribute("error", "Error adding toast");
+        }
         response.sendRedirect("/");
     }
 

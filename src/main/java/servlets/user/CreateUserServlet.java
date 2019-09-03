@@ -32,13 +32,13 @@ public class CreateUserServlet extends HttpServlet {
         String mail = request.getParameter(FormFields.mail.getValue());
         UserType userType = request.getParameter("usertype").equals("admin")? UserType.Admin:UserType.User;
         if (!password.equals(confirmPassword)) {
-            request.setAttribute("error", "Passwords don't match");
+            request.getSession().setAttribute("error", "Passwords don't match");
             logger.error("Passwords don't match");
             response.sendRedirect("users-list");
             return;
         }
         if (userRepository.findByUserName(userName) != null) {
-            request.setAttribute("error", "Username is already taken");
+            request.getSession().setAttribute("error", "Username is already taken");
             logger.error("Username is already taken, {}", userName);
             response.sendRedirect("users-list");
             return;
@@ -46,7 +46,7 @@ public class CreateUserServlet extends HttpServlet {
 
         User user = new User(userName, Cracker.code(password), firstName, lastName, mail);
         user.setUserType(userType);
-        if (manager.insert(user)) request.setAttribute("info", "Registration is successful");
+        if (manager.insert(user)) request.getSession().setAttribute("info", "Registration is successful");
 
         response.sendRedirect("users-list");
     }

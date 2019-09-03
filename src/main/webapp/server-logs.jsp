@@ -31,7 +31,15 @@
         <jsp:include page="components/topbar.jsp"/>
         <div class="container">
             <div class="ui red segment">
-                <h2><i class="fas fa-server"></i> Server Logs</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2><i class="fas fa-server"></i> Server Logs</h2>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="clearLogs" class="btn btn-danger" style="float: right"><i class="fas fa-trash"></i> Clear Logs</a>
+                    </div>
+                </div>
+
 
                 <table id="myTable" class="table table-striped table-bordered table-sm">
                     <thead>

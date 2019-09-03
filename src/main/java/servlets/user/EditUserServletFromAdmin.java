@@ -32,7 +32,7 @@ public class EditUserServletFromAdmin extends HttpServlet {
         int hiddenId = Integer.parseInt(request.getParameter("hiddenId"));
         User editedUser = userRepository.findById(hiddenId);
         if (!password.equals(confirmPassword)){
-            request.setAttribute("error", "Passwords don't match");
+            request.getSession().setAttribute("error", "Passwords don't match");
             request.getRequestDispatcher("users-list").forward(request,response);
             return;
         }
@@ -41,7 +41,7 @@ public class EditUserServletFromAdmin extends HttpServlet {
         editedUser.setFirstName(firstName);
         editedUser.setLastName(lastName);
         manager.update(editedUser);
-        request.setAttribute("info", "Profile updated successfully");
+        request.getSession().setAttribute("info", "Profile updated successfully");
         request.getRequestDispatcher("users-list").forward(request, response);
     }
 }

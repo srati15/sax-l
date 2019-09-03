@@ -20,9 +20,9 @@ public class DeleteInboxMessageServlet extends HttpServlet {
         AdminMessageDao adminMessageDao = manager.getDao(DaoType.AdminMessage);
         int messageId = Integer.parseInt(request.getParameter("messageId"));
         if (adminMessageDao.deleteById(messageId)){
-            request.setAttribute("info", "Message deleted.");
+            request.getSession().setAttribute("info", "Message deleted.");
         }else {
-            request.setAttribute("error", "Error deleting Message.");
+            request.getSession().setAttribute("error", "Error deleting Message.");
         }
         response.sendRedirect("inbox");
     }

@@ -25,7 +25,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         String userName = request.getParameter("username");
         User user = userRepository.findByUserName(userName);
         if (user == null) {
-            request.setAttribute("error", "Wrong username");
+            request.getSession().setAttribute("error", "Wrong username");
             request.getRequestDispatcher("forgot").forward(request, response);
             return;
         }
@@ -37,10 +37,10 @@ public class ForgotPasswordServlet extends HttpServlet {
         user.setPassword(passwordHash);
         userRepository.update(user);
         if (PasswordRecovery.send(user, passwordBuilder.toString())) {
-            request.setAttribute("info", "Password recovery mail sent to " + user.getMail());
+            request.getSession().setAttribute("info", "Password recovery mail sent to " + user.getMail());
             request.getRequestDispatcher("").forward(request, response);
         } else {
-            request.setAttribute("error", "Your mail is invalid. you have to create a new Account");
+            request.getSession().setAttribute("error", "Your mail is invalid. you have to create a new Account");
             request.getRequestDispatcher("register").forward(request, response);
         }
     }

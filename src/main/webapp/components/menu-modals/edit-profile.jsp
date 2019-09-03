@@ -32,7 +32,7 @@
                     </div>
                     <div class="form-group">
                         <label for="mail">E-mail</label>
-                        <input type="email" class="form-control" disabled name="mail" id="mail" placeholder="" required>
+                        <input type="email" class="form-control" disabled name="mail" id="mail" placeholder="${sessionScope.user.mail}" required>
                     </div>
                     <div class="form-group">
                         <label for="username">First Name</label>

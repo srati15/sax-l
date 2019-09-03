@@ -20,7 +20,7 @@ public class MessageToAdminServlet extends HttpServlet {
         String messageText = request.getParameter("message");
         String subject = request.getParameter("subject");
         manager.insert(new AdminMessage(name, mail, subject, messageText, LocalDateTime.now(), false));
-        request.setAttribute("info", "Message received. We will reply shortly");
+        request.getSession().setAttribute("info", "Message received. We will reply shortly");
         response.sendRedirect("contact");
     }
 

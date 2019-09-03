@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -35,19 +36,20 @@ public class LoginServlet extends HttpServlet {
         String passwordHash = Cracker.code(request.getParameter("password"));
         User user = userRepository.findByUserName(userName);
         if (user == null) {
-            request.setAttribute("error", "Wrong login credentials");
+            request.getSession().setAttribute("error", "Wrong login credentials");
             logger.error("User with username {} deosn't exist", userName);
             response.sendRedirect("/");
             return;
         }
         if (!user.getPassword().equals(passwordHash)) {
-            request.setAttribute("error", "Wrong login credentials");
+            request.getSession().setAttribute("error", "Wrong login credentials");
             logger.debug("Wrong login credentials");
             response.sendRedirect("/");
             return;
         }
         request.getSession().setAttribute("user", user);
-        request.setAttribute("info", "Successful login.\n"+user.getUserName()+", Welcome to Sax-L");
+        request.getSession().setAttribute("info", "Successful login.\n"+user.getUserName()+", Welcome to Sax-L");
+        logger.info("Successful login, {}", userName);
         Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");
         userMap.put(user.getId(), user);
         ActivityDao activityDao = manager.getDao(DaoType.Activity);

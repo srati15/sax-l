@@ -1,12 +1,13 @@
 package dao;
 
 import database.CreateConnection;
-import datatypes.announcement.Announcement;
+import datatypes.toast.Toast;
 import enums.DaoType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -14,42 +15,42 @@ import static dao.helpers.FinalBlockExecutor.executeFinalBlock;
 import static dao.helpers.FinalBlockExecutor.rollback;
 import static dao.helpers.QueryGenerator.*;
 
-public class ToastDao implements Dao<Integer, Announcement> {
+public class ToastDao implements Dao<Integer, Toast> {
     private static final Logger logger = LogManager.getLogger(ToastDao.class);
 
-    private static final String ANNOUNCEMENT_ID = "id";
+    private static final String TOAST_ID = "id";
     private static final String USER_ID = "user_id";
-    private static final String ANNOUNCEMENT_TEXT = "announcement_text";
-    private static final String HYPERLINK = "hyperlink";
-    private static final String STATUS = "active";
-    private static final String TABLE_NAME = "announcements";
+    private static final String TITLE = "title";
+    private static final String TOAST_TEXT = "toast_text";
+    private static final String DATE_CREATED = "date_created";
+    private static final String TABLE_NAME = "toast";
 
-    private final DBRowMapper<Announcement> mapper = new AnnouncementMapper();
-    private final Cao<Integer, Announcement> cao = new Cao<>();
+    private final DBRowMapper<Toast> mapper = new ToastMapper();
+    private final Cao<Integer, Toast> cao = new Cao<>();
     private final AtomicBoolean isCached = new AtomicBoolean(false);
 
     public ToastDao() {
     }
 
     @Override
-    public Announcement findById(Integer id) {
+    public Toast findById(Integer id) {
         if (!isCached.get()) cache();
         return cao.findById(id);
     }
 
 
     @Override
-    public boolean insert(Announcement entity) {
+    public boolean insert(Toast entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
         try {
-            String query = getInsertQuery(TABLE_NAME, ANNOUNCEMENT_TEXT, HYPERLINK, STATUS, USER_ID);
+            String query = getInsertQuery(TABLE_NAME, TOAST_TEXT, USER_ID, DATE_CREATED, TITLE);
             statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, entity.getAnnouncementText());
-            statement.setString(2, entity.getHyperLink());
-            statement.setBoolean(3, entity.isActive());
-            statement.setInt(4, entity.getUserId());
+            statement.setString(1, entity.getToastText());
+            statement.setInt(2, entity.getAuthorId());
+            statement.setTimestamp(3, Timestamp.valueOf(entity.getDateCreated()));
+            statement.setString(4, entity.getTitle());
             logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
@@ -58,10 +59,10 @@ public class ToastDao implements Dao<Integer, Announcement> {
                 rs.next();
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
-                logger.info("Announcement inserted successfully {}", entity);
+                logger.info("Toast inserted successfully {}", entity);
                 return true;
             } else
-                logger.error("Error inserting announcement {}", entity);
+                logger.error("Error inserting Toast {}", entity);
         } catch (SQLException e) {
             rollback(connection);
             logger.error(e);
@@ -73,7 +74,7 @@ public class ToastDao implements Dao<Integer, Announcement> {
 
 
     @Override
-    public Collection<Announcement> findAll() {
+    public Collection<Toast> findAll() {
         if (!isCached.get()) cache();
         return cao.findAll();
     }
@@ -83,18 +84,18 @@ public class ToastDao implements Dao<Integer, Announcement> {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
-            String query = getDeleteQuery(TABLE_NAME, ANNOUNCEMENT_ID);
+            String query = getDeleteQuery(TABLE_NAME, TOAST_ID);
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             logger.debug("Executing statement: {}", statement);
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-                logger.info("Announcement Deleted Successfully, {}", findById(id));
+                logger.info("Toast Deleted Successfully, {}", findById(id));
                 cao.delete(id);
                 return true;
             } else
-                logger.error("Error Deleting Announcement");
+                logger.error("Error Deleting Toast");
         } catch (SQLException e) {
             rollback(connection);
             logger.error(e);
@@ -105,16 +106,17 @@ public class ToastDao implements Dao<Integer, Announcement> {
     }
 
     @Override
-    public boolean update(Announcement entity) {
+    public boolean update(Toast entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
-            String query = getUpdateQuery(TABLE_NAME, ANNOUNCEMENT_ID, ANNOUNCEMENT_TEXT, HYPERLINK, STATUS, USER_ID);
+            String query = getUpdateQuery(TABLE_NAME, TOAST_ID, TOAST_TEXT, DATE_CREATED, USER_ID, TITLE);
             statement = connection.prepareStatement(query);
-            statement.setString(1, entity.getAnnouncementText());
-            statement.setString(2, entity.getHyperLink());
-            statement.setBoolean(3, entity.isActive());
-            statement.setInt(4, entity.getUserId());
+            statement.setString(1, entity.getToastText());
+            statement.setTimestamp(2, Timestamp.valueOf(entity.getDateCreated()));
+            statement.setInt(3, entity.getAuthorId());
+            statement.setString(4, entity.getTitle());
+
             statement.setInt(5, entity.getId());
 
             logger.debug("Executing statement: {}", statement);
@@ -122,9 +124,9 @@ public class ToastDao implements Dao<Integer, Announcement> {
             connection.commit();
             if (result == 1) {
                 cao.add(entity);
-                logger.info("Announcement updated sucessfully, {}", entity);
+                logger.info("Toast updated sucessfully, {}", entity);
                 return true;
-            } else logger.error("Error updating announcement {}", entity);
+            } else logger.error("Error updating Toast {}", entity);
         } catch (SQLException e) {
             rollback(connection);
             logger.error(e);
@@ -136,7 +138,7 @@ public class ToastDao implements Dao<Integer, Announcement> {
 
     @Override
     public DaoType getDaoType() {
-        return DaoType.Announcement;
+        return DaoType.Toast;
     }
 
     public void cache() {
@@ -149,8 +151,8 @@ public class ToastDao implements Dao<Integer, Announcement> {
             statement = connection.prepareStatement(query);
             rs = statement.executeQuery();
             while (rs.next()) {
-                Announcement announcement = mapper.mapRow(rs);
-                cao.add(announcement);
+                Toast Toast = mapper.mapRow(rs);
+                cao.add(Toast);
             }
             isCached.set(true);
             logger.info("{} is Cached", this.getClass().getSimpleName());
@@ -162,17 +164,17 @@ public class ToastDao implements Dao<Integer, Announcement> {
         }
     }
 
-    private class AnnouncementMapper implements DBRowMapper<Announcement> {
+    private class ToastMapper implements DBRowMapper<Toast> {
 
         @Override
-        public Announcement mapRow(ResultSet rs) {
+        public Toast mapRow(ResultSet rs) {
             try {
-                int id = rs.getInt(ANNOUNCEMENT_ID);
-                String txt = rs.getString(ANNOUNCEMENT_TEXT);
-                String hyperLink = rs.getString(HYPERLINK);
-                boolean isActive = rs.getBoolean(STATUS);
+                int id = rs.getInt(TOAST_ID);
+                String txt = rs.getString(TOAST_TEXT);
+                String title = rs.getString(TITLE);
                 int userId = rs.getInt(USER_ID);
-                return new Announcement(id, userId, txt, hyperLink, isActive);
+                LocalDateTime dateCreated = rs.getTimestamp(DATE_CREATED).toLocalDateTime();
+                return new Toast(id, userId, title, txt, dateCreated);
             } catch (SQLException e) {
                 logger.error(e);
             }

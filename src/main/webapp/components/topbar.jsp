@@ -30,7 +30,9 @@
                     <jsp:include page="dropdown-notifications.jsp"/>
                 </li>
 
+
             </ul>
         </div>
     </div>
 </nav>
+<jsp:include page="notifications.jsp"/>

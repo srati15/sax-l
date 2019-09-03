@@ -33,13 +33,13 @@ public class RegisterServlet extends HttpServlet {
         String lastName = request.getParameter("lastname");
         String mail = request.getParameter("mail");
         if (!passwordHash.equals(confirmPasswordHash)) {
-            request.setAttribute("error", "Passwords don't match");
+            request.getSession().setAttribute("error", "Passwords don't match");
             logger.error("Passwords don't match");
-            response.sendRedirect("/");
+            request.getRequestDispatcher("/").forward(request, response);
             return;
         }
         if (userRepository.findByUserName(userName) != null) {
-            request.setAttribute("error", "Username is already taken");
+            request.getSession().setAttribute("error", "Username is already taken");
             logger.error("Username is already taken, {}", userName);
             request.getRequestDispatcher("/").forward(request, response);
             return;
@@ -47,7 +47,7 @@ public class RegisterServlet extends HttpServlet {
 
         User user = new User(userName, passwordHash, firstName, lastName, mail);
         DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
-        if (manager.insert(user)) request.setAttribute("info", "Registration is successful.\n"+user.getUserName()+", Welcome to Sax-L");
+        if (manager.insert(user)) request.getSession().setAttribute("info", "Registration is successful.\n"+user.getUserName()+", Welcome to Sax-L");
 
         request.getSession().setAttribute("user", user);
         Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");

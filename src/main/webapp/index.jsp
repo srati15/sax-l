@@ -30,7 +30,6 @@
     <div id="content">
         <jsp:include page="components/topbar.jsp"/>
         <jsp:include page="components/timeline.jsp"/>
-
     </div>
 </div>
 
