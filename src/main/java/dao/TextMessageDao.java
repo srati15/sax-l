@@ -3,7 +3,10 @@ package dao;
 import database.CreateConnection;
 import datatypes.messages.Message;
 import datatypes.messages.TextMessage;
+import datatypes.promise.DaoResult;
+import datatypes.promise.Promise;
 import enums.DaoType;
+import enums.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +44,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
     }
 
     @Override
-    public boolean insert(TextMessage entity) {
+    public Promise insert(TextMessage entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -61,7 +64,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
                 logger.info("Text Message inserted successfully, {}", entity);
-                return true;
+                return new DaoResult(Level.INFO, "Message sent");
             }
             else logger.error("Error inserting Text Message, {}", entity);
 
@@ -71,7 +74,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
         }finally {
             executeFinalBlock(connection, statement, rs);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Message not sent, please try again..");
     }
 
     @Override
@@ -81,7 +84,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
     }
 
     @Override
-    public boolean deleteById(Integer id) {
+    public Promise deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -94,7 +97,7 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
             if(result == 1){
                 logger.info("message Deleted Successfully, {}", findById(id));
                 cao.delete(id);
-                return true;
+                return new DaoResult(Level.INFO, "Message deleted");
             }
             else
                 logger.error("Error Deleting message, {}", findById(id));
@@ -104,11 +107,11 @@ public class TextMessageDao implements Dao<Integer, TextMessage> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error deleting message, please try again..");
     }
     @Deprecated
     @Override
-    public boolean update(TextMessage entity) {
+    public Promise update(TextMessage entity) {
         throw new UnsupportedOperationException();
     }
 

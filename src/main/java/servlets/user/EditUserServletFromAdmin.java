@@ -1,6 +1,7 @@
 package servlets.user;
 
 import dao.UserDao;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import enums.DaoType;
 import enums.FormFields;
@@ -40,8 +41,8 @@ public class EditUserServletFromAdmin extends HttpServlet {
         editedUser.setPassword(Cracker.code(password));
         editedUser.setFirstName(firstName);
         editedUser.setLastName(lastName);
-        manager.update(editedUser);
-        request.getSession().setAttribute("info", "Profile updated successfully");
+        Promise promise =manager.update(editedUser);
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         request.getRequestDispatcher("users-list").forward(request, response);
     }
 }

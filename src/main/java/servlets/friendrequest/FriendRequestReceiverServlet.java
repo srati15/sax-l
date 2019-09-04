@@ -1,5 +1,6 @@
 package servlets.friendrequest;
 
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import datatypes.messages.FriendRequest;
 import enums.RequestStatus;
@@ -23,7 +24,8 @@ public class FriendRequestReceiverServlet extends HttpServlet {
         int receiverId = Integer.parseInt(request.getParameter("receiverId"));
         Timestamp dateSent = Timestamp.valueOf(LocalDateTime.now());
         FriendRequest friendRequest = new FriendRequest(user.getId(), receiverId, RequestStatus.Pending, dateSent.toLocalDateTime() );
-        manager.insert(friendRequest);
+        Promise promise = manager.insert(friendRequest);
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         response.sendRedirect("user-profile?userid=" + receiverId);
     }
 }

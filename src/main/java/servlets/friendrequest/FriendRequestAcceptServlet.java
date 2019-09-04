@@ -2,6 +2,7 @@ package servlets.friendrequest;
 
 import dao.FriendRequestDao;
 import datatypes.messages.FriendRequest;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import enums.DaoType;
 import enums.RequestStatus;
@@ -12,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/FriendRequestAcceptServlet")
@@ -25,15 +27,16 @@ public class FriendRequestAcceptServlet extends HttpServlet {
         FriendRequest request1 = friendRequestDao.findBySenderReceiverId(user.getId(), receiverId);
         FriendRequest request2 = friendRequestDao.findBySenderReceiverId(receiverId, user.getId());
         if (request1 != null) {
-            removeFromNotifications(manager, request1);
+            removeFromNotifications(manager, request1, request.getSession());
         } else if (request2 != null) {
-            removeFromNotifications(manager, request2);
+            removeFromNotifications(manager, request2, request.getSession());
         };
         response.sendRedirect("profile");
     }
 
-    private void removeFromNotifications(DaoManager manager, FriendRequest request2) {
+    private void removeFromNotifications(DaoManager manager, FriendRequest request2, HttpSession session) {
         request2.setStatus(RequestStatus.Accepted);
-        manager.update(request2);
+        Promise promise = manager.update(request2);
+        session.setAttribute(promise.getLevel().getValue(), promise.getText());
     }
 }

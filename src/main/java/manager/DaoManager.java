@@ -7,12 +7,14 @@ import datatypes.messages.AdminMessage;
 import datatypes.messages.AdminReply;
 import datatypes.messages.FriendRequest;
 import datatypes.messages.TextMessage;
+import datatypes.promise.Promise;
 import datatypes.server.Activity;
 import datatypes.toast.Toast;
 import datatypes.user.Person;
 import datatypes.user.User;
 import datatypes.user.UserAchievement;
 import enums.DaoType;
+import enums.Level;
 import enums.RequestStatus;
 import mail.ReplySender;
 import org.apache.logging.log4j.LogManager;
@@ -111,22 +113,24 @@ public class DaoManager {
         return (E) map.get(daoType);
     }
 
-    public void insert(FriendRequest friendRequest) {
-        if (friendRequestDao.insert(friendRequest)) {
+    public Promise insert(FriendRequest friendRequest) {
+        Promise promise = friendRequestDao.insert(friendRequest);
+        if (promise.getLevel() == Level.INFO) {
             Person sender = userDao.findById(friendRequest.getSenderId());
             User receiver = userDao.findById(friendRequest.getReceiverId());
             receiver.getPendingFriendRequests().add(sender);
             activityDao.insert(new Activity(sender.getId(), "sent friend request to " + receiver.getUserName(), LocalDateTime.now()));
         }
+        return promise;
     }
 
 
-    public void delete(User deleteUser) {
+    public Promise delete(User deleteUser) {
+        Promise promise = userDao.deleteById(deleteUser.getId());
         executor.execute(() -> {
-            if (userDao.deleteById(deleteUser.getId())) {
+            if (promise.getLevel() == Level.INFO) {
                 activityDao.insert(new Activity(deleteUser.getId(), "'s account is being removed", LocalDateTime.now()));
                 deleteUser.getAchievements().forEach(achievement -> userAchievementDao.deleteById(achievement.getId()));
-
                 friendRequestDao.findAllForUser(deleteUser.getId()).forEach(friendRequest -> friendRequestDao.deleteById(friendRequest.getId()));
                 deleteUser.getTextMessages().values().forEach(textMessages -> textMessages.forEach(textMessage -> textMessageDao.deleteById(textMessage.getId())));
                 activityDao.findAll().stream().filter(activity -> activity.getUserId() == deleteUser.getId()).forEach(activity -> activityDao.deleteById(activity.getId()));
@@ -135,22 +139,27 @@ public class DaoManager {
                 logger.error("Unable to delete user, {}", deleteUser);
             }
         });
+        return promise;
     }
 
-    private void insert(UserAchievement userAchievement) {
+    private Promise insert(UserAchievement userAchievement) {
+        Promise promise = userAchievementDao.insert(userAchievement);
         executor.execute(() -> {
-            if (userAchievementDao.insert(userAchievement)) {
+            if (promise.getLevel() == Level.INFO) {
                 userDao.findById(userAchievement.getUserId()).getAchievements().add(userAchievement);
                 activityDao.insert(new Activity(userAchievement.getUserId(), "gained achievement " + userAchievement.getAchievement().getAchievementName(), LocalDateTime.now()));
             }
         });
+        return promise;
     }
 
-    public void insert(TextMessage mes) {
-        if (textMessageDao.insert(mes)) {
+    public Promise insert(TextMessage mes) {
+        Promise promise = textMessageDao.insert(mes);
+        if (promise.getLevel() == Level.INFO) {
             activityDao.insert(new Activity(mes.getSenderId(), "sent message to " + userDao.findById(mes.getReceiverId()), LocalDateTime.now()));
             setMessages(mes);
         }
+        return promise;
     }
 
     private void setMessages(TextMessage mes) {
@@ -164,18 +173,20 @@ public class DaoManager {
         receiver.getTextMessages().get(sender.getUserName()).add(mes);
     }
 
-    public void update(FriendRequest request) {
-        friendRequestDao.update(request);
+    public Promise update(FriendRequest request) {
+        Promise promise = friendRequestDao.update(request);
         User receiver = userDao.findById(request.getReceiverId());
         User sender = userDao.findById(request.getSenderId());
         sender.getFriends().add(receiver);
         receiver.getFriends().add(sender);
         receiver.getPendingFriendRequests().remove(sender);
         activityDao.insert(new Activity(receiver.getId(), "accepted " + sender.getUserName() + "'s friend request", LocalDateTime.now()));
+        return promise;
     }
 
-    public void delete(FriendRequest request) {
-        if (friendRequestDao.deleteById(request.getId())) {
+    public Promise delete(FriendRequest request) {
+        Promise promise = friendRequestDao.deleteById(request.getId());
+        if (promise.getLevel() == Level.INFO) {
             User sender = userDao.findById(request.getSenderId());
             User receiver = userDao.findById(request.getReceiverId());
             sender.getFriends().remove(receiver);
@@ -183,48 +194,53 @@ public class DaoManager {
             receiver.getPendingFriendRequests().remove(sender);
             activityDao.insert(new Activity(receiver.getId(), "rejected friendship with " + sender.getUserName(), LocalDateTime.now()));
         }
+        return promise;
     }
 
-    public boolean insert(User user) {
-        if (userDao.insert(user)) {
+    public Promise insert(User user) {
+        Promise promise = userDao.insert(user);
+        if (promise.getLevel() == Level.INFO) {
             activityDao.insert(new Activity(user.getId(), "Registered", LocalDateTime.now()));
-            return true;
         }
-        return false;
+        return promise;
     }
 
-    public boolean update(User user) {
-        if (userDao.update(user)) {
+    public Promise update(User user) {
+        Promise promise = userDao.update(user);
+        if (promise.getLevel() == Level.INFO) {
             activityDao.insert(new Activity(user.getId(), "updated profile", LocalDateTime.now()));
-            return true;
         }
-        return false;
+        return promise;
     }
 
-    public void insert(Announcement announcement) {
-        if (announcementDao.insert(announcement)) {
+    public Promise insert(Announcement announcement) {
+        Promise promise = announcementDao.insert(announcement);
+        if (promise.getLevel() == Level.INFO) {
             activityDao.insert(new Activity(announcement.getUserId(), "created announcement " + announcement, LocalDateTime.now()));
         }
+        return promise;
     }
 
-    public void update(Announcement announcement) {
-        if (announcementDao.update(announcement)) {
+    public Promise update(Announcement announcement) {
+        Promise promise = announcementDao.update(announcement);
+        if (promise.getLevel() == Level.INFO) {
             activityDao.insert(new Activity(announcement.getUserId(), "updated announcement " + announcement, LocalDateTime.now()));
         }
+        return promise;
     }
 
-    public void delete(Integer deleterId, Announcement announcement) {
-        if (announcementDao.deleteById(announcement.getId())) {
+    public Promise delete(Integer deleterId, Announcement announcement) {
+        Promise promise = announcementDao.deleteById(announcement.getId());
+        if (promise.getLevel() == Level.INFO) {
             activityDao.insert(new Activity(deleterId, "deleted announcement", LocalDateTime.now()));
         }
+        return promise;
     }
 
 
     public void shutDown() {
         logger.info("DaoManager is shutting down..");
-        executor.execute(() -> {
-            activityDao.shutDown();
-        });
+        executor.execute(activityDao::shutDown);
         awaitTerminationAfterShutdown(executor);
         logger.info("Dao manager has shut down !!");
     }
@@ -241,23 +257,24 @@ public class DaoManager {
         }
     }
 
-    public void insert(AdminMessage adminMessage) {
-        adminMessageDao.insert(adminMessage);
+    public Promise insert(AdminMessage adminMessage) {
+        return adminMessageDao.insert(adminMessage);
     }
 
-    public boolean insert(AdminReply adminReply) {
+    public Promise insert(AdminReply adminReply) {
+        Promise promise = adminReplyMessageDao.insert(adminReply);
         executor.execute(() -> {
-            if (adminReplyMessageDao.insert(adminReply)) {
+            if (promise.getLevel() == Level.INFO) {
                 ReplySender.send(adminMessageDao.findById(adminReply.getMessageId()), adminReply.getReplyText());
                 AdminMessage message = adminMessageDao.findById(adminReply.getMessageId());
                 message.setSeen(true);
                 adminMessageDao.update(message);
             }
         });
-        return true;
+        return promise;
     }
 
-    public boolean insert(Toast toast) {
+    public Promise insert(Toast toast) {
         return toastDao.insert(toast);
     }
 }

@@ -1,8 +1,11 @@
 package dao;
 
 import database.CreateConnection;
+import datatypes.promise.DaoResult;
+import datatypes.promise.Promise;
 import datatypes.toast.Toast;
 import enums.DaoType;
+import enums.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +43,7 @@ public class ToastDao implements Dao<Integer, Toast> {
 
 
     @Override
-    public boolean insert(Toast entity) {
+    public Promise insert(Toast entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -60,7 +63,7 @@ public class ToastDao implements Dao<Integer, Toast> {
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
                 logger.info("Toast inserted successfully {}", entity);
-                return true;
+                return new DaoResult(Level.INFO, "Toast created successfully");
             } else
                 logger.error("Error inserting Toast {}", entity);
         } catch (SQLException e) {
@@ -69,7 +72,7 @@ public class ToastDao implements Dao<Integer, Toast> {
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error creating Toast, please try again..");
     }
 
 
@@ -80,7 +83,7 @@ public class ToastDao implements Dao<Integer, Toast> {
     }
 
     @Override
-    public boolean deleteById(Integer id) {
+    public Promise deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -93,7 +96,7 @@ public class ToastDao implements Dao<Integer, Toast> {
             if (result == 1) {
                 logger.info("Toast Deleted Successfully, {}", findById(id));
                 cao.delete(id);
-                return true;
+                return new DaoResult(Level.INFO, "Toast deleted successfully");
             } else
                 logger.error("Error Deleting Toast");
         } catch (SQLException e) {
@@ -102,11 +105,11 @@ public class ToastDao implements Dao<Integer, Toast> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error deleting Toast, please try again");
     }
 
     @Override
-    public boolean update(Toast entity) {
+    public Promise update(Toast entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -125,7 +128,7 @@ public class ToastDao implements Dao<Integer, Toast> {
             if (result == 1) {
                 cao.add(entity);
                 logger.info("Toast updated sucessfully, {}", entity);
-                return true;
+                return new DaoResult(Level.INFO, "Toast updated successfully");
             } else logger.error("Error updating Toast {}", entity);
         } catch (SQLException e) {
             rollback(connection);
@@ -133,7 +136,7 @@ public class ToastDao implements Dao<Integer, Toast> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error updating Toast");
     }
 
     @Override

@@ -2,6 +2,7 @@ package servlets.messages;
 
 import dao.AdminMessageDao;
 import datatypes.messages.AdminMessage;
+import datatypes.promise.Promise;
 import enums.DaoType;
 import manager.DaoManager;
 
@@ -19,11 +20,8 @@ public class DeleteInboxMessageServlet extends HttpServlet {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
         AdminMessageDao adminMessageDao = manager.getDao(DaoType.AdminMessage);
         int messageId = Integer.parseInt(request.getParameter("messageId"));
-        if (adminMessageDao.deleteById(messageId)){
-            request.getSession().setAttribute("info", "Message deleted.");
-        }else {
-            request.getSession().setAttribute("error", "Error deleting Message.");
-        }
+        Promise promise = adminMessageDao.deleteById(messageId);
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         response.sendRedirect("inbox");
     }
 

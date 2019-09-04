@@ -1,6 +1,7 @@
 package servlets.messages;
 
 import dao.TextMessageDao;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import datatypes.messages.TextMessage;
 import enums.DaoType;
@@ -24,8 +25,8 @@ public class TextMessageServlet extends HttpServlet {
         Timestamp dateSent = Timestamp.valueOf(LocalDateTime.now());
         String message = request.getParameter("msg");
         TextMessage mes = new TextMessage(user.getId(), receiverId, dateSent.toLocalDateTime(), message);
-        manager.insert(mes);
-        request.getSession().setAttribute("info", "Message sent");
+        Promise promise = manager.insert(mes);
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         response.sendRedirect("user-profile?userid=" + receiverId);
     }
 

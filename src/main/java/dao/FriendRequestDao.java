@@ -2,7 +2,10 @@ package dao;
 
 import database.CreateConnection;
 import datatypes.messages.FriendRequest;
+import datatypes.promise.DaoResult;
+import datatypes.promise.Promise;
 import enums.DaoType;
+import enums.Level;
 import enums.RequestStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +41,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
     }
 
     @Override
-    public boolean insert(FriendRequest entity) {
+    public Promise insert(FriendRequest entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -59,7 +62,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
                 entity.setId(id);
                 cao.add(entity);
                 logger.info("Request Added Successfully");
-                return true;
+                return new DaoResult(Level.INFO, "Request is successful");
             } else
                 logger.error("Error Adding Request");
         } catch (SQLException e) {
@@ -68,7 +71,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error sending friend request, please try again..");
     }
 
     @Override
@@ -78,7 +81,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
     }
 
     @Override
-    public boolean deleteById(Integer id) {
+    public Promise deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -91,7 +94,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             if (result == 1) {
                 logger.info("Request Deleted Successfully, {}", findById(id));
                 cao.delete(id);
-                return true;
+                return new DaoResult(Level.INFO, "Request deleted");
             } else
                 logger.error("Error Deleting Request");
         } catch (SQLException e) {
@@ -100,11 +103,11 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error deleting request, please try again");
     }
 
     @Override
-    public boolean update(FriendRequest entity) {
+    public Promise update(FriendRequest entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -118,7 +121,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
             if (result == 1) {
                 logger.info("Request accepted Successfully, {}", entity);
                 cao.add(entity);
-                return true;
+                return new DaoResult(Level.INFO, "Request updated");
             } else
                 logger.error("Error accepting Request, {}",entity);
         } catch (SQLException e) {
@@ -127,7 +130,7 @@ public class FriendRequestDao implements Dao<Integer, FriendRequest> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.INFO, "Error updating request");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package servlets.announcement;
 
 import datatypes.announcement.Announcement;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import enums.FormFields;
 import manager.DaoManager;
@@ -21,8 +22,8 @@ public class CreateAnnouncementServlet extends HttpServlet {
         String hyperlink = request.getParameter("hyperlink");
         boolean active = request.getParameter(FormFields.activeOrNot.getValue()).equals("Active");
         Announcement announcement = new Announcement(user.getId(), announcementText, hyperlink, active);
-        manager.insert(announcement);
-        request.getSession().setAttribute("info", "Announcement created successfully");
+        Promise promise = manager.insert(announcement);
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         response.sendRedirect("announcements");
     }
 

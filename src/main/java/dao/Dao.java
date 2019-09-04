@@ -1,5 +1,6 @@
 package dao;
 
+import datatypes.promise.Promise;
 import enums.DaoType;
 
 import java.util.Collection;
@@ -7,13 +8,13 @@ import java.util.Collection;
 public interface Dao<ID, D> {
     D findById(ID id);
 
-    boolean insert(D entity);
+    Promise insert(D entity);
 
     Collection<D> findAll();
 
-    boolean deleteById(ID id);
+    Promise deleteById(ID id);
 
-    boolean update(D entity);
+    Promise update(D entity);
 
     DaoType getDaoType();
 

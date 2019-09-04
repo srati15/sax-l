@@ -1,9 +1,12 @@
 package dao;
 
 import database.CreateConnection;
+import datatypes.promise.DaoResult;
+import datatypes.promise.Promise;
 import datatypes.user.Achievement;
 import datatypes.user.UserAchievement;
 import enums.DaoType;
+import enums.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,7 +37,7 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
     }
 
     @Override
-    public boolean insert(UserAchievement entity) {
+    public Promise insert(UserAchievement entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -53,7 +56,7 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
                 rs.next();
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
-                return true;
+                return new DaoResult(Level.INFO, "Congratulations, you gained Achievement "+entity.getAchievement().getAchievementName());
             }
             else logger.error("Error inserting User Achievement, {}", entity);
 
@@ -63,7 +66,7 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error inserting achievement");
     }
 
     @Override
@@ -72,7 +75,7 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
         return cao.findAll();
     }
     @Override
-    public boolean deleteById(Integer id) {
+    public Promise deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -85,7 +88,7 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
             if (result == 1) {
                 logger.info("User Achievement Deleted Successfully, {}", findById(id));
                 cao.delete(id);
-                return true;
+                return new DaoResult(Level.INFO, "You lost Achievement :(");
             } else
                 logger.error("Error Deleting User Achievement");
         } catch (SQLException e) {
@@ -94,11 +97,11 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error deleting achievement");
     }
     @Deprecated
     @Override
-    public boolean update(UserAchievement entity) {
+    public Promise update(UserAchievement entity) {
         throw new UnsupportedOperationException();
     }
 
@@ -147,7 +150,7 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
         }
 
         @Override
-        public boolean insert(Achievement entity) {
+        public Promise insert(Achievement entity) {
             throw new UnsupportedOperationException("You can't add achievement manually");
         }
 
@@ -158,12 +161,12 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
         }
 
         @Override
-        public boolean deleteById(Integer integer) {
+        public Promise deleteById(Integer integer) {
             throw new UnsupportedOperationException("You can't delete achievement manually");
         }
 
         @Override
-        public boolean update(Achievement entity) {
+        public Promise update(Achievement entity) {
             throw new UnsupportedOperationException("You can't update achievement manually");
         }
 
@@ -200,12 +203,12 @@ public class UserAchievementDao implements Dao<Integer, UserAchievement> {
             return findAll().stream().filter(achievement->achievement.getAchievementName().equals(achievementName)).findFirst().get();
         }
     }
-    private class AchievementMapper implements DBRowMapper<Achievement> {
-        public static final String ACHIEVEMENT_ID = "id";
-        public static final String ACHIEVEMENT_NAME = "achievement_name";
-        public static final String ACHIEVEMENT_CRITERIA = "achievement_criteria";
+    private static class AchievementMapper implements DBRowMapper<Achievement> {
+        static final String ACHIEVEMENT_ID = "id";
+        static final String ACHIEVEMENT_NAME = "achievement_name";
+        static final String ACHIEVEMENT_CRITERIA = "achievement_criteria";
 
-        public static final String TABLE_NAME = "achievements";
+        static final String TABLE_NAME = "achievements";
         @Override
         public Achievement mapRow(ResultSet rs) {
             try {

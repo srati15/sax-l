@@ -1,6 +1,7 @@
 package servlets.messages;
 
 import datatypes.messages.AdminMessage;
+import datatypes.promise.Promise;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -19,8 +20,8 @@ public class MessageToAdminServlet extends HttpServlet {
         String mail = request.getParameter("mail");
         String messageText = request.getParameter("message");
         String subject = request.getParameter("subject");
-        manager.insert(new AdminMessage(name, mail, subject, messageText, LocalDateTime.now(), false));
-        request.getSession().setAttribute("info", "Message received. We will reply shortly");
+        Promise promise = manager.insert(new AdminMessage(name, mail, subject, messageText, LocalDateTime.now(), false));
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         response.sendRedirect("contact");
     }
 

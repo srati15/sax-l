@@ -1,6 +1,7 @@
 package servlets.user;
 
 import dao.UserDao;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import enums.DaoType;
 import enums.FormFields;
@@ -46,8 +47,8 @@ public class CreateUserServlet extends HttpServlet {
 
         User user = new User(userName, Cracker.code(password), firstName, lastName, mail);
         user.setUserType(userType);
-        if (manager.insert(user)) request.getSession().setAttribute("info", "Registration is successful");
-
+        Promise promise = manager.insert(user);
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         response.sendRedirect("users-list");
     }
 }

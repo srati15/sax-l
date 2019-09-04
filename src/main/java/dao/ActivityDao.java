@@ -1,8 +1,11 @@
 package dao;
 
 import database.CreateConnection;
+import datatypes.promise.DaoResult;
+import datatypes.promise.Promise;
 import datatypes.server.Activity;
 import enums.DaoType;
+import enums.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,9 +51,9 @@ public class ActivityDao implements Dao<Integer, Activity> {
 
 
     @Override
-    public boolean insert(Activity entity) {
+    public Promise insert(Activity entity) {
         executor.execute(new InsertTask(entity));
-        return true;
+        return new DaoResult(Level.INFO, "Activity inserted successfully");
     }
 
     @Override
@@ -60,7 +63,7 @@ public class ActivityDao implements Dao<Integer, Activity> {
     }
 
     @Override
-    public boolean deleteById(Integer id) {
+    public Promise deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -70,9 +73,9 @@ public class ActivityDao implements Dao<Integer, Activity> {
             int result = statement.executeUpdate();
             connection.commit();
             if (result == 1) {
-
                 logger.info("Activity Deleted Successfully, {}",findById(id));
                 cao.delete(id);
+                return new DaoResult(Level.INFO, "Activity deleted successfully");
             } else
                 logger.error("Error Deleting Activity, {}", findById(id));
         } catch (SQLException e) {
@@ -81,11 +84,11 @@ public class ActivityDao implements Dao<Integer, Activity> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error deleting activity");
     }
 
     @Override
-    public boolean update(Activity entity) {
+    public Promise update(Activity entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -101,7 +104,7 @@ public class ActivityDao implements Dao<Integer, Activity> {
             if (result == 1) {
                 cao.add(entity);
                 logger.info("Activity updated sucessfully, {}", entity);
-                return true;
+                return new DaoResult(Level.INFO, "Activity updated sucessfully");
             } else logger.error("Error updating Activity, {}", entity);
         } catch (SQLException e) {
             rollback(connection);
@@ -109,7 +112,7 @@ public class ActivityDao implements Dao<Integer, Activity> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error updating Activity");
     }
 
     @Override

@@ -2,6 +2,7 @@ package servlets.friendrequest;
 
 import dao.FriendRequestDao;
 import datatypes.messages.FriendRequest;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import enums.DaoType;
 import enums.RequestStatus;
@@ -26,7 +27,8 @@ public class FriendRequestSenderServlet extends HttpServlet {
         int receiverId = Integer.parseInt(request.getParameter("receiverId"));
         Timestamp dateSent = Timestamp.valueOf(LocalDateTime.now());
         FriendRequest friendRequest = new FriendRequest(user.getId(), receiverId, RequestStatus.Pending, dateSent.toLocalDateTime() );
-        manager.insert(friendRequest);
+        Promise promise = manager.insert(friendRequest);
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         request.getRequestDispatcher("user-profile?userid=" + receiverId).forward(request, response);
     }
 

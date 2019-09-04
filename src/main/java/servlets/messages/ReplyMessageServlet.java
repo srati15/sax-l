@@ -2,6 +2,7 @@ package servlets.messages;
 
 import datatypes.messages.AdminMessage;
 import datatypes.messages.AdminReply;
+import datatypes.promise.Promise;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -18,11 +19,9 @@ public class ReplyMessageServlet extends HttpServlet {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
         int messageId = Integer.parseInt(request.getParameter("messageId"));
         String messageText = request.getParameter("replyText");
-        if (manager.insert(new AdminReply(messageId, messageText, LocalDateTime.now()))){
-            request.getSession().setAttribute("info", "Message sent.");
-        }else {
-            request.getSession().setAttribute("error", "Error sending mail");
-        }
+        Promise promise = manager.insert(new AdminReply(messageId, messageText, LocalDateTime.now()));
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
+
         response.sendRedirect("inbox");
     }
 

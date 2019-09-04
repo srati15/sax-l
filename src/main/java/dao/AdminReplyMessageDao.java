@@ -3,7 +3,10 @@ package dao;
 import database.CreateConnection;
 import datatypes.messages.AdminReply;
 import datatypes.messages.AdminReply;
+import datatypes.promise.DaoResult;
+import datatypes.promise.Promise;
 import enums.DaoType;
+import enums.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,7 +39,7 @@ public class AdminReplyMessageDao implements Dao<Integer, AdminReply> {
     }
 
     @Override
-    public boolean insert(AdminReply entity) {
+    public Promise insert(AdminReply entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -55,7 +58,7 @@ public class AdminReplyMessageDao implements Dao<Integer, AdminReply> {
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
                 logger.info("Message from admin inserted successfully {}", entity);
-                return true;
+                return new DaoResult(Level.INFO, "Message sent");
             } else
                 logger.error("Error inserting Message from admin {}", entity);
         } catch (SQLException e) {
@@ -64,7 +67,7 @@ public class AdminReplyMessageDao implements Dao<Integer, AdminReply> {
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Message not sent, please try again..");
     }
 
     @Override
@@ -74,7 +77,7 @@ public class AdminReplyMessageDao implements Dao<Integer, AdminReply> {
     }
 
     @Override
-    public boolean deleteById(Integer id) {
+    public Promise deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -87,7 +90,7 @@ public class AdminReplyMessageDao implements Dao<Integer, AdminReply> {
             if (result == 1) {
                 logger.info("Admin's Message deleted sucessfully, {}", findById(id));
                 cao.delete(id);
-                return true;
+                return new DaoResult(Level.INFO, "Message deleted");
             } else {
                 logger.error("Error deleting Admin's Reply, {}", findById(id));
             }
@@ -96,11 +99,11 @@ public class AdminReplyMessageDao implements Dao<Integer, AdminReply> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error deleting message, please try again..");
     }
 
     @Deprecated
-    public boolean update(AdminReply AdminReply) {
+    public Promise update(AdminReply AdminReply) {
         throw new UnsupportedOperationException();
     }
 

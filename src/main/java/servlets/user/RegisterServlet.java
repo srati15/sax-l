@@ -2,6 +2,7 @@ package servlets.user;
 
 import dao.ActivityDao;
 import dao.UserDao;
+import datatypes.promise.Promise;
 import datatypes.server.Activity;
 import datatypes.user.User;
 import enums.DaoType;
@@ -47,7 +48,8 @@ public class RegisterServlet extends HttpServlet {
 
         User user = new User(userName, passwordHash, firstName, lastName, mail);
         DaoManager manager = (DaoManager) getServletContext().getAttribute("manager");
-        if (manager.insert(user)) request.getSession().setAttribute("info", "Registration is successful.\n"+user.getUserName()+", Welcome to Sax-L");
+        Promise promise = manager.insert(user);
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
 
         request.getSession().setAttribute("user", user);
         Map<Integer, User> userMap = (Map<Integer, User>) request.getServletContext().getAttribute("onlineUsers");

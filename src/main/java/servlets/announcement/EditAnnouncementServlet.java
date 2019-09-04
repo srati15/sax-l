@@ -1,6 +1,7 @@
 package servlets.announcement;
 
 import datatypes.announcement.Announcement;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import manager.DaoManager;
 
@@ -22,8 +23,8 @@ public class EditAnnouncementServlet extends HttpServlet {
         boolean active = request.getParameter("activeOrNot").equals("Active");
         int id = Integer.parseInt(request.getParameter("editAnnouncementId"));
         Announcement announcement = new Announcement(id, user.getId(), announcementText, hyperlink, active);
-        manager.update(announcement);
-        request.getSession().setAttribute("info", "Announcement updated successfully");
+        Promise promise = manager.update(announcement);
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         response.sendRedirect("announcements");
     }
 

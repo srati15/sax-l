@@ -1,8 +1,10 @@
 package servlets.user;
 
 import dao.UserDao;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import enums.DaoType;
+import enums.Level;
 import enums.UserType;
 import manager.DaoManager;
 import org.apache.logging.log4j.LogManager;
@@ -25,10 +27,13 @@ public class PromoteUserServlet extends HttpServlet {
         UserDao userDao = manager.getDao(DaoType.User);
         User promotable = userDao.findById(promotableUserId);
         promotable.setUserType(UserType.Admin);
-        if (manager.update(promotable)){
+        Promise promise = manager.update(promotable);
+        if (promise.getLevel() == Level.INFO){
             logger.info("{} is promoted to Admin", promotable.getUserName());
+            request.getSession().setAttribute("info", promotable.getUserName() +" is promoted to Admin");
         }else {
             logger.error("Error promoting {}", promotable.getUserName());
+            request.getSession().setAttribute("error", "Error during promoting.. please try again");
         }
         request.getRequestDispatcher("/users-list").forward(request, response);
     }

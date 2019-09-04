@@ -1,6 +1,7 @@
 package servlets.announcement;
 
 import dao.AnnouncementDao;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
@@ -18,8 +19,8 @@ public class DeleteAnnouncementServlet extends HttpServlet {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");
         AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);
         User user = (User) request.getSession().getAttribute("user");
-        manager.delete(user.getId(),announcementDao.findById(Integer.parseInt(request.getParameter("announcementId"))));
-        request.getSession().setAttribute("warn", "Announcement deleted successfully");
+        Promise promise = manager.delete(user.getId(),announcementDao.findById(Integer.parseInt(request.getParameter("announcementId"))));
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         response.sendRedirect("announcements");
     }
 

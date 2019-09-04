@@ -2,6 +2,7 @@ package servlets.friendrequest;
 
 import dao.FriendRequestDao;
 import datatypes.messages.FriendRequest;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
@@ -25,9 +26,11 @@ public class FriendRequestDeleteServlet extends HttpServlet {
         FriendRequest request1 = friendRequestDao.findBySenderReceiverId(user.getId(), receiverId);
         FriendRequest request2 = friendRequestDao.findBySenderReceiverId(receiverId, user.getId());
         if (request1 != null) {
-            removeFromNotifications(manager, request1);
+            Promise promise = manager.delete(request1);
+            request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         } else if (request2 != null) {
-            removeFromNotifications(manager, request2);
+            Promise promise = manager.delete(request2);
+            request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         }
         String callingPage = request.getParameter("callingPage");
 
@@ -38,6 +41,5 @@ public class FriendRequestDeleteServlet extends HttpServlet {
     }
 
     private void removeFromNotifications(DaoManager manager, FriendRequest request2) {
-        manager.delete(request2);
     }
 }

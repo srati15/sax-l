@@ -1,8 +1,11 @@
 package dao;
 
 import database.CreateConnection;
+import datatypes.promise.DaoResult;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import enums.DaoType;
+import enums.Level;
 import enums.UserType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +45,7 @@ public class UserDao implements Dao<Integer, User> {
     }
 
     @Override
-    public boolean insert(User entity) {
+    public Promise insert(User entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -64,10 +67,9 @@ public class UserDao implements Dao<Integer, User> {
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
                 logger.info("User inserted sucessfully");
-                return true;
+                return new DaoResult(Level.INFO, "Registration is successful. welcome "+entity.getUserName());
             } else {
                 logger.error("Error inserting User");
-                return false;
             }
 
         } catch (SQLException e) {
@@ -76,7 +78,7 @@ public class UserDao implements Dao<Integer, User> {
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error during registrations, please try again..");
     }
 
     @Override
@@ -86,7 +88,7 @@ public class UserDao implements Dao<Integer, User> {
     }
 
     @Override
-    public boolean deleteById(Integer id) {
+    public Promise deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -99,7 +101,7 @@ public class UserDao implements Dao<Integer, User> {
             if (result == 1) {
                 logger.info("User deleted sucessfully, {}", findById(id));
                 cao.delete(id);
-                return true;
+                return new DaoResult(Level.INFO, "User deleted sucessfully");
             } else {
                 logger.error("Error deleting User, {}", findById(id));
             }
@@ -108,10 +110,10 @@ public class UserDao implements Dao<Integer, User> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error during registration, please try again..");
     }
 
-    public boolean update(User user) {
+    public Promise update(User user) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -128,7 +130,7 @@ public class UserDao implements Dao<Integer, User> {
             if (result == 1) {
                 logger.info("User updated sucessfully, {}", user);
                 cao.add(user);
-                return true;
+                return new DaoResult(Level.INFO, "Profile updated sucessfully");
             } else logger.error("Error updating user, {}", user);
         } catch (SQLException e) {
             logger.error(e);
@@ -136,7 +138,7 @@ public class UserDao implements Dao<Integer, User> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error updating profile, please try again..");
     }
 
     @Override
@@ -165,7 +167,7 @@ public class UserDao implements Dao<Integer, User> {
         }
     }
 
-    private class UserMapper implements DBRowMapper<User> {
+    private static class UserMapper implements DBRowMapper<User> {
         @Override
         public User mapRow(ResultSet rs) {
             try {

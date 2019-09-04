@@ -1,5 +1,6 @@
 package servlets.user;
 
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import enums.FormFields;
 import manager.DaoManager;
@@ -34,8 +35,8 @@ public class UpdateUserServlet extends HttpServlet {
         user.setPassword(Cracker.code(password));
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        manager.update(user);
-        request.getSession().setAttribute("info", "Profile updated successfully");
+        Promise promise = manager.update(user);
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         response.sendRedirect("/");
     }
 

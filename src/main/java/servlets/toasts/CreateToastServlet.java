@@ -1,5 +1,6 @@
 package servlets.toasts;
 
+import datatypes.promise.Promise;
 import datatypes.toast.Toast;
 import datatypes.user.User;
 import manager.DaoManager;
@@ -20,11 +21,9 @@ public class CreateToastServlet extends HttpServlet {
         String title = request.getParameter("toastTitle");
         String toastText = request.getParameter("content");
         Toast toast = new Toast(user.getId(), title, toastText, LocalDateTime.now());
-        if (manager.insert(toast)) {
-            request.getSession().setAttribute("info", "Toast created successfully");
-        }else {
-            request.getSession().setAttribute("error", "Error adding toast");
-        }
+        Promise promise = manager.insert(toast);
+        request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
+
         response.sendRedirect("/");
     }
 

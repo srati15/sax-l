@@ -1,6 +1,7 @@
 package servlets.user;
 
 import dao.UserDao;
+import datatypes.promise.Promise;
 import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
@@ -27,8 +28,8 @@ public class DeleteUserServlet extends HttpServlet {
             return;
         }
         if (user.getId() != deleteUserId)  {
-            manager.delete(deleteUser);
-            request.getSession().setAttribute("warn", deleteUser.getUserName()+"'s account is being removed");
+            Promise promise = manager.delete(deleteUser);
+            request.getSession().setAttribute(promise.getLevel().getValue(), promise.getText());
         }
         request.getRequestDispatcher("users-list").forward(request, response);
     }

@@ -2,7 +2,10 @@ package dao;
 
 import database.CreateConnection;
 import datatypes.announcement.Announcement;
+import datatypes.promise.DaoResult;
+import datatypes.promise.Promise;
 import enums.DaoType;
+import enums.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,7 +42,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
 
 
     @Override
-    public boolean insert(Announcement entity) {
+    public Promise insert(Announcement entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         ResultSet rs = null;
@@ -59,7 +62,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
                 entity.setId(rs.getInt(1));
                 cao.add(entity);
                 logger.info("Announcement inserted successfully {}", entity);
-                return true;
+                return new DaoResult(Level.INFO, "Announcement created successfully");
             } else
                 logger.error("Error inserting announcement {}", entity);
         } catch (SQLException e) {
@@ -68,7 +71,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
         } finally {
             executeFinalBlock(connection, statement, rs);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error inserting Announcement");
     }
 
 
@@ -79,7 +82,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
     }
 
     @Override
-    public boolean deleteById(Integer id) {
+    public Promise deleteById(Integer id) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -92,7 +95,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             if (result == 1) {
                 logger.info("Announcement Deleted Successfully, {}", findById(id));
                 cao.delete(id);
-                return true;
+                return new DaoResult(Level.INFO, "Announcement deleted successfully");
             } else
                 logger.error("Error Deleting Announcement");
         } catch (SQLException e) {
@@ -101,11 +104,11 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error deleting Announcement");
     }
 
     @Override
-    public boolean update(Announcement entity) {
+    public Promise update(Announcement entity) {
         Connection connection = CreateConnection.getConnection();
         PreparedStatement statement = null;
         try {
@@ -123,7 +126,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
             if (result == 1) {
                 cao.add(entity);
                 logger.info("Announcement updated sucessfully, {}", entity);
-                return true;
+                return new DaoResult(Level.INFO, "Announcement updated successfully");
             } else logger.error("Error updating announcement {}", entity);
         } catch (SQLException e) {
             rollback(connection);
@@ -131,7 +134,7 @@ public class AnnouncementDao implements Dao<Integer, Announcement> {
         } finally {
             executeFinalBlock(connection, statement);
         }
-        return false;
+        return new DaoResult(Level.ERROR, "Error updating Announcement");
     }
 
     @Override
