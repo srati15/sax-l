@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@WebServlet("/FriendRequestSenderServlet")
+@WebServlet(value = "/FriendRequestSenderServlet", asyncSupported = true)
 public class FriendRequestSenderServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

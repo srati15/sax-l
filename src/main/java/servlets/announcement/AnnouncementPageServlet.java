@@ -1,10 +1,7 @@
 package servlets.announcement;
 
 import dao.AnnouncementDao;
-import datatypes.announcement.Announcement;
-import datatypes.user.User;
 import enums.DaoType;
-import enums.FormFields;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -14,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/announcements")
+@WebServlet(value = "/announcements", asyncSupported = true)
 public class AnnouncementPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");

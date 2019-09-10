@@ -1,7 +1,6 @@
 package servlets.messages;
 
 import dao.AdminMessageDao;
-import datatypes.messages.AdminMessage;
 import datatypes.promise.Promise;
 import enums.DaoType;
 import manager.DaoManager;
@@ -12,9 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
 
-@WebServlet("/DeleteInboxMessageServlet")
+@WebServlet(value = "/DeleteInboxMessageServlet", asyncSupported = true)
 public class DeleteInboxMessageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");

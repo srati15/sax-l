@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/EditUserServletFromAdmin")
+@WebServlet(value = "/EditUserServletFromAdmin", asyncSupported = true)
 public class EditUserServletFromAdmin extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(EditUserServletFromAdmin.class);
 

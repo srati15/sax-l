@@ -1,21 +1,20 @@
 package context;
 
-import dao.ActivityDao;
+import config.Config;
 import dao.AnnouncementDao;
 import dao.ToastDao;
 import datatypes.announcement.Announcement;
-import datatypes.server.Activity;
 import datatypes.toast.Toast;
 import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +26,11 @@ public class ContextListener implements ServletContextListener {
     private Map<Integer, User> onlineUsers = new ConcurrentHashMap<>();
     private DaoManager manager;
     public void contextInitialized(ServletContextEvent sce) {
-        manager = new DaoManager();
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.register(Config.class);
+        context.refresh();
+        manager = context.getBean(DaoManager.class);
+
         sce.getServletContext().setAttribute("manager", manager);
         sce.getServletContext().setAttribute("onlineUsers", onlineUsers);
         AnnouncementDao announcementDao = manager.getDao(DaoType.Announcement);

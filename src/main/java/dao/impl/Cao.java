@@ -1,11 +1,13 @@
-package dao;
+package dao.impl;
 
 import datatypes.Domain;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Component
 public class Cao<ID, D extends Domain<ID>> {
     private final Map<ID, D> map = new ConcurrentHashMap<>();
 

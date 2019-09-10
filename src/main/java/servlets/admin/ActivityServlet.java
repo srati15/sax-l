@@ -1,9 +1,7 @@
 package servlets.admin;
 
 import dao.ActivityDao;
-import dao.AdminMessageDao;
 import dao.UserDao;
-import datatypes.messages.AdminMessage;
 import datatypes.server.Activity;
 import enums.DaoType;
 import manager.DaoManager;
@@ -20,9 +18,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@WebServlet("/activities")
+@WebServlet(value = "/activities", asyncSupported = true)
 public class ActivityServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(ActivityServlet.class);
 

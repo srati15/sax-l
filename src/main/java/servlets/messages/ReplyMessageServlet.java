@@ -1,6 +1,5 @@
 package servlets.messages;
 
-import datatypes.messages.AdminMessage;
 import datatypes.messages.AdminReply;
 import datatypes.promise.Promise;
 import manager.DaoManager;
@@ -13,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-@WebServlet("/ReplyMessageServlet")
+@WebServlet(value = "/ReplyMessageServlet",asyncSupported = true)
 public class ReplyMessageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");

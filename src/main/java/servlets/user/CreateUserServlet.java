@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/CreateUserServlet")
+@WebServlet(value = "/CreateUserServlet",asyncSupported = true)
 public class CreateUserServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(CreateUserServlet.class);
 

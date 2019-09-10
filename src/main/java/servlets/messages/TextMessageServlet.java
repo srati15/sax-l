@@ -1,10 +1,8 @@
 package servlets.messages;
 
-import dao.TextMessageDao;
+import datatypes.messages.TextMessage;
 import datatypes.promise.Promise;
 import datatypes.user.User;
-import datatypes.messages.TextMessage;
-import enums.DaoType;
 import manager.DaoManager;
 
 import javax.servlet.ServletException;
@@ -16,7 +14,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@WebServlet("/TextMessageServlet")
+@WebServlet(value = "/TextMessageServlet", asyncSupported = true)
 public class TextMessageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         DaoManager manager = (DaoManager) request.getServletContext().getAttribute("manager");

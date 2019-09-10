@@ -19,28 +19,42 @@ import enums.RequestStatus;
 import mail.ReplySender;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.*;
 
+@Service
 public class DaoManager {
     private static final Logger logger = LogManager.getLogger(DaoManager.class);
     private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
 
-    private final Map<DaoType, Dao> map;
-    private final AnnouncementDao announcementDao = new AnnouncementDao();
-    private final FriendRequestDao friendRequestDao = new FriendRequestDao();
-    private final TextMessageDao textMessageDao = new TextMessageDao();
-    private final UserDao userDao = new UserDao();
-    private final UserAchievementDao userAchievementDao = new UserAchievementDao();
-    private final AdminMessageDao adminMessageDao = new AdminMessageDao();
-    private final AdminReplyMessageDao adminReplyMessageDao = new AdminReplyMessageDao();
-    private final ToastDao toastDao = new ToastDao();
-    private final ActivityDao activityDao = new ActivityDao((ThreadPoolExecutor) Executors.newFixedThreadPool(4));
+    private Map<DaoType, Dao> map;
+    @Autowired
+    private AnnouncementDao announcementDao;
+    @Autowired
+    private FriendRequestDao friendRequestDao;
+    @Autowired
+    private TextMessageDao textMessageDao;
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private UserAchievementDao userAchievementDao;
+    @Autowired
+    private AdminMessageDao adminMessageDao;
+    @Autowired
+    private AdminReplyMessageDao adminReplyMessageDao;
+    @Autowired
+    private ToastDao toastDao;
+    @Autowired
+    private ActivityDao activityDao;
     private CountDownLatch latch;
 
-    public DaoManager() {
+    @PostConstruct
+    private void post(){
         map = new HashMap<>();
         map.put(announcementDao.getDaoType(), announcementDao);
         map.put(userDao.getDaoType(), userDao);

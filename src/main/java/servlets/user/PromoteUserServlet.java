@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/PromoteUserServlet")
+@WebServlet(value = "/PromoteUserServlet", asyncSupported = true)
 public class PromoteUserServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(PromoteUserServlet.class);
 

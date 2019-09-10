@@ -17,8 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-@WebServlet("/server-logs")
+@WebServlet(value = "/server-logs", asyncSupported = true)
 public class ServerLogServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(ServerLogServlet.class);
 

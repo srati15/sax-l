@@ -1,9 +1,9 @@
 package servlets.user;
 
-import dao.*;
-import datatypes.messages.Message;
+import dao.FriendRequestDao;
+import dao.TextMessageDao;
+import dao.UserDao;
 import datatypes.messages.TextMessage;
-import datatypes.server.Activity;
 import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
@@ -16,12 +16,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@WebServlet("/user-profile")
+@WebServlet(value = "/user-profile", asyncSupported = true)
 public class UserProfileServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(UserProfileServlet.class);
 

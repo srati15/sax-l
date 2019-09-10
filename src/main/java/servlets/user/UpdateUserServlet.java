@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/UpdateUserServlet")
+@WebServlet(value = "/UpdateUserServlet", asyncSupported = true)
 public class UpdateUserServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(UpdateUserServlet.class);
 

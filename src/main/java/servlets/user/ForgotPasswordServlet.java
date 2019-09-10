@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Random;
 
-@WebServlet("/ForgotPasswordServlet")
+@WebServlet(value = "/ForgotPasswordServlet", asyncSupported = true)
 public class ForgotPasswordServlet extends HttpServlet {
     private static final int PASSWORD_LENGTH = 12;
     private final Random random = new Random();

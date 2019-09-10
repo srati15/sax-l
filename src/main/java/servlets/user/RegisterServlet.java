@@ -1,9 +1,7 @@
 package servlets.user;
 
-import dao.ActivityDao;
 import dao.UserDao;
 import datatypes.promise.Promise;
-import datatypes.server.Activity;
 import datatypes.user.User;
 import enums.DaoType;
 import manager.DaoManager;
@@ -17,10 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Map;
 
-@WebServlet("/register")
+@WebServlet(value = "/register", asyncSupported = true)
 public class RegisterServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(RegisterServlet.class);
 

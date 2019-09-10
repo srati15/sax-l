@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/statistics")
+@WebServlet(value = "/statistics", asyncSupported = true)
 public class StatisticsServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(StatisticsServlet.class);
 

@@ -1,8 +1,8 @@
 package servlets.friendrequest;
 
+import datatypes.messages.FriendRequest;
 import datatypes.promise.Promise;
 import datatypes.user.User;
-import datatypes.messages.FriendRequest;
 import enums.RequestStatus;
 import manager.DaoManager;
 
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@WebServlet("/FriendRequestReceiverServlet")
+@WebServlet(value = "/FriendRequestReceiverServlet", asyncSupported = true)
 public class FriendRequestReceiverServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
