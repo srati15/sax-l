@@ -1,0 +1,35 @@
+2019-09-20 12:57:06 !! DEBUG !! Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@747252dd
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'org.springframework.context.annotation.internalConfigurationAnnotationProcessor'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'org.springframework.context.event.internalEventListenerProcessor'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'org.springframework.context.event.internalEventListenerFactory'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'org.springframework.context.annotation.internalAutowiredAnnotationProcessor'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'org.springframework.context.annotation.internalCommonAnnotationProcessor'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'config'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'daoManager'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'announcementDao'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'friendRequestDao'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'textMessageDao'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'userDao'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'userAchievementDao'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'adminMessageDao'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'adminReplyMessageDao'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'toastDao'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'activityDao'
+2019-09-20 12:57:06 !! DEBUG !! Creating shared instance of singleton bean 'threadPoolExecutor'
+2019-09-20 12:57:08 !! INFO  !! ToastDaoImpl is Cached
+2019-09-20 12:57:08 !! INFO  !! AdminReplyMessageDaoImpl is Cached
+2019-09-20 12:57:08 !! INFO  !! AdminMessageDaoImpl is Cached
+2019-09-20 12:57:08 !! INFO  !! AnnouncementDaoImpl is Cached
+2019-09-20 12:57:09 !! INFO  !! ActivityDaoImpl is Cached
+2019-09-20 12:57:09 !! INFO  !! AchievementDao is Cached
+2019-09-20 12:57:09 !! INFO  !! FriendRequestDaoImpl is Cached
+2019-09-20 12:57:09 !! INFO  !! TextMessageDaoImpl is Cached
+2019-09-20 12:57:10 !! INFO  !! UserAchievementDaoImpl is Cached
+2019-09-20 12:57:10 !! INFO  !! UserDaoImpl is Cached
+2019-09-20 12:57:10 !! INFO  !! Server is running...
+2019-09-20 12:57:56 !! INFO  !! Server is shutting down...
+2019-09-20 12:57:56 !! INFO  !! DaoManager is shutting down..
+2019-09-20 12:57:56 !! INFO  !! ActivityDao is shutting down..
+2019-09-20 12:57:56 !! INFO  !! ActivityDao has shut down !!
+2019-09-20 12:57:56 !! INFO  !! Dao manager has shut down !!
+2019-09-20 12:57:56 !! INFO  !! Server has shut down !!
