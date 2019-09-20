@@ -88,7 +88,7 @@
     </dependencies>
 
     <build>
-        <finalName>sax-l</finalName>
+        <finalName>tamadaznauri</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
